@@ -1,1 +1,1 @@
-# CMPUT301_GroupProject
+# SuperQR
