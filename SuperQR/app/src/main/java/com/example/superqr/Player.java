@@ -2,6 +2,11 @@ package com.example.superqr;
 
 import android.location.Location;
 
+
+/**
+ * Player is the main interface by which most classes are managed by.
+ */
+
 public class Player {
     private PlayerSettings settings;
     private PlayerStats stats;
