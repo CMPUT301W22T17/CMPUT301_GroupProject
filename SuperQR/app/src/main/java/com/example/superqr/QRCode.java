@@ -8,6 +8,7 @@ public class QRCode {
     private String hash;
     private int score;
     private Location location;
+    private Boolean scanned = false;
     private ArrayList<String> comments = new ArrayList<>();
 
     public QRCode(String hash, Location location) {
@@ -20,7 +21,7 @@ public class QRCode {
     }
 
     public Boolean scanned() {
-        return false;
+        return scanned;
     }
 
 
