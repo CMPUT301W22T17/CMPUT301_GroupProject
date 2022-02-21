@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/SuperQR.iml" filepath="$PROJECT_DIR$/.idea/modules/SuperQR.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/CMPUT301_GroupProject.SuperQR.iml" filepath="$PROJECT_DIR$/.idea/modules/CMPUT301_GroupProject.SuperQR.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/SuperQR.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/SuperQR.app.iml" />
     </modules>
   </component>
