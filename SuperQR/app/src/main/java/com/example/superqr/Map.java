@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class Map {
     private ArrayList<QRCode> QRCodeLocations;
     private Player player;
-    private GoogleMap QRMap;
+    private int QRMap;
 
     public Map(ArrayList<QRCode> QRCodeLocations, Player player) {
         this.QRCodeLocations = QRCodeLocations;
