@@ -15,7 +15,7 @@ public class QRCode {
         this.location = location;
     }
 
-    public void takePhoto() {
+    public void takePhoto(contents) {
 
     }
 
