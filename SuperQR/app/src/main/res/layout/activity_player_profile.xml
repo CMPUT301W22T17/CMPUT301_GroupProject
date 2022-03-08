@@ -6,52 +6,31 @@
     android:layout_height="match_parent"
     tools:context=".PlayerProfileActivity">
 
-    <TextView
-        android:id="@+id/username_header"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:text="Username"
-        android:textSize="10sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.022">
-
-    </TextView>
 
     <TextView
         android:id="@+id/player_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
         android:text="Player Username"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/username_header">
+        app:layout_constraintTop_toTopOf="parent">
 
     </TextView>
 
-    <TextView
-        android:id="@+id/email_header"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="20dp"
-        android:text="Email"
-        android:textSize="10sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/player_username"></TextView>
 
     <TextView
         android:id="@+id/player_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
         android:text="Player Email"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/email_header">
+        app:layout_constraintTop_toBottomOf="@+id/player_username">
 
     </TextView>
 
@@ -60,10 +39,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
+        android:layout_marginTop="28dp"
         android:text="Player Phone Number"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/phone_header">
+        app:layout_constraintTop_toBottomOf="@+id/player_email">
 
     </TextView>
 
@@ -84,7 +64,7 @@
         android:id="@+id/login_code_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="52dp"
+        android:layout_marginEnd="40dp"
         android:text="Login Code"
         android:textSize="10sp"
         app:layout_constraintBottom_toBottomOf="@+id/status_code_button"
@@ -111,8 +91,8 @@
         android:id="@+id/status_code_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="52dp"
-        android:layout_marginTop="44dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="24dp"
         android:text="Status Code"
         android:textSize="10sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -170,18 +150,7 @@
 
     </Button>
 
-    <TextView
-        android:id="@+id/phone_header"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="20dp"
-        android:text="Phone Number"
-        android:textSize="10sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/player_email">
 
-    </TextView>
 
     <Button
         android:id="@+id/view_high_score_button"
@@ -208,5 +177,6 @@
         app:layout_constraintTop_toBottomOf="@+id/player_phone">
 
     </TextView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

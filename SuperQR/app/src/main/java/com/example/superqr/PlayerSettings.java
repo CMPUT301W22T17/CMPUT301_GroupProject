@@ -7,7 +7,7 @@ public class PlayerSettings {
 
 
     // returns a QR code for player login
-
+    /*
     public QRCode loginQR() {
         //WIP
 
@@ -17,6 +17,8 @@ public class PlayerSettings {
     public QRCode statusQR() {
         //WIP
     }
+
+     */
 
 
 }
