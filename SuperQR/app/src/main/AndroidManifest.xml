@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.superqr">
 
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
@@ -13,6 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SuperQR"
         tools:replace="android:allowBackup">
+        <activity
+            android:name=".PlayerProfileActivity"
+            android:exported="true" />
         <activity
             android:name=".DisplayMapActivity"
             android:exported="true" />
