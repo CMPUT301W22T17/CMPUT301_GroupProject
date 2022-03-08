@@ -27,12 +27,6 @@ public class QRCode {
         this.location = location;
     }
 
-    /**
-     * Takes a photo of QR code, hashes the code and stores the hash.
-     */
-    public void takePhoto() {
-        // WIP
-    }
 
     /**
      * Increments how many times a QR code has been scanned.

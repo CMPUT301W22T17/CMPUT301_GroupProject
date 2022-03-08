@@ -31,7 +31,9 @@ public class ScanActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+
                         resultData.setText(result.getText());
+
                     }
                 });
             }
