@@ -1,13 +1,20 @@
 package com.example.superqr;
 
-public class Map {
-    private ArrayList<QRCode> QRCodeLocations;
-    private Player player;
-    private MapView mapView;
-    private GoogleMap QRMap;
+import android.location.Location;
 
-    public Map(ArrayList<QRCode> QRCodeLocations, Player player) {
-        this.QRCodeLocations = QRCodeLocations;
-        this.player = player;
+import java.util.ArrayList;
+
+public class Map {
+    protected ArrayList<Location> QRCodeLocations;
+    protected Player player;
+
+    public Map(Player currentPlayer) {
+        this.player = currentPlayer;
+        this.QRCodeLocations = new ArrayList<Location>();
+    }
+
+    // test constructor (remove once other classes are built more)
+    public Map() {
+        this.QRCodeLocations = new ArrayList<Location>();
     }
 }
