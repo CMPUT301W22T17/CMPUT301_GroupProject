@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
@@ -91,17 +92,19 @@ public class MapFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
 
             // actual code (keep)
-
+            /*
             Context mapContext = getActivity().getApplicationContext();
             Configuration.getInstance().load(mapContext, PreferenceManager.getDefaultSharedPreferences(mapContext));
 
-            map = (MapView) getActivity().findViewById(R.id.map);
+            //map = (MapView) getActivity().findViewById(R.id.map);
             map.setTileSource(TileSourceFactory.MAPNIK);
 
             controller = new MapController(map);
 
             // test code
             mapInfo = new Map();
+
+             */
 
         /* actual code (add once more classes are built)
         mapInfo = new Map(player); // for player being the name of a Player class
@@ -122,14 +125,14 @@ public class MapFragment extends Fragment {
 
             // actual code
             createLocationIcons();
-            //setToUserLocation();
+            setToUserLocation();
 
         /* actual code (to be added when classes are more built)
         playerPoint = new GeoPoint(mapInfo.getPlayerLocation());
          */
 
             // actual code
-            //addLocationMarkers();
+            addLocationMarkers();
 
         }
 
@@ -139,8 +142,15 @@ public class MapFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.activity_display_map, container, false);
+        //return inflater.inflate(R.layout.activity_display_map, container, false);
+
+        View view = inflater.inflate(R.layout.activity_display_map, container, false);
+        map = view.findViewById(R.id.map);
+
+
+        return view;
     }
+    /*
     @Override
     public void onResume() {
         super.onResume();
@@ -151,7 +161,7 @@ public class MapFragment extends Fragment {
     public void onPause() {
         super.onPause();
         map.onPause();
-    }
+    }*/
 
     public void createLocationIcons() {
         //https://stackoverflow.com/questions/60301641/customized-icon-in-osmdroid-marker-android
@@ -183,7 +193,6 @@ public class MapFragment extends Fragment {
         controller.setCenter(playerPoint);
 
     }
-
 
     public void addLocationMarkers() {
 
