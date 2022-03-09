@@ -1,3 +1,9 @@
+package com.example.superqr;
+
+import android.location.Location;
+
+import com.example.superqr.Player;
+
 import java.util.ArrayList;
 
 public class Map {
