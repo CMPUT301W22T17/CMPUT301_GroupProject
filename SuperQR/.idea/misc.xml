@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/301/CMPUT301_GroupProject/SuperQR/app/src/main/res/layout/activity_scan.xml" value="0.27447916666666666" />
+        <entry key="..\:/301/CMPUT301_GroupProject/SuperQR/app/src/main/res/layout/fragment_search.xml" value="0.17255434782608695" />
         <entry key="..\:/301/CMPUT301_GroupProject/SuperQR/app/src/main/res/layout/search_fragment.xml" value="0.27447916666666666" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.17916666666666667" />
         <entry key="app/src/main/res/layout/activity_scan.xml" value="0.25" />

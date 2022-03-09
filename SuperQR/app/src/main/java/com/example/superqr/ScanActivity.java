@@ -31,8 +31,8 @@ public class ScanActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-
-                        resultData.setText(result.getText());
+                        QRCode myQR = new QRCode((String) resultData.getText());
+                        myQR.hashContents();
 
                     }
                 });

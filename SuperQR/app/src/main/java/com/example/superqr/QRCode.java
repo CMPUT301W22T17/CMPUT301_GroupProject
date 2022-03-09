@@ -2,6 +2,10 @@ package com.example.superqr;
 
 import android.location.Location;
 
+import com.himanshurawat.hasher.HashType;
+import com.himanshurawat.hasher.Hasher;
+
+import java.sql.Array;
 import java.util.ArrayList;
 
 /**
@@ -12,36 +16,26 @@ public class QRCode {
     private String hash;
     private int score;
     private Location location;
-    private int scanned;
     private ArrayList<String> comments = new ArrayList<>();
+    private boolean scanned;
 
     /**
      * Creates a QRCode object.
-     * @param code
+     * @param hash
      *      QR code to be hashed
-     * @param location
-     *      Geolocation of the QR code
      */
-    public QRCode(String code, Location location) {
+    public QRCode(String hash) {
         // hash and score will be calculated and stored
-        this.location = location;
-    }
-
-
-    /**
-     * Increments how many times a QR code has been scanned.
-     */
-    public void scanned() {
-        this.scanned += 1;
+        this.hash = hash;
     }
 
     /**
-     * Returns the hash of a QR code.
-     * @return
-     *      Return the hash
+     * Calculates the hash/score of a QR code.
      */
-    public String getHash() {
-        return hash;
+
+    public void hashContents() {
+        int hashedContents = this.hash.hashCode();
+        this.score = hashedContents; // store this QRCode's score
     }
 
     /**
@@ -49,6 +43,7 @@ public class QRCode {
      * @return
      *      Return the score
      */
+
     public int getScore() {
         return score;
     }
@@ -58,6 +53,7 @@ public class QRCode {
      * @return
      *      Return the location
      */
+
     public Location getLocation() {
         return location;
     }
@@ -67,8 +63,8 @@ public class QRCode {
      * @return
      *      Return if the QR code was scanned
      */
-    public Boolean getScanned() {
-        return this.scanned > 1;
+    public Boolean isScanned() {
+        return scanned;
     }
 
     /**
