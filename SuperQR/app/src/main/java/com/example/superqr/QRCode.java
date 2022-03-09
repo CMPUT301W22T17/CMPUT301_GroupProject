@@ -5,25 +5,26 @@ import android.location.Location;
 import java.util.ArrayList;
 
 /**
- * The QRCode class keeps track of the hash, score, and geolocation of a QR code.
- * Takes photo of a QR code.
+ * The QRCode class keeps track of the code, score, and geolocation of a QR code.
+ * Takes photo of an object or location of the QR code.
  */
 public class QRCode {
-    private String hash;
+    private String code;
     private int score;
     private Location location;
-    private int scanned;
+    private Boolean scanned = false;
     private ArrayList<String> comments = new ArrayList<>();
 
     /**
      * Creates a QRCode object.
      * @param code
-     *      QR code to be hashed
+     *      QR code contents
      * @param location
      *      Geolocation of the QR code
      */
     public QRCode(String code, Location location) {
-        // hash and score will be calculated and stored
+        // score will be calculated and stored
+        this.code = code;
         this.location = location;
     }
 
@@ -35,19 +36,19 @@ public class QRCode {
     }
 
     /**
-     * Increments how many times a QR code has been scanned.
+     * Scanned becomes true when the QR code has been scanned by another time
      */
     public void scanned() {
-        this.scanned += 1;
+        this.scanned = true;
     }
 
     /**
-     * Returns the hash of a QR code.
+     * Returns the string of a QR code
      * @return
-     *      Return the hash
+     *      Return the code
      */
-    public String getHash() {
-        return hash;
+    public String getCode() {
+        return code;
     }
 
     /**
@@ -74,7 +75,7 @@ public class QRCode {
      *      Return if the QR code was scanned
      */
     public Boolean getScanned() {
-        return this.scanned > 1;
+        return scanned;
     }
 
     /**
