@@ -177,17 +177,5 @@
 
     </TextView>
 
-    <FrameLayout
-        android:id="@+id/qr_score_container"
-        android:layout_width="300sp"
-        android:layout_height="300sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-    </FrameLayout>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
