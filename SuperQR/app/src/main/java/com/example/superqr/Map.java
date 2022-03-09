@@ -18,8 +18,8 @@ public class Map {
     // test constructor (remove once other classes are built more)
     public Map() {
         this.QRCodeLocations = new ArrayList<Location>();
-    }
 
+    }
     /**
      * Displays the map for the player to see
      */
@@ -40,5 +40,4 @@ public class Map {
     public void placePlayerLocation() {
         // WIP
     }
-
 }
