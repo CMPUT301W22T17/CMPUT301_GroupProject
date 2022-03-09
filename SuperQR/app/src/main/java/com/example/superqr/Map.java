@@ -2,6 +2,8 @@ package com.example.superqr;
 
 import android.location.Location;
 
+import com.example.superqr.Player;
+
 import java.util.ArrayList;
 
 public class Map {
@@ -18,7 +20,6 @@ public class Map {
         this.QRCodeLocations = new ArrayList<Location>();
 
     }
-
     /**
      * Displays the map for the player to see
      */
@@ -39,5 +40,4 @@ public class Map {
     public void placePlayerLocation() {
         // WIP
     }
-
 }
