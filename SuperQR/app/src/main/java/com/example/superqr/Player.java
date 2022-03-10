@@ -25,19 +25,7 @@ public class Player {
     public PlayerSettings getSettings() {
         return settings;
     }
-
-    public void setSettings(PlayerSettings settings) {
-        this.settings = settings;
-    }
-
-    public PlayerStats getStats() {
-        return stats;
-    }
-
-    public void setStats(PlayerStats stats) {
-        this.stats = stats;
-    }
-
+    
     public Location getLocation() {
         return location;
     }
