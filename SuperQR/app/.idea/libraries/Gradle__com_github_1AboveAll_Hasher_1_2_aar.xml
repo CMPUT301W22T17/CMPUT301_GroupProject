@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Gradle: com.github.1AboveAll:Hasher:1.2@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/1f4a64fb9cb5a335fdb8c612b49b000d/transformed/Hasher-1.2/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/1f4a64fb9cb5a335fdb8c612b49b000d/transformed/Hasher-1.2/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/1f4a64fb9cb5a335fdb8c612b49b000d/transformed/Hasher-1.2/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.1AboveAll/Hasher/1.2/4bf4f33756ec3a543151012566d81841c2fc0b81/Hasher-1.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

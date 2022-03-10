@@ -1,9 +1,10 @@
 <component name="libraryTable">
   <library name="Gradle: org.osmdroid:osmdroid-wms:6.1.1@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/f394bbba4c16ba1a913fbd30be62d19c/transformed/osmdroid-wms-6.1.1/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/f394bbba4c16ba1a913fbd30be62d19c/transformed/osmdroid-wms-6.1.1/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/f394bbba4c16ba1a913fbd30be62d19c/transformed/osmdroid-wms-6.1.1/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/fb62b49cbf38b58b855c65369758ab45/transformed/osmdroid-wms-6.1.1/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/fb62b49cbf38b58b855c65369758ab45/transformed/osmdroid-wms-6.1.1/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/fb62b49cbf38b58b855c65369758ab45/transformed/osmdroid-wms-6.1.1/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.osmdroid/osmdroid-wms/6.1.1/ed68803b26ffee48dc613a961202e4e1520ec55f/osmdroid-wms-6.1.1-javadoc.jar!/" />
