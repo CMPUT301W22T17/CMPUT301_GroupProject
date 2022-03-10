@@ -95,23 +95,34 @@ public class BrowseFragment extends Fragment implements View.OnClickListener {
                 // https://stackoverflow.com/questions/16728426/android-nested-fragment-approach
 
                 Fragment searchPlayerFragment = new SearchPlayerFragment();
-                FragmentTransaction searchPlayerTransaction = getChildFragmentManager().beginTransaction();
-
-                searchPlayerTransaction.replace(R.id.browse_container, searchPlayerFragment);
-                searchPlayerTransaction.addToBackStack(null);
-                searchPlayerTransaction.commit();
-
-                hideButtons();
+                displayFragment(searchPlayerFragment);
+                break;
 
             case R.id.view_ranking_button:
                 break;
 
-            case R.id.view_codes_button:
+            case R.id.search_geolocation_button:
+
+                Fragment searchGeolocationFragment = new SearchGeolocationFragment();
+                displayFragment(searchGeolocationFragment);
                 break;
 
-            case R.id.search_geolocation_button:
+            case R.id.view_codes_button:
+                Fragment viewCodesFragment = new ViewPlayerCodesFragment();
+                displayFragment(viewCodesFragment);
                 break;
+
         }
+    }
+
+    public void displayFragment(Fragment fragment) {
+        FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
+
+        fragmentTransaction.replace(R.id.browse_container, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+
+        hideButtons();
     }
 
     public void hideButtons() {
