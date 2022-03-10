@@ -1,21 +1,25 @@
 package com.example.superqr;
 
+import android.location.Location;
+
+import com.example.superqr.Player;
+
 import java.util.ArrayList;
 
-/**
- * Map is a class that displays the locations of nearby QR codes and the player's location
- */
-
 public class Map {
-    private ArrayList<QRCode> QRCodeLocations;
-    private Player player;
-    private int QRMap;
+    protected ArrayList<Location> QRCodeLocations;
+    protected Player player;
 
-    public Map(ArrayList<QRCode> QRCodeLocations, Player player) {
-        this.QRCodeLocations = QRCodeLocations;
-        this.player = player;
+    public Map(Player currentPlayer) {
+        this.player = currentPlayer;
+        this.QRCodeLocations = new ArrayList<Location>();
     }
 
+    // test constructor (remove once other classes are built more)
+    public Map() {
+        this.QRCodeLocations = new ArrayList<Location>();
+
+    }
     /**
      * Displays the map for the player to see
      */
@@ -36,5 +40,4 @@ public class Map {
     public void placePlayerLocation() {
         // WIP
     }
-
 }
