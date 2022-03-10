@@ -9,24 +9,24 @@ import java.sql.Array;
 import java.util.ArrayList;
 
 /**
- * The QRCode class keeps track of the hash, score, and geolocation of a QR code.
- * Takes photo of a QR code.
+ * The QRCode class keeps track of the code, score, and geolocation of a QR code.
+ * Takes photo of an object or location of the QR code.
  */
 public class QRCode {
-    private String hash;
+    private String code;
     private int score;
     private Location location;
     private ArrayList<String> comments = new ArrayList<>();
-    private boolean scanned;
+    private boolean scanned = false;
 
     /**
      * Creates a QRCode object.
-     * @param hash
+     * @param code
      *      QR code to be hashed
      */
-    public QRCode(String hash) {
+    public QRCode(String code) {
         // hash and score will be calculated and stored
-        this.hash = hash;
+        this.code = code;
     }
 
     /**
@@ -60,6 +60,14 @@ public class QRCode {
 
         // this.score = hashedContents; // store this QRCode's score
     }
+    
+     /**
+     * Returns the string of a QR code
+     * @return
+     *      Return the code
+     */
+    public String getCode() {
+        return code;
 
     /**
      * Returns the score of a QR code.
@@ -86,7 +94,7 @@ public class QRCode {
      * @return
      *      Return if the QR code was scanned
      */
-    public Boolean isScanned() {
+    public boolean getScanned() {
         return scanned;
     }
 
