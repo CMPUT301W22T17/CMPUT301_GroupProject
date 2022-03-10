@@ -34,8 +34,31 @@ public class QRCode {
      */
 
     public void hashContents() {
-        int hashedContents = this.hash.hashCode();
-        this.score = hashedContents; // store this QRCode's score
+        String contents = hash;
+        String hash = Hasher.Companion.hash(contents, HashType.SHA_256);
+        char[] charArray = contents.toCharArray();
+        ArrayList<Character> duplicates = new ArrayList<Character>();
+        for (int i = 0; i < contents.length(); i++) {
+            for (int j = i + 1; j < contents.length(); j++) {
+                if (charArray[i] == charArray[j]) {
+                    duplicates.add(charArray[j]);
+                    break;
+                }
+            }
+        }
+
+        ArrayList<Integer> dupeCount = new ArrayList<Integer>();
+        for (int a = 0; a < charArray.length; a++) {
+            int count = 0;
+            for (int b = 0; b < contents.length(); b++) {
+                if (contents.charAt(b) == charArray[a]) {
+                    count++;
+                }
+            }
+            dupeCount.add(count);
+        }
+
+        // this.score = hashedContents; // store this QRCode's score
     }
 
     /**
