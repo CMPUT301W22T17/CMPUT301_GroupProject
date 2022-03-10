@@ -20,8 +20,8 @@
             android:name=".DisplayMapActivity"
             android:exported="true" />
         <activity
-            android:name=".ScanActivity"
-            android:exported="true" />
+            android:name=".LogInActivity"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

@@ -3,6 +3,7 @@ package com.example.superqr;
 import android.os.Bundle;
 
 import androidx.fragment.app.DialogFragment;
+
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import android.widget.TextView;
  * Use the {@link ProfileFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
+
 public class ProfileFragment extends Fragment implements View.OnClickListener {
 
     // TODO: Rename parameter arguments, choose names that match
@@ -70,7 +72,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
         View profileView = inflater.inflate(R.layout.activity_player_profile, container, false);
         qrHighScoreButton = (Button) profileView.findViewById(R.id.view_high_score_button);
         qrHighScoreButton.setOnClickListener(this);
@@ -126,7 +127,5 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         totalScoreText.setText("player's total score");
          */
     }
-
-
 
 }
