@@ -10,34 +10,36 @@ public class Map {
     protected ArrayList<Location> QRCodeLocations;
     protected Player player;
 
-    public Map(Player currentPlayer) {
-        this.player = currentPlayer;
-        this.QRCodeLocations = new ArrayList<Location>();
-    }
-
-    // test constructor (remove once other classes are built more)
+    /**
+     * Initializes a map class by creating a list of QR codes
+     */
     public Map() {
         this.QRCodeLocations = new ArrayList<Location>();
-
-    }
-    /**
-     * Displays the map for the player to see
-     */
-    public void displayMap() {
-        // WIP
     }
 
     /**
-     * Places the locations of nearby QR codes on the map
+     * Adds the locations of nearby QR codes to the map's database
+     * @param QRLocation
+     *      Location of QR code to be added to map's list of QR code locations
      */
-    public void placeQRLocations() {
-        // WIP
+
+    public void addAQRLocation(Location QRLocation) {
+        this.QRCodeLocations.add(QRLocation);
     }
 
     /**
-     * Places the location of the current player
+     * Adds a group of locations of nearby QR codes to the map's database
+     * @param QRCodes
+     *      Adds a list of QR code locations to the map's lsit of QR code locations
      */
-    public void placePlayerLocation() {
-        // WIP
+
+    public void addQRLocations(ArrayList<QRCode> QRCodes) {
+        for (QRCode code : QRCodes) {
+            this.QRCodeLocations.add(code.getLocation());
+        }
+    }
+
+    public ArrayList<Location> getQRLocations() {
+        return QRCodeLocations;
     }
 }

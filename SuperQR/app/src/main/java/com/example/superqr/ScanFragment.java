@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +30,7 @@ import com.karumi.dexter.listener.single.PermissionListener;
 
 import java.util.Scanner;
 
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link ScanFragment#newInstance} factory method to
@@ -44,7 +46,9 @@ public class ScanFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
     private CodeScanner codeScanner;
+
 
     public ScanFragment() {
         // Required empty public constructor
@@ -81,6 +85,7 @@ public class ScanFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
         final Activity activity = getActivity();
         View root = inflater.inflate(R.layout.fragment_scan, container, false);
         CodeScannerView codeScannerView = root.findViewById(R.id.scanner_view);

@@ -20,6 +20,11 @@ public class Player {
     public Player() {
         this.settings = new PlayerSettings();
         this.stats = new PlayerStats();
+        this.location = new Location("map_location");
+    }
+
+    public Location getPlayerLocation() {
+        return this.location;
     }
 
 }

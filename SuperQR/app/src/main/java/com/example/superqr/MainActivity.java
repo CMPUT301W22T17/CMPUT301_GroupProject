@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+
 import android.preference.PreferenceManager;
 
 import com.example.superqr.databinding.ActivityMainBinding;
@@ -55,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
             }
             return true;
         });
+
     }
 
     /**
@@ -81,5 +83,14 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, LogInActivity.class);
             startActivity(intent);
         }
+
     }
+
+    private void replaceFragment(Fragment fragment){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frame_layout, fragment);
+        fragmentTransaction.commit();
+    }
+
 }

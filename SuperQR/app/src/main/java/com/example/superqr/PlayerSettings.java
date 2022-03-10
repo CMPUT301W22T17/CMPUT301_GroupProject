@@ -7,13 +7,18 @@ public class PlayerSettings {
 
 
     // returns a QR code for player login
-    public void loginQR() {
+    /*
+    public QRCode loginQR() {
         //WIP
+
     }
 
     // returns player status QR code
-    public void statusQR() {
+    public QRCode statusQR() {
         //WIP
     }
+
+     */
+
 
 }
