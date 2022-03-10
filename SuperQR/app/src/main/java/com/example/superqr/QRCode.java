@@ -2,6 +2,10 @@ package com.example.superqr;
 
 import android.location.Location;
 
+import com.himanshurawat.hasher.HashType;
+import com.himanshurawat.hasher.Hasher;
+
+import java.sql.Array;
 import java.util.ArrayList;
 
 /**
@@ -12,50 +16,65 @@ public class QRCode {
     private String code;
     private int score;
     private Location location;
-    private Boolean scanned = false;
     private ArrayList<String> comments = new ArrayList<>();
+    private boolean scanned = false;
 
     /**
      * Creates a QRCode object.
      * @param code
-     *      QR code contents
-     * @param location
-     *      Geolocation of the QR code
+     *      QR code to be hashed
      */
-    public QRCode(String code, Location location) {
-        // score will be calculated and stored
+    public QRCode(String code) {
+        // hash and score will be calculated and stored
         this.code = code;
-        this.location = location;
     }
 
     /**
-     * Takes a photo of QR code, hashes the code and stores the hash.
+     * Calculates the hash/score of a QR code.
      */
-    public void takePhoto() {
-        // WIP
-    }
 
-    /**
-     * Scanned becomes true when the QR code has been scanned by another time
-     */
-    public void scanned() {
-        this.scanned = true;
-    }
+    public void hashContents() {
+        String contents = hash;
+        String hash = Hasher.Companion.hash(contents, HashType.SHA_256);
+        char[] charArray = contents.toCharArray();
+        ArrayList<Character> duplicates = new ArrayList<Character>();
+        for (int i = 0; i < contents.length(); i++) {
+            for (int j = i + 1; j < contents.length(); j++) {
+                if (charArray[i] == charArray[j]) {
+                    duplicates.add(charArray[j]);
+                    break;
+                }
+            }
+        }
 
-    /**
+        ArrayList<Integer> dupeCount = new ArrayList<Integer>();
+        for (int a = 0; a < charArray.length; a++) {
+            int count = 0;
+            for (int b = 0; b < contents.length(); b++) {
+                if (contents.charAt(b) == charArray[a]) {
+                    count++;
+                }
+            }
+            dupeCount.add(count);
+        }
+
+        // this.score = hashedContents; // store this QRCode's score
+    }
+    
+     /**
      * Returns the string of a QR code
      * @return
      *      Return the code
      */
     public String getCode() {
         return code;
-    }
 
     /**
      * Returns the score of a QR code.
      * @return
      *      Return the score
      */
+
     public int getScore() {
         return score;
     }
@@ -65,6 +84,7 @@ public class QRCode {
      * @return
      *      Return the location
      */
+
     public Location getLocation() {
         return location;
     }
@@ -74,7 +94,7 @@ public class QRCode {
      * @return
      *      Return if the QR code was scanned
      */
-    public Boolean getScanned() {
+    public boolean getScanned() {
         return scanned;
     }
 
