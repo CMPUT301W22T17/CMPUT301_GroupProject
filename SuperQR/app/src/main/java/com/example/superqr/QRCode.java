@@ -32,9 +32,8 @@ public class QRCode {
     /**
      * Calculates the hash/score of a QR code.
      */
-
     public void hashContents() {
-        String contents = hash;
+        String contents = code;
         String hash = Hasher.Companion.hash(contents, HashType.SHA_256);
         char[] charArray = contents.toCharArray();
         ArrayList<Character> duplicates = new ArrayList<Character>();
@@ -60,21 +59,21 @@ public class QRCode {
 
         // this.score = hashedContents; // store this QRCode's score
     }
-    
-     /**
+
+    /**
      * Returns the string of a QR code
      * @return
      *      Return the code
      */
     public String getCode() {
         return code;
+    }
 
     /**
      * Returns the score of a QR code.
      * @return
      *      Return the score
      */
-
     public int getScore() {
         return score;
     }
@@ -84,7 +83,6 @@ public class QRCode {
      * @return
      *      Return the location
      */
-
     public Location getLocation() {
         return location;
     }
