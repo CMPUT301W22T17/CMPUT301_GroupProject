@@ -62,6 +62,8 @@ public class LogInActivity extends AppCompatActivity {
         signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Player player = new Player();
+                db.collection("users").document("user01").set(player);
                 finish();
             }
         });

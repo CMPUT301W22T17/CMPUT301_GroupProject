@@ -85,4 +85,24 @@ public class PlayerStats {
     public int getLowestScore() {
         return lowestScore;
     }
+
+    public void setQrCodes(ArrayList<QRCode> qrCodes) {
+        this.qrCodes = qrCodes;
+    }
+
+    public void setCounts(int counts) {
+        this.counts = counts;
+    }
+
+    public void setTotalScore(int totalScore) {
+        this.totalScore = totalScore;
+    }
+
+    public void setHighestScore(int highestScore) {
+        this.highestScore = highestScore;
+    }
+
+    public void setLowestScore(int lowestScore) {
+        this.lowestScore = lowestScore;
+    }
 }

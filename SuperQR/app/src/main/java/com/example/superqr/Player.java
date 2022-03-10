@@ -22,4 +22,27 @@ public class Player {
         this.stats = new PlayerStats();
     }
 
+    public PlayerSettings getSettings() {
+        return settings;
+    }
+
+    public void setSettings(PlayerSettings settings) {
+        this.settings = settings;
+    }
+
+    public PlayerStats getStats() {
+        return stats;
+    }
+
+    public void setStats(PlayerStats stats) {
+        this.stats = stats;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
 }
