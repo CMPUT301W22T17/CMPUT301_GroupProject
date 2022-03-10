@@ -20,6 +20,7 @@ public class PlayerSettings {
     }
 
     // returns a QR code for player login
+  
     public QRCode getLoginQR() {
         return loginQR;
     }

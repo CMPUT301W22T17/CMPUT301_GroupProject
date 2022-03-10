@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ScanFragment">
 
@@ -37,5 +38,6 @@
         android:layout_marginTop="550dp"
         android:text="Testing Scan"
         android:textColor="@color/white" />
+
 
 </RelativeLayout>
