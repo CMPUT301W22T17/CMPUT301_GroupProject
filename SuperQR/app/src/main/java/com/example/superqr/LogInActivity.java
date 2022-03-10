@@ -3,6 +3,7 @@ package com.example.superqr;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -62,10 +63,27 @@ public class LogInActivity extends AppCompatActivity {
         signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Player player = new Player();
-                db.collection("users").document("user01").set(player);
+                String userName = usernameEditText.getText().toString();
+                String email = emailEditText.getText().toString();
+                String phone = phoneEditText.getText().toString();
+
+                PlayerSettings playerSettings = new PlayerSettings(userName, phone, email);
+                PlayerStats playerStats = new PlayerStats();
+                Player player = new Player(playerSettings, playerStats);
+                db.collection("users").document(userName).set(player);
+                SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("user", userName);
+                editor.apply();
                 finish();
             }
         });
     }
+
+   /* private void saveData(String userName) {
+        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("user", userName);
+        editor.apply();
+    }*/
 }

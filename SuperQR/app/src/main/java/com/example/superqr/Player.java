@@ -25,6 +25,10 @@ public class Player {
     public PlayerSettings getSettings() {
         return settings;
     }
+
+    public PlayerStats getStats() {
+        return stats;
+    }
     
     public Location getLocation() {
         return location;
