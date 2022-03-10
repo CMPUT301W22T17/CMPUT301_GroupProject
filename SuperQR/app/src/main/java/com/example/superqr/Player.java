@@ -27,4 +27,19 @@ public class Player {
         return this.location;
     }
 
+    public PlayerSettings getSettings() {
+        return settings;
+    }
+
+    public PlayerStats getStats() {
+        return stats;
+    }
+    
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
 }

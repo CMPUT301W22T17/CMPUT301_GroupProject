@@ -12,8 +12,15 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import android.preference.PreferenceManager;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.example.superqr.databinding.ActivityMainBinding;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -24,11 +31,18 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
+    Player player;
+    FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        checkNewUser();
+
+        db = FirebaseFirestore.getInstance();
+        // Get a top level reference to the collection
+        final CollectionReference collectionReference = db.collection("Users");
+
+        loadData();
 
         // All fragments are launched from this main activity.
         // When clicking on the navigation buttons, we open a new fragment to display
@@ -72,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     // TODO: ACTUALLY IMPLEMENT PROPERLY
-    public void checkNewUser(){
+    /*public void checkNewUser(){
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
         //https://stackoverflow.com/questions/35681693/checking-if-shared-preferences-exist
         boolean ranBefore = sharedPrefs.getBoolean("ranBefore", false);
@@ -82,6 +96,29 @@ public class MainActivity extends AppCompatActivity {
             editor.commit();
             Intent intent = new Intent(MainActivity.this, LogInActivity.class);
             startActivity(intent);
+        }
+        Intent intent = new Intent(MainActivity.this, LogInActivity.class);
+        startActivity(intent);
+    }*/
+
+    private void loadData() {
+        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+        //Gson gson = new Gson();
+        String userName = sharedPreferences.getString("user", "");
+        //Log.d("userName:", userName);
+        if (userName == ""){
+            Intent intent = new Intent(MainActivity.this, LogInActivity.class);
+            startActivity(intent);
+        }
+
+        else {
+            DocumentReference docRef = db.collection("users").document(userName);
+            docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    player = documentSnapshot.toObject(Player.class);
+                }
+            });
         }
 
     }
