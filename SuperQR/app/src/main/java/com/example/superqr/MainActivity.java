@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
 
     // TODO: ACTUALLY IMPLEMENT PROPERLY
     public void checkNewUser(){
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+        /*SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
         //https://stackoverflow.com/questions/35681693/checking-if-shared-preferences-exist
         boolean ranBefore = sharedPrefs.getBoolean("ranBefore", false);
         if (!ranBefore) {
@@ -80,6 +80,8 @@ public class MainActivity extends AppCompatActivity {
             editor.commit();
             Intent intent = new Intent(MainActivity.this, LogInActivity.class);
             startActivity(intent);
-        }
+        }*/
+        Intent intent = new Intent(MainActivity.this, LogInActivity.class);
+        startActivity(intent);
     }
 }
