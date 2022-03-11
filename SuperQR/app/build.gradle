@@ -9,7 +9,7 @@ android {
     compileSdk 32
     defaultConfig {
         applicationId "com.example.superqr"
-        minSdk 21
+        minSdk 23
         targetSdk 32
         versionCode 1
         versionName "1.0"
@@ -48,4 +48,5 @@ dependencies {
     implementation 'com.karumi:dexter:6.2.3'
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'com.github.1AboveAll:Hasher:1.2'
+    implementation 'com.google.android.gms:play-services-location:19.0.1'
 }
