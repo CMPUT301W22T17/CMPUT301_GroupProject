@@ -38,8 +38,8 @@ public class LeaderboardListView extends ArrayAdapter<Player> {
         TextView score = view.findViewById(R.id.score);
         TextView Rank = view.findViewById(R.id.Rank);
         Rank.setText(String.valueOf(position+1));
-        userId.setText(player.getSettings().getUsername());
-        score.setText(String.valueOf(player.getStats().getHighestScore()));
+        userId.setText(player.getName());
+        score.setText(String.valueOf(player.getScore()));
         return view;
     }
 }
