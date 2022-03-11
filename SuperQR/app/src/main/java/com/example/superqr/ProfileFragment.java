@@ -48,8 +48,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setUserInfo();
-        setQRInfo();
     }
 
     @Override
@@ -64,6 +62,11 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         qrLowScoreButton.setOnClickListener(this);
 
         player = (Player) getArguments().getParcelable(playerKey);
+
+        // https://stackoverflow.com/questions/9931993/passing-an-object-from-an-activity-to-a-fragment
+        // get the object from Main
+        setUserInfo();
+        setQRInfo();
 
         return profileView;
     }
@@ -99,6 +102,15 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         emailText.setText("player's email");
         phoneText.setText("player's phone number");
          */
+
+        /*String userName = player.getSettings().getUsername();
+        String email = player.getSettings().getEmail();
+        String phone = player.getSettings().getPhone();
+
+        usernameText.setText(userName);
+        emailText.setText(email);
+        phoneText.setText(phone);*/
+
     }
 
     /**

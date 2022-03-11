@@ -1,6 +1,7 @@
 package com.example.superqr;
 
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -13,7 +14,10 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.superqr.databinding.ActivityMainBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -38,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
         // Get a top level reference to the collection
-        final CollectionReference collectionReference = db.collection("Users");
 
         loadData();
 
@@ -104,20 +107,32 @@ public class MainActivity extends AppCompatActivity {
         //Gson gson = new Gson();
         String userName = sharedPreferences.getString("user", "");
         //Log.d("userName:", userName);
-        if (userName == ""){
+        if (userName == "") {
             Intent intent = new Intent(MainActivity.this, LogInActivity.class);
             startActivity(intent);
-        }
-
-        else {
+        } else {
+            Log.d("username", userName);
             DocumentReference docRef = db.collection("users").document(userName);
-            docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
-                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                    player = documentSnapshot.toObject(Player.class);
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    Log.d(TAG, "onComplete: executing");
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            Log.d(TAG, "onComplete: data does exist");
+                            player = document.toObject(Player.class);
+                        } else {
+                            // should handle this
+                            Log.d(TAG, "onComplete: data not exist");
+                        }
+                    } else {
+                        Log.d(TAG, "get failed with", task.getException());
+                    }
                 }
             });
         }
     }
 
+    //https://stackoverflow.com/questions/48499310/how-to-return-a-documentsnapshot-as-a-result-of-a-method
 }
