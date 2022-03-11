@@ -47,6 +47,6 @@ dependencies {
     implementation 'com.github.yuriy-budiyev:code-scanner:2.1.1'
     implementation 'com.karumi:dexter:6.2.3'
     implementation 'com.google.code.gson:gson:2.8.9'
-    implementation 'com.github.1AboveAll:Hasher:1.2'
+    implementation 'com.github.ihimanshurawat:Hasher:1.2'
     implementation 'com.google.android.gms:play-services-location:19.0.1'
 }

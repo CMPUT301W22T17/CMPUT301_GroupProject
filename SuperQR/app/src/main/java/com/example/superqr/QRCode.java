@@ -1,22 +1,32 @@
 package com.example.superqr;
 
 import android.location.Location;
+import android.os.Message;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.*;
 
+
+import com.google.android.gms.common.util.Hex;
 import com.himanshurawat.hasher.HashType;
 import com.himanshurawat.hasher.Hasher;
 
 import java.io.Serializable;
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Array;
 import java.util.ArrayList;
+
+import javax.crypto.KeyGenerator;
 
 /**
  * The QRCode class keeps track of the code, score, and geolocation of a QR code.
  * Takes photo of an object or location of the QR code.
  */
 public class QRCode implements Parcelable {
-    private String code;
+    private String hash;
     private int score;
     private Location location;
     private ArrayList<String> comments = new ArrayList<>();
@@ -28,12 +38,25 @@ public class QRCode implements Parcelable {
      *      QR code to be hashed
      */
     public QRCode(String code) {
-        // hash and score will be calculated and stored
-        this.code = code;
+        Log.d("debug", "Before hash");
+        try {
+            MessageDigest md = MessageDigest.getInstance("Sha-256");
+            byte[] hashBytes = md.digest(code.getBytes(StandardCharsets.UTF_8));
+            BigInteger number = new BigInteger(1, hashBytes);
+            StringBuilder hexString = new StringBuilder(number.toString(16));
+            while (hexString.length() < 32) {
+                hexString.insert(0, '0');
+            }
+            this.hash = hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        Log.d("debug", hash);
+
     }
 
     protected QRCode(Parcel in) {
-        code = in.readString();
+        hash = in.readString();
         score = in.readInt();
         location = in.readParcelable(Location.class.getClassLoader());
         comments = in.createStringArrayList();
@@ -55,13 +78,13 @@ public class QRCode implements Parcelable {
     /**
      * Calculates the hash/score of a QR code.
      */
+
     public void hashContents() {
-        String contents = code;
-        String hash = Hasher.Companion.hash(contents, HashType.SHA_256);
-        char[] charArray = contents.toCharArray();
+        Log.d("debug", "Scoring");
+        char[] charArray = hash.toCharArray();
         ArrayList<Character> duplicates = new ArrayList<Character>();
-        for (int i = 0; i < contents.length(); i++) {
-            for (int j = i + 1; j < contents.length(); j++) {
+        for (int i = 0; i < hash.length(); i++) {
+            for (int j = i + 1; j < hash.length(); j++) {
                 if (charArray[i] == charArray[j]) {
                     duplicates.add(charArray[j]);
                     break;
@@ -72,15 +95,26 @@ public class QRCode implements Parcelable {
         ArrayList<Integer> dupeCount = new ArrayList<Integer>();
         for (int a = 0; a < charArray.length; a++) {
             int count = 0;
-            for (int b = 0; b < contents.length(); b++) {
-                if (contents.charAt(b) == charArray[a]) {
+            for (int b = 0; b < hash.length(); b++) {
+                if (hash.charAt(b) == charArray[a]) {
                     count++;
                 }
             }
             dupeCount.add(count);
         }
 
-        // this.score = hashedContents; // store this QRCode's score
+        for (int c = 0; c < duplicates.size(); c++) {
+            if (duplicates.get(c) == 0) {
+                int total = (int) Math.pow(20, dupeCount.get(c) - 1);
+                this.score += total;
+            }
+            else {
+                int number = Integer.parseInt(String.valueOf(duplicates.get(c)), 16);
+                int total = (int) Math.pow(number, dupeCount.get(c) - 1);
+                this.score += total;
+            }
+        }
+        System.out.println(this.score);
     }
 
     /**
@@ -88,8 +122,8 @@ public class QRCode implements Parcelable {
      * @return
      *      Return the code
      */
-    public String getCode() {
-        return code;
+    public String getHash() {
+        return hash;
     }
 
     /**
@@ -128,18 +162,6 @@ public class QRCode implements Parcelable {
         return comments;
     }
 
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
-    }
-
     public void setScanned(Boolean scanned) {
         this.scanned = scanned;
     }
@@ -155,7 +177,7 @@ public class QRCode implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(this.code);
+        parcel.writeString(hash);
         parcel.writeInt(this.score);
         parcel.writeList(this.comments);
         parcel.writeByte((byte) (this.scanned ? 1 : 0));
