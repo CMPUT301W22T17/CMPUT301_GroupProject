@@ -1,12 +1,13 @@
 package com.example.superqr;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * The PlayerStats class act as
  * scoring system for a player
  */
-public class PlayerStats {
+public class PlayerStats implements Serializable {
     private ArrayList<QRCode> qrCodes;
     private int counts;
     private int totalScore;

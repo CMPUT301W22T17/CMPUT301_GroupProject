@@ -5,6 +5,7 @@ import android.location.Location;
 import com.himanshurawat.hasher.HashType;
 import com.himanshurawat.hasher.Hasher;
 
+import java.io.Serializable;
 import java.sql.Array;
 import java.util.ArrayList;
 
@@ -12,7 +13,7 @@ import java.util.ArrayList;
  * The QRCode class keeps track of the code, score, and geolocation of a QR code.
  * Takes photo of an object or location of the QR code.
  */
-public class QRCode {
+public class QRCode implements Serializable {
     private String code;
     private int score;
     private Location location;

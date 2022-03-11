@@ -1,6 +1,8 @@
 package com.example.superqr;
 
-public class PlayerSettings {
+import java.io.Serializable;
+
+public class PlayerSettings implements Serializable {
     private String username;
     private String phone;
     private String email;
