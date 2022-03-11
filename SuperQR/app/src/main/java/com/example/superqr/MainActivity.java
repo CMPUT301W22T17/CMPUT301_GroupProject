@@ -60,8 +60,6 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
-
-    // TODO: ACTUALLY IMPLEMENT PROPERLY
     public void checkNewUser(){
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
         //https://stackoverflow.com/questions/35681693/checking-if-shared-preferences-exist
@@ -73,7 +71,6 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, LogInActivity.class);
             startActivity(intent);
         }
-
     }
 
 }
