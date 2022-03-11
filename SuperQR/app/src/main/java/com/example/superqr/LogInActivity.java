@@ -66,10 +66,7 @@ public class LogInActivity extends AppCompatActivity {
                 String userName = usernameEditText.getText().toString();
                 String email = emailEditText.getText().toString();
                 String phone = phoneEditText.getText().toString();
-
-                PlayerSettings playerSettings = new PlayerSettings(userName, phone, email);
-                PlayerStats playerStats = new PlayerStats();
-                Player player = new Player(playerSettings, playerStats);
+                Player player = new Player(userName, phone, email);
                 db.collection("users").document(userName).set(player);
                 SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
