@@ -70,12 +70,8 @@ public class LeaderboardFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_leaderboard,null);
         leaderboardList = view.findViewById(R.id.leaderboard_list);
-        player = new Player();
-        player.getSettings().setUsername("Paul");
-        player.getStats().setHighestScore(100);
         playerList = new ArrayList<>();
-        playerList.add(player);
-        Collections.sort(playerList);
+        //Collections.sort(playerList);
         playerAdapter = new LeaderboardListView(getActivity(), playerList);
         leaderboardList.setAdapter(playerAdapter);
         return view;
