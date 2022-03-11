@@ -106,3 +106,4 @@ public class PlayerStats {
         this.lowestScore = lowestScore;
     }
 }
+

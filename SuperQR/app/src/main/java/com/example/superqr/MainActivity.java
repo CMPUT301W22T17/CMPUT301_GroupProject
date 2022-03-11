@@ -1,16 +1,13 @@
 package com.example.superqr;
 
-import static android.content.ContentValues.TAG;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
@@ -83,9 +80,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.replace(R.id.frame_layout, fragment);
         fragmentTransaction.commit();
     }
-
-
-    // TODO: ACTUALLY IMPLEMENT PROPERLY
+  
     /*public void checkNewUser(){
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
         //https://stackoverflow.com/questions/35681693/checking-if-shared-preferences-exist
@@ -96,10 +91,7 @@ public class MainActivity extends AppCompatActivity {
             editor.commit();
             Intent intent = new Intent(MainActivity.this, LogInActivity.class);
             startActivity(intent);
-        }
-        Intent intent = new Intent(MainActivity.this, LogInActivity.class);
-        startActivity(intent);
-    }*/
+        }*/
 
     private void loadData() {
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
@@ -120,7 +112,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
-
     }
 
 }
