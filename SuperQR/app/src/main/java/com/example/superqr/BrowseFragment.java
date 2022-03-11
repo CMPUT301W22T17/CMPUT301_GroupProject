@@ -99,6 +99,8 @@ public class BrowseFragment extends Fragment implements View.OnClickListener {
                 break;
 
             case R.id.view_ranking_button:
+                Fragment leaderboardFragment = new LeaderboardFragment();
+                displayFragment(leaderboardFragment);
                 break;
 
             case R.id.search_geolocation_button:
