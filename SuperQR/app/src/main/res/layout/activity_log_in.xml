@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LogInActivity"
+    android:gravity="center">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerInParent="true">
+
+        <Button
+            android:id="@+id/existingUserButton"
+            android:layout_width="150dp"
+            android:layout_height="60dp"
+            android:layout_marginBottom="32dp"
+            android:backgroundTint="@color/black"
+            android:text="Existing User"
+            />
+        <Button
+            android:id="@+id/newUserButton"
+            android:layout_width="150dp"
+            android:layout_height="60dp"
+            android:backgroundTint="@color/black"
+            android:text="New User"
+            android:textSize="15sp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerInParent="true">
+        <EditText
+            android:id="@+id/userNameEditText"
+            android:layout_width="150dp"
+            android:layout_height="60dp"
+            android:hint="UserName"
+            android:textSize="20sp"
+            android:visibility="invisible"/>
+        <EditText
+            android:id="@+id/emailEditText"
+            android:layout_width="150dp"
+            android:layout_height="60dp"
+            android:hint="Email"
+            android:inputType="textEmailAddress"
+            android:textSize="20sp"
+            android:visibility="invisible"/>
+
+        <EditText
+            android:id="@+id/phoneEditText"
+            android:layout_width="150dp"
+            android:layout_height="60dp"
+            android:hint="Phone"
+            android:inputType="phone"
+            android:textSize="20sp"
+            android:visibility="invisible"/>
+
+        <Button
+            android:id="@+id/signUpButton"
+            android:layout_width="150dp"
+            android:layout_height="60dp"
+            android:backgroundTint="@color/black"
+            android:text="SIGN UP"
+            android:visibility="invisible" />
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/logInFrameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+    </FrameLayout>
+
+
+</RelativeLayout>
