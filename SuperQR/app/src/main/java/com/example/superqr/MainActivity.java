@@ -3,11 +3,17 @@ package com.example.superqr;
 
 import static android.content.ContentValues.TAG;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -26,6 +32,22 @@ public class MainActivity extends AppCompatActivity {
     Player player;
     FirebaseFirestore db;
     Fragment newFragment;
+
+    // from: https://stackoverflow.com/questions/62671106/onactivityresult-method-is-deprecated-what-is-the-alternative
+    // author: https://stackoverflow.com/users/4147849/muntashir-akon
+    ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent data = result.getData();
+                        player = (Player) data.getParcelableExtra("player");
+                        loadFragments();
+                    }
+                }
+            }
+    );
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         String userName = sharedPreferences.getString("user", "");
         if (userName == "") {
             Intent intent = new Intent(MainActivity.this, LogInActivity.class);
-            startActivity(intent);
+            resultLauncher.launch(intent);
         } else {
             Log.d("username", userName);
             DocumentReference docRef = db.collection("users").document(userName);

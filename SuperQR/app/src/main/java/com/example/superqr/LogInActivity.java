@@ -3,6 +3,7 @@ package com.example.superqr;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -72,6 +73,9 @@ public class LogInActivity extends AppCompatActivity {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("user", userName);
                 editor.apply();
+                Intent i = new Intent(LogInActivity.this, MainActivity.class);
+                i.putExtra("player", player);
+                setResult(RESULT_OK, i);
                 finish();
             }
         });
