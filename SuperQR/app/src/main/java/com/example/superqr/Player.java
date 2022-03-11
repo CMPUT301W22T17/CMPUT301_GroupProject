@@ -8,6 +8,8 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Looper;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -23,29 +25,42 @@ import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.tasks.Task;
 
 
+
 /**
  * Player is the main interface by which most classes are managed by.
  */
 
-public class Player implements Comparable<Player>{
+public class Player implements Parcelable, Comparable<Player> {
     private PlayerSettings settings;
     private PlayerStats stats;
     private Location location;
     private LocationRequest locationRequest = LocationRequest.create();
 
 
-    public Player(PlayerSettings settings, PlayerStats stats) {
-        this.settings = settings;
-        this.stats = stats;
-        this.location = new Location("map_location");
-
-    }
-
-    public Player() {
-        this.settings = new PlayerSettings();
+    public Player(String userName, String phone, String email) {
+        this.settings = new PlayerSettings(userName, phone, email);
         this.stats = new PlayerStats();
         this.location = new Location("map_location");
     }
+
+    protected Player(Parcel in) {
+        settings = in.readParcelable(PlayerSettings.class.getClassLoader());
+        stats = in.readParcelable(PlayerStats.class.getClassLoader());
+        location = in.readParcelable(Location.class.getClassLoader());
+        locationRequest = in.readParcelable(LocationRequest.class.getClassLoader());
+    }
+
+    public static final Creator<Player> CREATOR = new Creator<Player>() {
+        @Override
+        public Player createFromParcel(Parcel in) {
+            return new Player(in);
+        }
+
+        @Override
+        public Player[] newArray(int size) {
+            return new Player[size];
+        }
+    };
 
     public Location getPlayerLocation() {
         return this.location;
@@ -138,6 +153,20 @@ public class Player implements Comparable<Player>{
     }
 
     @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeParcelable(settings, i);
+        parcel.writeParcelable(stats, i);
+        parcel.writeParcelable(location, i);
+        parcel.writeParcelable(locationRequest, i);
+    }
+
+
+    @Override
     public int compareTo(Player player) {
         if (this.stats.getTotalScore() == player.stats.getTotalScore()) {
             return 0;
@@ -148,8 +177,5 @@ public class Player implements Comparable<Player>{
         }
     }
 
-    public PlayerStats getStats() {
-        return stats;
-    }
 
 }

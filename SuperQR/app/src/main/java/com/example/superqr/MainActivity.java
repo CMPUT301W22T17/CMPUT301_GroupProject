@@ -28,8 +28,9 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
-    Player player;
+    Player player = new Player("steve", "123", "123");
     FirebaseFirestore db;
+    Fragment newFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,22 +48,27 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         //we make the default "home" screen profile
-        replaceFragment(new ProfileFragment());
+        newFragment = ProfileFragment.newInstance(player);
+        replaceFragment(newFragment);
 
         //https://www.youtube.com/watch?v=Bb8SgfI4Cm4
         binding.bottomNav.setOnItemSelectedListener(menuItem -> {
             switch (menuItem.getItemId()) {
                 case R.id.profile:
-                    replaceFragment(new ProfileFragment());
+                    newFragment = ProfileFragment.newInstance(player);
+                    replaceFragment(newFragment);
                     break;
                 case R.id.map:
-                    replaceFragment(new MapFragment());
+                    newFragment = MapFragment.newInstance(player);
+                    replaceFragment(newFragment);
                     break;
                 case R.id.scan:
-                    replaceFragment(new ScanFragment());
+                    newFragment = ScanFragment.newInstance(player);
+                    replaceFragment(newFragment);
                     break;
                 case R.id.browse:
-                    replaceFragment(new BrowseFragment());
+                    newFragment = BrowseFragment.newInstance(player);
+                    replaceFragment(newFragment);
                     break;
             }
             return true;
