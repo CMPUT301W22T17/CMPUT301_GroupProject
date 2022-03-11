@@ -137,7 +137,6 @@ public class Player implements Comparable<Player>{
         });
     }
 
-
     @Override
     public int compareTo(Player player) {
         if (this.stats.getTotalScore() == player.stats.getTotalScore()) {
@@ -148,4 +147,9 @@ public class Player implements Comparable<Player>{
             return 1;
         }
     }
+
+    public PlayerStats getStats() {
+        return stats;
+    }
+
 }
