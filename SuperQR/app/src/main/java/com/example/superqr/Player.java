@@ -152,4 +152,14 @@ public class Player implements Comparable<Player>{
         return stats;
     }
 
+    @Override
+    public int compareTo(Player player) {
+        if (this.stats.getHighestScore() == player.stats.getHighestScore()) {
+            return 0;
+        } else if (this.stats.getHighestScore() > player.stats.getHighestScore()) {
+            return -1;
+        } else {
+            return 1;
+        }
+    }
 }
