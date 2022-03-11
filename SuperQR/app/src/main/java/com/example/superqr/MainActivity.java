@@ -22,10 +22,8 @@ public class MainActivity extends AppCompatActivity {
         button = findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Fragment leaderboard = new Leaderboard();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.leaderboardFragment, leaderboard);
-                transaction.commit();
+                getSupportFragmentManager().beginTransaction().add(R.id.container, new leaderboardFragment()).commit();
+                button.setVisibility(View.INVISIBLE);
             }
         });
 
