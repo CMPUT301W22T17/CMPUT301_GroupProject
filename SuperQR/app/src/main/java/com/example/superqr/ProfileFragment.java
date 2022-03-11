@@ -65,8 +65,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
         // https://stackoverflow.com/questions/9931993/passing-an-object-from-an-activity-to-a-fragment
         // get the object from Main
-        setUserInfo();
-        setQRInfo();
+        setUserInfo(profileView);
+        setQRInfo(profileView);
 
         return profileView;
     }
@@ -91,11 +91,11 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     /**
      * Displays the player's personal information
      */
-    public void setUserInfo() {
+    public void setUserInfo(View view) {
         // https://stackoverflow.com/questions/6495898/findviewbyid-in-fragment
-        TextView usernameText = getActivity().findViewById(R.id.player_username);
-        TextView emailText = getActivity().findViewById(R.id.player_email);
-        TextView phoneText = getActivity().findViewById(R.id.player_phone);
+        TextView usernameText = view.findViewById(R.id.player_username);
+        TextView emailText = view.findViewById(R.id.player_email);
+        TextView phoneText = view.findViewById(R.id.player_phone);
 
         /* implement later
         usernameText.setText("player's username");
@@ -103,20 +103,20 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         phoneText.setText("player's phone number");
          */
 
-        /*String userName = player.getSettings().getUsername();
+        String userName = player.getSettings().getUsername();
         String email = player.getSettings().getEmail();
         String phone = player.getSettings().getPhone();
 
         usernameText.setText(userName);
         emailText.setText(email);
-        phoneText.setText(phone);*/
+        phoneText.setText(phone);
 
     }
 
     /**
      * Displays the player's QR stats about total scanned and total score for their QR codes
      */
-    public void setQRInfo() {
+    public void setQRInfo(View view) {
         TextView totalScannedText = getActivity().findViewById(R.id.total_qr_scanned);
         TextView totalScoreText = getActivity().findViewById(R.id.total_qr_score);
 

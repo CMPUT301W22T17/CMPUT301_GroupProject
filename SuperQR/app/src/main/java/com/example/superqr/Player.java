@@ -24,8 +24,6 @@ import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.tasks.Task;
 
-import android.os.Parcel;
-import android.os.Parcelable;
 
 
 /**
@@ -44,6 +42,9 @@ public class Player implements Parcelable, Comparable<Player> {
         this.stats = new PlayerStats();
         this.location = new Location("map_location");
     }
+
+    public Player() {}
+
 
     protected Player(Parcel in) {
         settings = in.readParcelable(PlayerSettings.class.getClassLoader());
