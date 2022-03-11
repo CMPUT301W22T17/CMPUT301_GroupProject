@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SuperQR">
         <activity
-            android:name=".MainActivity"
+            android:name="com.example.superqr.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
