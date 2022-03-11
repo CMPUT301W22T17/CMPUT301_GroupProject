@@ -4,9 +4,10 @@ import android.location.Location;
 
 import com.example.superqr.Player;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Map {
+public class Map implements Serializable {
     protected ArrayList<Location> QRCodeLocations;
     protected Player player;
 

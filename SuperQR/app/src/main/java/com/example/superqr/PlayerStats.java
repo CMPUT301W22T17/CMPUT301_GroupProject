@@ -143,4 +143,3 @@ public class PlayerStats implements Parcelable {
         parcel.writeInt(lowestScore);
     }
 }
-

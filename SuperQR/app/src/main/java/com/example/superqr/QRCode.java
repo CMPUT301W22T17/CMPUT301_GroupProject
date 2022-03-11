@@ -7,7 +7,6 @@ import android.os.Parcelable;
 import com.himanshurawat.hasher.HashType;
 import com.himanshurawat.hasher.Hasher;
 
-import java.io.Serializable;
 import java.sql.Array;
 import java.util.ArrayList;
 

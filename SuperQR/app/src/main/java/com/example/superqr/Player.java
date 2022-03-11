@@ -45,6 +45,9 @@ public class Player implements Parcelable, Comparable<Player> {
         this.location = new Location("map_location");
     }
 
+    public Player() {}
+
+
     protected Player(Parcel in) {
         settings = in.readParcelable(PlayerSettings.class.getClassLoader());
         stats = in.readParcelable(PlayerStats.class.getClassLoader());
@@ -168,16 +171,17 @@ public class Player implements Parcelable, Comparable<Player> {
     }
 
 
+
+
     @Override
     public int compareTo(Player player) {
-        if (this.stats.getTotalScore() == player.stats.getTotalScore()) {
+        if (this.stats.getHighestScore() == player.stats.getHighestScore()) {
             return 0;
-        } else if (this.stats.getTotalScore() > player.stats.getTotalScore()) {
+        } else if (this.stats.getHighestScore() > player.stats.getHighestScore()) {
             return -1;
         } else {
             return 1;
         }
     }
-
 
 }
