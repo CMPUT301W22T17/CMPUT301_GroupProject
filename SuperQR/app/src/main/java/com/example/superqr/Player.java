@@ -7,11 +7,9 @@ import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
-import android.os.Build;
 import android.os.Looper;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -22,7 +20,6 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 
@@ -30,11 +27,19 @@ import com.google.android.gms.tasks.Task;
  * Player is the main interface by which most classes are managed by.
  */
 
-public class Player {
+public class Player implements Comparable<Player>{
     private PlayerSettings settings;
     private PlayerStats stats;
     private Location location;
     private LocationRequest locationRequest = LocationRequest.create();
+
+
+    public Player(PlayerSettings settings, PlayerStats stats) {
+        this.settings = settings;
+        this.stats = stats;
+        this.location = new Location("map_location");
+
+    }
 
     public Player() {
         this.settings = new PlayerSettings();
@@ -133,4 +138,14 @@ public class Player {
     }
 
 
+    @Override
+    public int compareTo(Player player) {
+        if (this.stats.getTotalScore() == player.stats.getTotalScore()) {
+            return 0;
+        } else if (this.stats.getTotalScore() > player.stats.getTotalScore()) {
+            return -1;
+        } else {
+            return 1;
+        }
+    }
 }
