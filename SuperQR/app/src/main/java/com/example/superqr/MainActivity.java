@@ -1,16 +1,13 @@
 package com.example.superqr;
 
-import static android.content.ContentValues.TAG;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
@@ -31,8 +28,9 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
-    Player player;
+    Player player = new Player("steve", "123", "123");
     FirebaseFirestore db;
+    Fragment newFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,22 +48,27 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         //we make the default "home" screen profile
-        replaceFragment(new ProfileFragment());
+        newFragment = ProfileFragment.newInstance(player);
+        replaceFragment(newFragment);
 
         //https://www.youtube.com/watch?v=Bb8SgfI4Cm4
         binding.bottomNav.setOnItemSelectedListener(menuItem -> {
             switch (menuItem.getItemId()) {
                 case R.id.profile:
-                    replaceFragment(new ProfileFragment());
+                    newFragment = ProfileFragment.newInstance(player);
+                    replaceFragment(newFragment);
                     break;
                 case R.id.map:
-                    replaceFragment(new MapFragment());
+                    newFragment = MapFragment.newInstance(player);
+                    replaceFragment(newFragment);
                     break;
                 case R.id.scan:
-                    replaceFragment(new ScanFragment());
+                    newFragment = ScanFragment.newInstance(player);
+                    replaceFragment(newFragment);
                     break;
                 case R.id.browse:
-                    replaceFragment(new BrowseFragment());
+                    newFragment = BrowseFragment.newInstance(player);
+                    replaceFragment(newFragment);
                     break;
             }
             return true;
@@ -83,9 +86,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.replace(R.id.frame_layout, fragment);
         fragmentTransaction.commit();
     }
-
-
-    // TODO: ACTUALLY IMPLEMENT PROPERLY
+  
     /*public void checkNewUser(){
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
         //https://stackoverflow.com/questions/35681693/checking-if-shared-preferences-exist
@@ -96,10 +97,7 @@ public class MainActivity extends AppCompatActivity {
             editor.commit();
             Intent intent = new Intent(MainActivity.this, LogInActivity.class);
             startActivity(intent);
-        }
-        Intent intent = new Intent(MainActivity.this, LogInActivity.class);
-        startActivity(intent);
-    }*/
+        }*/
 
     private void loadData() {
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
@@ -120,7 +118,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
-
     }
 
 }

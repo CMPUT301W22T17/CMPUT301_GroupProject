@@ -1,12 +1,15 @@
 package com.example.superqr;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 
 /**
  * The PlayerStats class act as
  * scoring system for a player
  */
-public class PlayerStats {
+public class PlayerStats implements Parcelable {
     private ArrayList<QRCode> qrCodes;
     private int counts;
     private int totalScore;
@@ -40,6 +43,26 @@ public class PlayerStats {
         this.highestScore = highestScore;
         this.lowestScore = lowestScore;
     }
+
+    protected PlayerStats(Parcel in) {
+        qrCodes = in.createTypedArrayList(QRCode.CREATOR);
+        counts = in.readInt();
+        totalScore = in.readInt();
+        highestScore = in.readInt();
+        lowestScore = in.readInt();
+    }
+
+    public static final Creator<PlayerStats> CREATOR = new Creator<PlayerStats>() {
+        @Override
+        public PlayerStats createFromParcel(Parcel in) {
+            return new PlayerStats(in);
+        }
+
+        @Override
+        public PlayerStats[] newArray(int size) {
+            return new PlayerStats[size];
+        }
+    };
 
     /**
      * gets the QR code a player had scanned
@@ -105,4 +128,19 @@ public class PlayerStats {
     public void setLowestScore(int lowestScore) {
         this.lowestScore = lowestScore;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeTypedList(qrCodes);
+        parcel.writeInt(counts);
+        parcel.writeInt(totalScore);
+        parcel.writeInt(highestScore);
+        parcel.writeInt(lowestScore);
+    }
 }
+

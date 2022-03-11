@@ -1,10 +1,13 @@
 package com.example.superqr;
 
 import android.location.Location;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.himanshurawat.hasher.HashType;
 import com.himanshurawat.hasher.Hasher;
 
+import java.io.Serializable;
 import java.sql.Array;
 import java.util.ArrayList;
 
@@ -12,7 +15,7 @@ import java.util.ArrayList;
  * The QRCode class keeps track of the code, score, and geolocation of a QR code.
  * Takes photo of an object or location of the QR code.
  */
-public class QRCode {
+public class QRCode implements Parcelable {
     private String code;
     private int score;
     private Location location;
@@ -28,6 +31,26 @@ public class QRCode {
         // hash and score will be calculated and stored
         this.code = code;
     }
+
+    protected QRCode(Parcel in) {
+        code = in.readString();
+        score = in.readInt();
+        location = in.readParcelable(Location.class.getClassLoader());
+        comments = in.createStringArrayList();
+        scanned = in.readByte() != 0;
+    }
+
+    public static final Creator<QRCode> CREATOR = new Creator<QRCode>() {
+        @Override
+        public QRCode createFromParcel(Parcel in) {
+            return new QRCode(in);
+        }
+
+        @Override
+        public QRCode[] newArray(int size) {
+            return new QRCode[size];
+        }
+    };
 
     /**
      * Calculates the hash/score of a QR code.
@@ -123,5 +146,21 @@ public class QRCode {
 
     public void setComments(ArrayList<String> comments) {
         this.comments = comments;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(this.code);
+        parcel.writeInt(this.score);
+        parcel.writeList(this.comments);
+        parcel.writeByte((byte) (this.scanned ? 1 : 0));
+        parcel.writeParcelable(this.location, i);
+
+
     }
 }
