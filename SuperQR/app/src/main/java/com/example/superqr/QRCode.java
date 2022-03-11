@@ -104,4 +104,24 @@ public class QRCode {
     public ArrayList<String> getComments() {
         return comments;
     }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    public void setScanned(Boolean scanned) {
+        this.scanned = scanned;
+    }
+
+    public void setComments(ArrayList<String> comments) {
+        this.comments = comments;
+    }
 }

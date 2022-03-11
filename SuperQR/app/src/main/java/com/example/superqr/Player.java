@@ -147,4 +147,9 @@ public class Player implements Comparable<Player>{
             return 1;
         }
     }
+
+    public PlayerStats getStats() {
+        return stats;
+    }
+
 }
