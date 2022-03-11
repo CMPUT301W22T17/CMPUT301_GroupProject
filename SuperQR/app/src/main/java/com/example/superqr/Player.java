@@ -166,16 +166,6 @@ public class Player implements Parcelable, Comparable<Player> {
     }
 
 
-    @Override
-    public int compareTo(Player player) {
-        if (this.stats.getTotalScore() == player.stats.getTotalScore()) {
-            return 0;
-        } else if (this.stats.getTotalScore() > player.stats.getTotalScore()) {
-            return -1;
-        } else {
-            return 1;
-        }
-    }
 
 
     @Override
