@@ -3,10 +3,14 @@ package com.example.superqr;
 import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
-import com.himanshurawat.hasher.HashType;
-import com.himanshurawat.hasher.Hasher;
+import androidx.annotation.VisibleForTesting;
 
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Array;
 import java.util.ArrayList;
 
@@ -15,7 +19,7 @@ import java.util.ArrayList;
  * Takes photo of an object or location of the QR code.
  */
 public class QRCode implements Parcelable {
-    private String code;
+    private String hash;
     private int score;
     private Location location;
     private ArrayList<String> comments = new ArrayList<>();
@@ -27,12 +31,16 @@ public class QRCode implements Parcelable {
      *      QR code to be hashed
      */
     public QRCode(String code) {
-        // hash and score will be calculated and stored
-        this.code = code;
+        try {
+            this.hash = hashCode(code);
+        } catch (NoSuchAlgorithmException e) {
+            System.out.println("Exception thrown for incorrect algorithm: " + e);
+        }
+        this.score = calculateScore(this.hash);
     }
 
     protected QRCode(Parcel in) {
-        code = in.readString();
+        hash = in.readString();
         score = in.readInt();
         location = in.readParcelable(Location.class.getClassLoader());
         comments = in.createStringArrayList();
@@ -51,44 +59,54 @@ public class QRCode implements Parcelable {
         }
     };
 
-    /**
-     * Calculates the hash/score of a QR code.
-     */
-    public void hashContents() {
-        String contents = code;
-        String hash = Hasher.Companion.hash(contents, HashType.SHA_256);
-        char[] charArray = contents.toCharArray();
-        ArrayList<Character> duplicates = new ArrayList<Character>();
-        for (int i = 0; i < contents.length(); i++) {
-            for (int j = i + 1; j < contents.length(); j++) {
-                if (charArray[i] == charArray[j]) {
-                    duplicates.add(charArray[j]);
-                    break;
-                }
+    @VisibleForTesting
+    private String hashCode(String code) throws NoSuchAlgorithmException{
+        // Hashes the code
+        // https://www.geeksforgeeks.org/sha-256-hash-in-java/
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
+        byte[] hashBytes = md.digest(code.getBytes(StandardCharsets.UTF_8));
+        BigInteger number = new BigInteger(1, hashBytes);
+        StringBuilder hexString = new StringBuilder(number.toString(16));
+
+        return hexString.toString();
+    }
+
+    private int calculateScore(String hash) {
+        // Calculate score
+        // https://www.geeksforgeeks.org/java-program-for-hexadecimal-to-decimal-conversion/
+        char[] hashChars = hash.toCharArray();
+        char prevChar = hashChars[0];
+        int duplicates = 0, totalScore = 0, base = 0;
+        for (int i = 1; i < hash.length(); i++) {
+            if (hashChars[i] == prevChar) {
+                duplicates += 1;
             }
+            else if (duplicates != 0) {
+                if (prevChar == '0') {
+                    base = 20;
+                }
+                else if (prevChar >= '1' && prevChar <= '9') { // 1-9
+                    base = prevChar - 48; // 2-9
+                }
+                else if (prevChar >= 'a' && prevChar <= 'g') { // a-g
+                    base = prevChar - 87; // 10-16
+                }
+                totalScore += Math.pow(base, duplicates); // base^duplicates
+                duplicates = 0;
+            }
+            prevChar = hashChars[i];
         }
 
-        ArrayList<Integer> dupeCount = new ArrayList<Integer>();
-        for (int a = 0; a < charArray.length; a++) {
-            int count = 0;
-            for (int b = 0; b < contents.length(); b++) {
-                if (contents.charAt(b) == charArray[a]) {
-                    count++;
-                }
-            }
-            dupeCount.add(count);
-        }
-
-        // this.score = hashedContents; // store this QRCode's score
+        return totalScore;
     }
 
     /**
-     * Returns the string of a QR code
+     * Returns the hash of a QR code.
      * @return
      *      Return the code
      */
-    public String getCode() {
-        return code;
+    public String getHash() {
+        return hash;
     }
 
     /**
@@ -127,24 +145,12 @@ public class QRCode implements Parcelable {
         return comments;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void isScanned(boolean scanned) {
+        this.scanned = true;
     }
 
-    public void setScore(int score) {
-        this.score = score;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
-    }
-
-    public void setScanned(Boolean scanned) {
-        this.scanned = scanned;
-    }
-
-    public void setComments(ArrayList<String> comments) {
-        this.comments = comments;
+    public void addComment(String comment) {
+        this.comments.add(comment);
     }
 
     @Override
@@ -154,7 +160,7 @@ public class QRCode implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(this.code);
+        parcel.writeString(this.hash);
         parcel.writeInt(this.score);
         parcel.writeList(this.comments);
         parcel.writeByte((byte) (this.scanned ? 1 : 0));
