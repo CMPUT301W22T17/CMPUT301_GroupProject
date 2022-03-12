@@ -32,7 +32,6 @@ public class SearchGeolocationFragment extends Fragment {
     private static final String playerKey = "playerKey";
     private Player player;
     private Map map;
-    private FirebaseFirestore db;
 
     public SearchGeolocationFragment() {
         // Required empty public constructor
@@ -65,15 +64,11 @@ public class SearchGeolocationFragment extends Fragment {
         View searchGeoView = inflater.inflate(R.layout.fragment_search_geolocation, container, false);
 
         nearbyQRList = searchGeoView.findViewById(R.id.nearby_qr_codes);
-        db = FirebaseFirestore.getInstance();
-        map = new Map();
-
-        map.addQRLocations(db.collection("qrcodes"));
+        map = new Map(player);
 
         nearbyQRCodes = map.getQRLocations();
         nearbyQRAdapter = new QRGeolocationListView(requireContext(), nearbyQRCodes);
         nearbyQRList.setAdapter(nearbyQRAdapter);
-
 
         return searchGeoView;
     }
