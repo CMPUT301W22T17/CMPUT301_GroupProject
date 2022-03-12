@@ -65,9 +65,11 @@ public class SearchGeolocationFragment extends Fragment {
         View searchGeoView = inflater.inflate(R.layout.fragment_search_geolocation, container, false);
 
         nearbyQRList = searchGeoView.findViewById(R.id.nearby_qr_codes);
-
+        db = FirebaseFirestore.getInstance();
         map = new Map();
+
         map.addQRLocations(db.collection("qrcodes"));
+
         nearbyQRCodes = map.getQRLocations();
         nearbyQRAdapter = new QRGeolocationListView(requireContext(), nearbyQRCodes);
         nearbyQRList.setAdapter(nearbyQRAdapter);
