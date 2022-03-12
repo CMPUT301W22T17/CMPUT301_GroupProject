@@ -163,7 +163,8 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
     }
 
     /**
-     * Adds QRCcode to the player and updates the database.
+     * Adds QRCcode to the player,updates the database, and update's the player's
+     * QRCode stats as necessary.
      * @param qrCode
      */
     @Override
@@ -171,6 +172,23 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
         PlayerStats playerStats = player.getStats();
         Log.d("debug", String.valueOf(playerStats.getQrCodes()));
         playerStats.addQrCode(qrCode);
+        playerStats.setCounts();
+        playerStats.setTotalScore(qrCode.getScore());
+
+        int highScore = playerStats.getQrCodes().get(0).getScore();
+        int lowScore = playerStats.getQrCodes().get(0).getScore();
+        for (int i = 0; i < playerStats.getQrCodes().size(); i++) {
+            if (playerStats.getQrCodes().get(i).getScore() > highScore) {
+                highScore = playerStats.getQrCodes().get(i).getScore();
+            }
+            else if (playerStats.getQrCodes().get(i).getScore() < lowScore) {
+                lowScore = playerStats.getQrCodes().get(i).getScore();
+            }
+        }
+
+        playerStats.setHighestScore(highScore);
+        playerStats.setLowestScore(lowScore);
+
         Log.d("deb", String.valueOf(playerStats.getQrCodes()));
         player.setStats(playerStats);
         db.collection("users").document(player.getSettings().getUsername()).update(

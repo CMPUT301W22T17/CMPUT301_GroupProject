@@ -17,7 +17,7 @@ public class PlayerStats implements Parcelable {
     private int lowestScore;
 
     /**
-     * Creates an PlayerStats object
+     * Creates a PlayerStats object
      *
      */
     public PlayerStats() {
@@ -120,15 +120,15 @@ public class PlayerStats implements Parcelable {
     public void addQrCode(QRCode qrCode) {
 
         this.qrCodes.add(qrCode);
+
     }
 
     /**
-     * sets the number of QR codes the player has scanned
-     * @param counts
+     * increments number of QR codes the player has scanned
      */
-    public void setCounts(int counts) {
+    public void setCounts() {
 
-        this.counts = counts;
+        this.counts += 1;
     }
 
     /**
@@ -137,7 +137,7 @@ public class PlayerStats implements Parcelable {
      */
     public void setTotalScore(int totalScore) {
 
-        this.totalScore = totalScore;
+        this.totalScore += totalScore;
     }
 
     /**
