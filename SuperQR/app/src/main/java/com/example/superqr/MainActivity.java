@@ -9,33 +9,52 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.Manifest;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
+
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.example.superqr.databinding.ActivityMainBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import org.w3c.dom.Text;
 
-public class MainActivity extends AppCompatActivity implements ScanFragment.ScanFragmentListener{
+
+public class MainActivity extends AppCompatActivity implements EditInfoFragment.OnFragmentInteractionListenerm, ScanFragment.ScanFragmentListener {
 
     private ActivityMainBinding binding;
     Player player;
     FirebaseFirestore db;
     Fragment newFragment;
+    LocationManager locationManager;
 
     // from: https://stackoverflow.com/questions/62671106/onactivityresult-method-is-deprecated-what-is-the-alternative
     // author: https://stackoverflow.com/users/4147849/muntashir-akon
+    // used to pass Player object through into fragments.
     ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
@@ -55,7 +74,6 @@ public class MainActivity extends AppCompatActivity implements ScanFragment.Scan
 
         db = FirebaseFirestore.getInstance();
         // Get a top level reference to the collection
-
         loadData();
     }
 
@@ -70,7 +88,9 @@ public class MainActivity extends AppCompatActivity implements ScanFragment.Scan
         fragmentTransaction.commit();
     }
 
-
+    /**
+     * Load user profile from database.
+     */
     private void loadData() {
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
         String userName = sharedPreferences.getString("user", "");
@@ -103,6 +123,9 @@ public class MainActivity extends AppCompatActivity implements ScanFragment.Scan
         }
     }
 
+    /**
+     * Load fragments for main activity, and handle requests for location and such.
+     */
     public void loadFragments(){
         // All fragments are launched from this main activity.
         // When clicking on the navigation buttons, we open a new fragment to display
@@ -121,6 +144,7 @@ public class MainActivity extends AppCompatActivity implements ScanFragment.Scan
                     replaceFragment(newFragment);
                     break;
                 case R.id.map:
+                    requestLocation();
                     newFragment = MapFragment.newInstance(player);
                     replaceFragment(newFragment);
                     break;
@@ -129,6 +153,7 @@ public class MainActivity extends AppCompatActivity implements ScanFragment.Scan
                     replaceFragment(newFragment);
                     break;
                 case R.id.browse:
+                    requestLocation();
                     newFragment = BrowseFragment.newInstance(player);
                     replaceFragment(newFragment);
                     break;
@@ -150,5 +175,121 @@ public class MainActivity extends AppCompatActivity implements ScanFragment.Scan
         player.setPlayerStats(playerStats);
         db.collection("users").document(player.getSettings().getUsername()).update(
                 "stats.qrCodes", FieldValue.arrayUnion(qrCode));
+    }
+
+    @Override
+    public void onOkPressed(String newUsername, String newEmail, String newPhone) {
+        String name = player.getSettings().getUsername();
+        if (name.equals(newUsername) || newUsername.isEmpty()) {
+            player.getSettings().setEmail(newEmail);
+            player.getSettings().setPhone(newPhone);
+            db.collection("users").document(name)
+                    .update(
+                            "settings.email", newEmail,
+                            "settings.phone", newPhone
+                    );
+            PlayerSettings ps = player.getSettings();
+            ps.setEmail(newEmail);
+            ps.setPhone(newPhone);
+            player.setSettings(ps);
+            Toast.makeText(MainActivity.this, "Successful Update...", Toast.LENGTH_LONG).show();
+        }
+        else {
+            DocumentReference docRef = db.collection("users").document(newUsername);
+            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    Log.d(TAG, "onComplete: executing");
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            Log.d(TAG, "onComplete: data does exist");
+                            // do not add
+                            Toast.makeText(MainActivity.this, "Unsuccessful Update. Username already exists...", Toast.LENGTH_LONG).show();
+                        } else {
+                            // rename and add to database
+                            Log.d(TAG, "onComplete: data not exist");
+                            // delete existing user collection
+                            DocumentReference docRefOldName = db.collection("users")
+                                    .document(player.getSettings().getUsername());
+                            docRefOldName.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void unused) {
+                                    Log.d(TAG, "DocumentSnapShot successfuly deleted");
+                                }
+                            });
+                            PlayerSettings ps = player.getSettings();
+                            ps.setUsername(newUsername);
+                            ps.setEmail(newEmail);
+                            ps.setPhone(newPhone);
+                            player.setSettings(ps);
+                            // create new document references to newUsername
+                            db.collection("users").document(newUsername).set(player);
+                            SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString("user", newUsername);
+                            editor.apply();
+                        }
+                    } else {
+                        Log.d(TAG, "get failed with", task.getException());
+                    }
+                }
+            });
+        }
+        newFragment = ProfileFragment.newInstance(player);
+        replaceFragment(newFragment);
+    }
+
+    /**
+     * Used to request location from user. If gps is enabled, update player location, else, enable GPS.
+     */
+    private void requestLocation(){
+        ActivityCompat.requestPermissions( this,
+                new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            OnGPS();
+        }
+        else {
+            getLocation();
+        }
+    }
+
+    /**
+     * Gets location from GPS, then updates the player location.
+     */
+    private void getLocation() {
+        if (ActivityCompat.checkSelfPermission(
+                MainActivity.this,Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        } else {
+            Location locationGPS = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if (locationGPS != null) {
+                player.setPlayerLocation(locationGPS.getLatitude(), locationGPS.getLongitude());
+            } else {
+                Toast.makeText(this, "Unable to find location.", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    /**
+     * Checks if user has enabled GPS or not
+     */
+    private void OnGPS() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Enable GPS").setCancelable(false).setPositiveButton("Yes", new  DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+            }
+        }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        final AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 }

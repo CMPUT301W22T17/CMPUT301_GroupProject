@@ -58,16 +58,16 @@ public class BrowseFragment extends Fragment implements View.OnClickListener {
         // Inflate the layout for this fragment
         View browseView = inflater.inflate(R.layout.fragment_browse, container, false);
 
-        playerSearchButton = (Button) browseView.findViewById(R.id.player_search_button);
+        playerSearchButton = browseView.findViewById(R.id.player_search_button);
         playerSearchButton.setOnClickListener(this);
 
-        viewRankingButton = (Button) browseView.findViewById(R.id.view_ranking_button);
+        viewRankingButton =  browseView.findViewById(R.id.view_ranking_button);
         viewRankingButton.setOnClickListener(this);
 
-        viewCodesButton = (Button) browseView.findViewById(R.id.view_codes_button);
+        viewCodesButton = browseView.findViewById(R.id.view_codes_button);
         viewCodesButton.setOnClickListener(this);
 
-        searchGeolocationButton = (Button) browseView.findViewById(R.id.search_geolocation_button);
+        searchGeolocationButton = browseView.findViewById(R.id.search_geolocation_button);
         searchGeolocationButton.setOnClickListener(this);
         showButtons();
 
@@ -81,7 +81,6 @@ public class BrowseFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.player_search_button:
                 // https://stackoverflow.com/questions/16728426/android-nested-fragment-approach
-
                 Fragment searchPlayerFragment = new SearchPlayerFragment();
                 displayFragment(searchPlayerFragment);
                 break;
@@ -105,6 +104,10 @@ public class BrowseFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    /**
+     * Places a fragment on frame_layout in the main activity
+     * @param fragment
+     */
     public void displayFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
 
@@ -115,6 +118,9 @@ public class BrowseFragment extends Fragment implements View.OnClickListener {
         hideButtons();
     }
 
+    /**
+     * Hide buttons when a choice is clicked
+     */
     public void hideButtons() {
         playerSearchButton.setVisibility(View.INVISIBLE);
         viewRankingButton.setVisibility(View.INVISIBLE);
@@ -122,6 +128,9 @@ public class BrowseFragment extends Fragment implements View.OnClickListener {
         searchGeolocationButton.setVisibility(View.INVISIBLE);
     }
 
+    /**
+     * Show the buttons in the fragment
+     */
     public void showButtons() {
         playerSearchButton.setVisibility(View.VISIBLE);
         viewRankingButton.setVisibility(View.VISIBLE);
