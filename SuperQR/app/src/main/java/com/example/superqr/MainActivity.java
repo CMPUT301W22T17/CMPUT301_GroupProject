@@ -28,17 +28,23 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
+
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.superqr.databinding.ActivityMainBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import org.w3c.dom.Text;
 
-public class MainActivity extends AppCompatActivity {
+
+public class MainActivity extends AppCompatActivity implements EditInfoFragment.OnFragmentInteractionListener, ScanFragment.ScanFragmentListener {
 
     private ActivityMainBinding binding;
     Player player;
@@ -143,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
                     replaceFragment(newFragment);
                     break;
                 case R.id.scan:
-                    newFragment = ScanFragment.newInstance(player);
+                    newFragment = ScanFragment.newInstance(player, 0);
                     replaceFragment(newFragment);
                     break;
                 case R.id.browse:
@@ -154,6 +160,84 @@ public class MainActivity extends AppCompatActivity {
             }
             return true;
         });
+    }
+
+    /**
+     * Adds QRCcode to the player and updates the database.
+     * @param qrCode
+     */
+    @Override
+    public void onQRScanned(QRCode qrCode) {
+        PlayerStats playerStats = player.getStats();
+        Log.d("debug", String.valueOf(playerStats.getQrCodes()));
+        playerStats.addQrCode(qrCode);
+        Log.d("deb", String.valueOf(playerStats.getQrCodes()));
+        player.setStats(playerStats);
+        db.collection("users").document(player.getSettings().getUsername()).update(
+                "stats.qrCodes", FieldValue.arrayUnion(qrCode));
+    }
+
+    @Override
+    public void onOkPressed(String newUsername, String newEmail, String newPhone) {
+        String name = player.getSettings().getUsername();
+        if (name.equals(newUsername) || newUsername.isEmpty()) {
+            player.getSettings().setEmail(newEmail);
+            player.getSettings().setPhone(newPhone);
+            db.collection("users").document(name)
+                    .update(
+                            "settings.email", newEmail,
+                            "settings.phone", newPhone
+                    );
+            PlayerSettings ps = player.getSettings();
+            ps.setEmail(newEmail);
+            ps.setPhone(newPhone);
+            player.setSettings(ps);
+            Toast.makeText(MainActivity.this, "Successful Update...", Toast.LENGTH_LONG).show();
+        }
+        else {
+            DocumentReference docRef = db.collection("users").document(newUsername);
+            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    Log.d(TAG, "onComplete: executing");
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            Log.d(TAG, "onComplete: data does exist");
+                            // do not add
+                            Toast.makeText(MainActivity.this, "Unsuccessful Update. Username already exists...", Toast.LENGTH_LONG).show();
+                        } else {
+                            // rename and add to database
+                            Log.d(TAG, "onComplete: data not exist");
+                            // delete existing user collection
+                            DocumentReference docRefOldName = db.collection("users")
+                                    .document(player.getSettings().getUsername());
+                            docRefOldName.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void unused) {
+                                    Log.d(TAG, "DocumentSnapShot successfuly deleted");
+                                }
+                            });
+                            PlayerSettings ps = player.getSettings();
+                            ps.setUsername(newUsername);
+                            ps.setEmail(newEmail);
+                            ps.setPhone(newPhone);
+                            player.setSettings(ps);
+                            // create new document references to newUsername
+                            db.collection("users").document(newUsername).set(player);
+                            SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString("user", newUsername);
+                            editor.apply();
+                        }
+                    } else {
+                        Log.d(TAG, "get failed with", task.getException());
+                    }
+                }
+            });
+        }
+        newFragment = ProfileFragment.newInstance(player);
+        replaceFragment(newFragment);
     }
 
     /**
@@ -208,5 +292,4 @@ public class MainActivity extends AppCompatActivity {
         final AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
-
 }
