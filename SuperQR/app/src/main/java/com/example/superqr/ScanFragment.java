@@ -106,6 +106,7 @@ public class ScanFragment extends Fragment {
                     public void run() {
                         // Testing to see the string of the scanned QR code
                         // Change code later to create a QRCode object or scan user's QR codes
+                        QRCode newQRCode = new QRCode(result.getText());
                         Toast.makeText(activity, result.getText(), Toast.LENGTH_SHORT).show();
                     }
                 });
