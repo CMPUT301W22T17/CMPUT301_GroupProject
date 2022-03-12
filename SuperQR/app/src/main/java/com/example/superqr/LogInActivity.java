@@ -80,11 +80,4 @@ public class LogInActivity extends AppCompatActivity {
             }
         });
     }
-
-   /* private void saveData(String userName) {
-        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("user", userName);
-        editor.apply();
-    }*/
 }
