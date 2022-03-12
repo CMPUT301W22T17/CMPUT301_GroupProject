@@ -6,4 +6,5 @@
     <string name="Map">Map</string>
     <string name="Scan">Scan</string>
     <string name="Browse">Browse</string>
+    <string name="New_User">New User</string>
 </resources>
