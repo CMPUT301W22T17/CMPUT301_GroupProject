@@ -83,6 +83,7 @@ public class Player implements Parcelable, Comparable<Player> {
 
     public void setSettings(PlayerSettings settings) {
         this.settings = settings;
+
     }
 
     public void setStats(PlayerStats stats) {

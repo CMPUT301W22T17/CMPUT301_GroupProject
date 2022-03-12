@@ -38,12 +38,13 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.w3c.dom.Text;
 
 
-public class MainActivity extends AppCompatActivity implements EditInfoFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements EditInfoFragment.OnFragmentInteractionListenerm, ScanFragment.ScanFragmentListener {
 
     private ActivityMainBinding binding;
     Player player;
@@ -148,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
                     replaceFragment(newFragment);
                     break;
                 case R.id.scan:
-                    newFragment = ScanFragment.newInstance(player);
+                    newFragment = ScanFragment.newInstance(player, 0);
                     replaceFragment(newFragment);
                     break;
                 case R.id.browse:
@@ -161,6 +162,20 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
         });
     }
 
+    /**
+     * Adds QRCcode to the player and updates the database.
+     * @param qrCode
+     */
+    @Override
+    public void onQRScanned(QRCode qrCode) {
+        PlayerStats playerStats = player.getStats();
+        Log.d("debug", String.valueOf(playerStats.getQrCodes()));
+        playerStats.addQrCode(qrCode);
+        Log.d("deb", String.valueOf(playerStats.getQrCodes()));
+        player.setPlayerStats(playerStats);
+        db.collection("users").document(player.getSettings().getUsername()).update(
+                "stats.qrCodes", FieldValue.arrayUnion(qrCode));
+    }
 
     @Override
     public void onOkPressed(String newUsername, String newEmail, String newPhone) {
@@ -277,5 +292,4 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
         final AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
-
 }
