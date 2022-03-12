@@ -99,13 +99,10 @@ public class MapFragment extends Fragment {
 
 
         player= (Player) getArguments().getParcelable(playerKey);
-        player.updateLocation(getActivity());
 
         controller = new MapController(map);
         mapInfo = new Map();
-        //playerPoint = new GeoPoint(player.getPlayerLocation().getLatitude(), player.getPlayerLocation().getLongitude());
-
-        playerPoint = new GeoPoint(53.5232, 113.5263);
+        playerPoint = new GeoPoint(player.getPlayerLocation());
 
         createLocationIcons();
         setToUserLocation();

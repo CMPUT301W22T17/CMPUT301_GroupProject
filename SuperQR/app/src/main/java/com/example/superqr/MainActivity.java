@@ -5,13 +5,25 @@ import static android.content.ContentValues.TAG;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
+import android.Manifest;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
+import android.widget.Toast;
+
 import com.example.superqr.databinding.ActivityMainBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -26,13 +38,13 @@ public class MainActivity extends AppCompatActivity {
     Player player;
     FirebaseFirestore db;
     Fragment newFragment;
+    LocationManager locationManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         db = FirebaseFirestore.getInstance();
         // Get a top level reference to the collection
-
         loadData();
     }
 
@@ -98,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
                     replaceFragment(newFragment);
                     break;
                 case R.id.map:
+                    requestLocation();
                     newFragment = MapFragment.newInstance(player);
                     replaceFragment(newFragment);
                     break;
@@ -106,12 +119,57 @@ public class MainActivity extends AppCompatActivity {
                     replaceFragment(newFragment);
                     break;
                 case R.id.browse:
+                    requestLocation();
                     newFragment = BrowseFragment.newInstance(player);
                     replaceFragment(newFragment);
                     break;
             }
             return true;
         });
+    }
+
+    private void requestLocation(){
+        ActivityCompat.requestPermissions( this,
+                new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            OnGPS();
+        }
+        else {
+            getLocation();
+        }
+    }
+
+    private void getLocation() {
+        if (ActivityCompat.checkSelfPermission(
+                MainActivity.this,Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        } else {
+            Location locationGPS = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if (locationGPS != null) {
+                player.setPlayerLocation(locationGPS.getLatitude(), locationGPS.getLongitude());
+            } else {
+                Toast.makeText(this, "Unable to find location.", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void OnGPS() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Enable GPS").setCancelable(false).setPositiveButton("Yes", new  DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+            }
+        }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        final AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
 }
