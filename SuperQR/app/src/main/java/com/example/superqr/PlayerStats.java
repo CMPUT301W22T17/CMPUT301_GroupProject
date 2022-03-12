@@ -109,8 +109,8 @@ public class PlayerStats implements Parcelable {
         return lowestScore;
     }
 
-    public void setQrCodes(ArrayList<QRCode> qrCodes) {
-        this.qrCodes = qrCodes;
+    public void addQrCode(QRCode qrCode) {
+        this.qrCodes.add(qrCode);
     }
 
     public void setCounts(int counts) {

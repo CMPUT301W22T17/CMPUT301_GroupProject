@@ -1,8 +1,11 @@
 package com.example.superqr;
 
+import static java.lang.System.exit;
+
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -17,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.provider.Settings;
 import android.util.Log;
@@ -42,6 +46,7 @@ import com.karumi.dexter.listener.PermissionRequestErrorListener;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.karumi.dexter.listener.single.PermissionListener;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -60,6 +65,13 @@ public class ScanFragment extends Fragment {
     private Player player;
     private CodeScanner codeScanner;
     private boolean cameraDenied; // permission permanently denied
+    private ScanFragmentListener listener;
+    private int scanAction;
+
+    // https://stackoverflow.com/questions/35091857/passing-object-from-fragment-to-activity
+    public interface ScanFragmentListener {
+        void onQRScanned(QRCode qrCode);
+    }
 
 
     public ScanFragment() {
@@ -74,10 +86,11 @@ public class ScanFragment extends Fragment {
      * @return A new instance of fragment ScanFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ScanFragment newInstance(Player player) {
+    public static ScanFragment newInstance(Player player, int scanAction) {
         ScanFragment fragment = new ScanFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable(playerKey, player);
+        bundle.putInt("scanAction", scanAction);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -93,10 +106,10 @@ public class ScanFragment extends Fragment {
         // Inflate the layout for this fragment
         // https://www.youtube.com/watch?v=Iuj4CuWjYF8
         player = (Player) getArguments().getParcelable(playerKey);
+        scanAction = getArguments().getInt("scanAction");
         final Activity activity = getActivity();
         View root = inflater.inflate(R.layout.fragment_scan, container, false);
         CodeScannerView codeScannerView = root.findViewById(R.id.scanner_view);
-        TextView testTextView = root.findViewById(R.id.qr_scan_testing);
         codeScanner = new CodeScanner(activity, codeScannerView);
         codeScanner.setDecodeCallback(new DecodeCallback() {
             @Override
@@ -106,8 +119,30 @@ public class ScanFragment extends Fragment {
                     public void run() {
                         // Testing to see the string of the scanned QR code
                         // Change code later to create a QRCode object or scan user's QR codes
-                        QRCode newQRCode = new QRCode(result.getText());
-                        Toast.makeText(activity, result.getText(), Toast.LENGTH_SHORT).show();
+                        boolean sameHash = false;
+                        if (scanAction == 0) { // generate QR code scan
+                            QRCode qrCode = new QRCode(result.getText());
+                            ArrayList<QRCode> playerCodes = player.getStats().getQrCodes();
+                            for (int i = 0; i < playerCodes.size(); i++) {
+                                if (qrCode.getHash().equals(playerCodes.get(i).getHash())) {
+                                    sameHash = true;
+                                    Toast.makeText(activity, "Cannot scan, QR code has already been scanned", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                            if (!sameHash) {
+                                listener.onQRScanned(qrCode); // Sends QRCode object to MainActivity
+                                Toast.makeText(activity, result.getText(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        else if (scanAction == 1) { // Login scan
+
+                        }
+
+                        else if (scanAction == 2) { // Show player profile
+
+                        }
+
                     }
                 });
             }
@@ -119,6 +154,20 @@ public class ScanFragment extends Fragment {
             }
         });
         return root;
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof ScanFragmentListener) {
+            listener = (ScanFragmentListener) context;
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        listener = null;
+        super.onDetach();
     }
 
     @Override

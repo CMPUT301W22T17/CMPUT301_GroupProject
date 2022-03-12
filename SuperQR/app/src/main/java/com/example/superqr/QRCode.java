@@ -25,6 +25,11 @@ public class QRCode implements Parcelable {
     private ArrayList<String> comments = new ArrayList<>();
     private boolean scanned = false;
 
+    // Firebase requirement
+    public QRCode() {
+
+    }
+
     /**
      * Creates a QRCode object.
      * @param code
