@@ -18,15 +18,18 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
+
 import com.example.superqr.databinding.ActivityMainBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements EditInfoFragment.OnFragmentInteractionListener {
 
     private ActivityMainBinding binding;
     Player player;
@@ -136,4 +139,63 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onOkPressed(String newUsername, String newEmail, String newPhone) {
+        String name = player.getSettings().getUsername();
+        if (name.equals(newUsername) || newUsername.isEmpty()) {
+            player.getSettings().setEmail(newEmail);
+            player.getSettings().setPhone(newPhone);
+            db.collection("users").document(name)
+                    .update(
+                            "settings.email", newEmail,
+                            "settings.phone", newPhone
+                    );
+            PlayerSettings ps = player.getSettings();
+            ps.setEmail(newEmail);
+            ps.setPhone(newPhone);
+            player.setSettings(ps);
+            Toast.makeText(MainActivity.this, "Successful Update...", Toast.LENGTH_LONG).show();
+        }
+        else {
+            DocumentReference docRef = db.collection("users").document(newUsername);
+            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    Log.d(TAG, "onComplete: executing");
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            Log.d(TAG, "onComplete: data does exist");
+                            // do not add
+                            Toast.makeText(MainActivity.this, "Unsuccessful Update. Username already exists...", Toast.LENGTH_LONG).show();
+                        } else {
+                            // should handle this
+                            // rename and add to database
+                            Log.d(TAG, "onComplete: data not exist");
+                            DocumentReference docRefOldName = db.collection("users")
+                                    .document(player.getSettings().getUsername());
+                            docRefOldName.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void unused) {
+                                    Log.d(TAG, "DocumentSnapShot successfuly deleted");
+                                }
+                            });
+                            PlayerSettings ps = player.getSettings();
+                            ps.setUsername(newUsername);
+                            ps.setEmail(newEmail);
+                            ps.setPhone(newPhone);
+                            player.setSettings(ps);
+                            db.collection("users").document(newUsername).set(player);
+                            SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString("user", newUsername);
+                            editor.apply();
+                        }
+                    } else {
+                        Log.d(TAG, "get failed with", task.getException());
+                    }
+                }
+            });
+        }
+    }
 }

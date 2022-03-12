@@ -1,16 +1,31 @@
 package com.example.superqr;
 
+import static android.content.ContentValues.TAG;
+import static android.content.Context.MODE_PRIVATE;
+
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,7 +40,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     private Player player;
     private Button qrHighScoreButton;
     private Button qrLowScoreButton;
-
+    private Button editInfoButton;
+    private FirebaseFirestore db;
     public ProfileFragment() {
         // Required empty public constructor
     }
@@ -48,6 +64,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        db = FirebaseFirestore.getInstance();
+
     }
 
     @Override
@@ -60,6 +78,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
         qrLowScoreButton = (Button) profileView.findViewById(R.id.view_low_score_button);
         qrLowScoreButton.setOnClickListener(this);
+        editInfoButton = (Button) profileView.findViewById(R.id.edit_player_info_button);
+        editInfoButton.setOnClickListener(this);
 
         player = (Player) getArguments().getParcelable(playerKey);
 
@@ -80,12 +100,22 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 // https://stackoverflow.com/questions/25887373/calling-dialogfragment-from-fragment-not-fragmentactivity
                 DialogFragment highQRScoreFragment = new ViewQRScoreFragment("2");
                 highQRScoreFragment.show(getActivity().getSupportFragmentManager(), "high_qr_dialog");
+                break;
 
             case R.id.view_low_score_button:
                 // replace 1 with the low qr score player has
                 DialogFragment lowQRScoreFragment = new ViewQRScoreFragment("1");
                 lowQRScoreFragment.show(getActivity().getSupportFragmentManager(), "high_qr_dialog");
+                break;
+            case R.id.edit_player_info_button:
+                editInfo();
+                break;
         }
+    }
+
+    private void editInfo() {
+        EditInfoFragment editInfoFragment = new EditInfoFragment(player);
+        editInfoFragment.show(getActivity().getSupportFragmentManager(), "edit info");
     }
 
     /**
@@ -126,4 +156,62 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
          */
     }
 
+    /*@Override
+    public void onOkPressed(String newUsername, String newEmail, String newPhone) {
+        if (player.getSettings().getUsername() == newUsername || newUsername.isEmpty()) {
+            player.getSettings().setEmail(newEmail);
+            player.getSettings().setPhone(newPhone);
+            db.collection("users").document()
+                    .update(
+                            "settings.email", newEmail,
+                            "settings.phone", newPhone
+                    );
+            PlayerSettings ps = player.getSettings();
+            ps.setEmail(newEmail);
+            ps.setPhone(newPhone);
+            player.setSettings(ps);
+            Toast.makeText(getActivity(), "Successful Update...", Toast.LENGTH_LONG).show();
+        }
+        else {
+            DocumentReference docRef = db.collection("users").document(newUsername);
+            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    Log.d(TAG, "onComplete: executing");
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            Log.d(TAG, "onComplete: data does exist");
+                            // do not add
+                            Toast.makeText(getActivity(), "Unsuccessful Update. Username already exists...", Toast.LENGTH_LONG).show();
+                        } else {
+                            // should handle this
+                            // rename and add to database
+                            Log.d(TAG, "onComplete: data not exist");
+                            DocumentReference docRefOldName = db.collection("users")
+                                    .document(player.getSettings().getUsername());
+                            docRefOldName.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void unused) {
+                                    Log.d(TAG, "DocumentSnapShot successfuly deleted");
+                                }
+                            });
+                            PlayerSettings ps = player.getSettings();
+                            ps.setUsername(newUsername);
+                            ps.setEmail(newEmail);
+                            ps.setPhone(newPhone);
+                            player.setSettings(ps);
+                            db.collection("users").document().set(player);
+                            SharedPreferences sharedPreferences = getActivity().getSharedPreferences("shared preferences", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString("user", newUsername);
+                            editor.apply();
+                        }
+                    } else {
+                        Log.d(TAG, "get failed with", task.getException());
+                    }
+                }
+            });
+        }
+    }*/
 }

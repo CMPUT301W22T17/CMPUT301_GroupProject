@@ -77,6 +77,14 @@ public class Player implements Parcelable, Comparable<Player> {
         return this.stats;
     }
 
+    public void setSettings(PlayerSettings settings) {
+        this.settings = settings;
+    }
+
+    public void setStats(PlayerStats stats) {
+        this.stats = stats;
+    }
+
     public void updateLocation(Activity activity){
         if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             if (isGPSEnabled(activity)) {
