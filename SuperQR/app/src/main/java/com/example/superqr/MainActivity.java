@@ -44,7 +44,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import org.w3c.dom.Text;
 
 
-public class MainActivity extends AppCompatActivity implements EditInfoFragment.OnFragmentInteractionListenerm, ScanFragment.ScanFragmentListener {
+public class MainActivity extends AppCompatActivity implements EditInfoFragment.OnFragmentInteractionListener, ScanFragment.ScanFragmentListener {
 
     private ActivityMainBinding binding;
     Player player;
@@ -172,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
         Log.d("debug", String.valueOf(playerStats.getQrCodes()));
         playerStats.addQrCode(qrCode);
         Log.d("deb", String.valueOf(playerStats.getQrCodes()));
-        player.setPlayerStats(playerStats);
+        player.setStats(playerStats);
         db.collection("users").document(player.getSettings().getUsername()).update(
                 "stats.qrCodes", FieldValue.arrayUnion(qrCode));
     }
