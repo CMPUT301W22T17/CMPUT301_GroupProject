@@ -15,9 +15,18 @@ public class Player implements Parcelable, Comparable<Player> {
     private PlayerStats stats = new PlayerStats();
     private Location location = new Location("map_location");
 
+    /**
+     * empty constructor needed for Firebase
+     */
     public Player() {
     }
 
+    /**
+     * Constuctor for player using username, phone and email
+     * @param userName
+     * @param phone
+     * @param email
+     */
     public Player(String userName, String phone, String email) {
         this.settings = new PlayerSettings(userName, phone, email);
     }
@@ -40,30 +49,46 @@ public class Player implements Parcelable, Comparable<Player> {
         }
     };
 
+    /**
+     * Return player location
+     * @return Player Location
+     */
     public Location getPlayerLocation() {
         return this.location;
     }
 
+    /**
+     * Set player location
+     * @param latitude
+     * @param longitude
+     */
     public void setPlayerLocation(double latitude, double longitude){
         this.location.setLatitude(latitude);
         this.location.setLongitude(longitude);
     }
 
+    /**
+     * @return Player's PlayerSettings
+     */
     public PlayerSettings getSettings() {
         return this.settings;
     }
 
+    /**
+     * @return Player's PlayerStat
+     */
     public PlayerStats getStats() {
         return this.stats;
     }
 
 
-
+    //needed for parcelable
     @Override
     public int describeContents() {
         return 0;
     }
 
+    //needed for parcelable
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeParcelable(settings, i);
@@ -71,6 +96,7 @@ public class Player implements Parcelable, Comparable<Player> {
         parcel.writeParcelable(location, i);
     }
 
+    //used to compare players for the leaderboard
     @Override
     public int compareTo(Player player) {
         if (this.stats.getHighestScore() == player.stats.getHighestScore()) {

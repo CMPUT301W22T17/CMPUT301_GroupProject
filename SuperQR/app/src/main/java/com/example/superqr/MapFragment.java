@@ -43,10 +43,8 @@ public class MapFragment extends Fragment {
 
     Map mapInfo;
     MapView map;
-
     MapController controller;
     Marker playerMarker;
-
     Drawable playerPin;
     Drawable QRPin;
     GeoPoint playerPoint;
@@ -97,7 +95,7 @@ public class MapFragment extends Fragment {
         map = view.findViewById(R.id.map);
         map.setTileSource(TileSourceFactory.MAPNIK);
 
-
+        //get Player from MainActivity
         player= (Player) getArguments().getParcelable(playerKey);
 
         controller = new MapController(map);
@@ -123,6 +121,9 @@ public class MapFragment extends Fragment {
         map.onPause();
     }
 
+    /**
+     * Create location icons used to show where the player is.
+     */
     public void createLocationIcons() {
         //https://stackoverflow.com/questions/60301641/customized-icon-in-osmdroid-marker-android
         // Player Map Marker Icon: <a href="https://www.flaticon.com/free-icons/location" title="location icons">Location icons created by IconMarketPK - Flaticon</a>
@@ -139,6 +140,9 @@ public class MapFragment extends Fragment {
 
     }
 
+    /**
+     * Set the zoom and center the map onto user location.
+     */
     public void setToUserLocation() {
         // https://stackoverflow.com/questions/40257342/how-to-display-user-location-on-osmdroid-mapview
 
@@ -150,6 +154,9 @@ public class MapFragment extends Fragment {
 
     }
 
+    /**
+     * Put markers onto the map of the nearby QR codes and player.
+     */
     public void addLocationMarkers() {
 
         playerMarker.setPosition(playerPoint);

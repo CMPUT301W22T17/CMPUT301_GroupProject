@@ -10,6 +10,7 @@ public class PlayerSettings implements Parcelable {
     private QRCode loginQR;
     private QRCode statusQR;
 
+    //temp empty constuctor
     public PlayerSettings() {
         username = "NewUser";
         phone = "123-123-1234";
@@ -48,11 +49,6 @@ public class PlayerSettings implements Parcelable {
         return loginQR;
     }
 
-    // returns player status QR code
-    public QRCode getStatusQR() {
-        return statusQR;
-    }
-
     public String getUsername() {
         return username;
     }
@@ -81,9 +77,6 @@ public class PlayerSettings implements Parcelable {
         this.loginQR = loginQR;
     }
 
-    public void setStatusQR(QRCode statusQR) {
-        this.statusQR = statusQR;
-    }
 
     @Override
     public int describeContents() {

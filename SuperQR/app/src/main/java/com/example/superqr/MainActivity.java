@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
     // from: https://stackoverflow.com/questions/62671106/onactivityresult-method-is-deprecated-what-is-the-alternative
     // author: https://stackoverflow.com/users/4147849/muntashir-akon
+    // used to pass Player object through into fragments.
     ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
@@ -81,7 +82,9 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
-
+    /**
+     * Load user profile from database.
+     */
     private void loadData() {
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
         String userName = sharedPreferences.getString("user", "");
@@ -114,6 +117,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Load fragments for main activity, and handle requests for location and such.
+     */
     public void loadFragments(){
         // All fragments are launched from this main activity.
         // When clicking on the navigation buttons, we open a new fragment to display
@@ -150,6 +156,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Used to request location from user. If gps is enabled, update player location, else, enable GPS.
+     */
     private void requestLocation(){
         ActivityCompat.requestPermissions( this,
                 new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, 1);
@@ -162,6 +171,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Gets location from GPS, then updates the player location.
+     */
     private void getLocation() {
         if (ActivityCompat.checkSelfPermission(
                 MainActivity.this,Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
@@ -177,6 +189,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Checks if user has enabled GPS or not
+     */
     private void OnGPS() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Enable GPS").setCancelable(false).setPositiveButton("Yes", new  DialogInterface.OnClickListener() {
