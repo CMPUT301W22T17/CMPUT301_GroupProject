@@ -24,13 +24,26 @@ public class EditInfoFragment extends DialogFragment {
     private Player player;
     private OnFragmentInteractionListener listener;
 
+    /**
+     * initiates the DialogFragment
+     * @param player
+     */
     public EditInfoFragment(Player player) {
         this.player = player;
 
     }
 
-
+    /**
+     * Creates interface for onClicklister
+     */
     public interface OnFragmentInteractionListener {
+        /**
+         * pass the information back to main activity
+         * execute when player clicks ok
+         * @param newUsername
+         * @param newEmail
+         * @param newPhone
+         */
         public void onOkPressed(String newUsername, String newEmail, String newPhone);
     }
 
@@ -46,6 +59,13 @@ public class EditInfoFragment extends DialogFragment {
         }
     }
 
+
+    /**
+     * creates AlertDialog
+     * pass back information
+     * @param savedInstanceState
+     * @return
+     */
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {

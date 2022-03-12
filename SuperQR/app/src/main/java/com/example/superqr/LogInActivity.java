@@ -1,6 +1,7 @@
 package com.example.superqr;
 
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -9,8 +10,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class LogInActivity extends AppCompatActivity {
@@ -18,6 +24,7 @@ public class LogInActivity extends AppCompatActivity {
     Button newUserButton, existingUserButton, signupButton;
     EditText usernameEditText, emailEditText, phoneEditText;
     FirebaseFirestore db;
+    Player player;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +40,6 @@ public class LogInActivity extends AppCompatActivity {
 
         // Access a Cloud Firestore instance from your Activity
         db = FirebaseFirestore.getInstance();
-        // Get a top level reference to the collection
-        final CollectionReference collectionReference = db.collection("Users");
 
         newUserButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,27 +69,44 @@ public class LogInActivity extends AppCompatActivity {
         signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // adapt the user's information from EditTexts
                 String userName = usernameEditText.getText().toString();
                 String email = emailEditText.getText().toString();
                 String phone = phoneEditText.getText().toString();
-                Player player = new Player(userName, phone, email);
-                db.collection("users").document(userName).set(player);
-                SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString("user", userName);
-                editor.apply();
-                Intent i = new Intent(LogInActivity.this, MainActivity.class);
-                i.putExtra("player", player);
-                setResult(RESULT_OK, i);
-                finish();
+
+                // check if username already exists
+                DocumentReference docRef = db.collection("users").document(userName);
+                docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot ds = task.getResult();
+                            if (ds.exists()) {
+                                Toast.makeText(LogInActivity.this,
+                                        "Username already exists...", Toast.LENGTH_LONG)
+                                        .show();
+                            }
+                            else {
+                                // create new player class
+                                player = new Player(userName, phone, email);
+                                // save class in Firestore
+                                db.collection("users").document(userName).set(player);
+                                // save username in SharedPreferences
+                                SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putString("user", userName);
+                                editor.apply();
+
+                                // pass player back to MainActivity
+                                Intent i = new Intent(LogInActivity.this, MainActivity.class);
+                                i.putExtra("player", player);
+                                setResult(RESULT_OK, i);
+                                finish();
+                            }
+                        }
+                    }
+                });
             }
         });
     }
-
-   /* private void saveData(String userName) {
-        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("user", userName);
-        editor.apply();
-    }*/
 }

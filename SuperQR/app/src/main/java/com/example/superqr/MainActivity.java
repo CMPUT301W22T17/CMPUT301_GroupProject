@@ -172,9 +172,9 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
                             // do not add
                             Toast.makeText(MainActivity.this, "Unsuccessful Update. Username already exists...", Toast.LENGTH_LONG).show();
                         } else {
-                            // should handle this
                             // rename and add to database
                             Log.d(TAG, "onComplete: data not exist");
+                            // delete existing user collection
                             DocumentReference docRefOldName = db.collection("users")
                                     .document(player.getSettings().getUsername());
                             docRefOldName.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -188,6 +188,7 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
                             ps.setEmail(newEmail);
                             ps.setPhone(newPhone);
                             player.setSettings(ps);
+                            // create new document references to newUsername
                             db.collection("users").document(newUsername).set(player);
                             SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
                             SharedPreferences.Editor editor = sharedPreferences.edit();
