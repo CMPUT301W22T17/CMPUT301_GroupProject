@@ -98,13 +98,13 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             case R.id.view_high_score_button:
                 // replace 2 with the high qr score player has
                 // https://stackoverflow.com/questions/25887373/calling-dialogfragment-from-fragment-not-fragmentactivity
-                DialogFragment highQRScoreFragment = new ViewQRScoreFragment("2");
+                DialogFragment highQRScoreFragment = new ViewQRScoreFragment(player.getStats().getHighestScore());
                 highQRScoreFragment.show(getActivity().getSupportFragmentManager(), "high_qr_dialog");
                 break;
 
             case R.id.view_low_score_button:
                 // replace 1 with the low qr score player has
-                DialogFragment lowQRScoreFragment = new ViewQRScoreFragment("1");
+                DialogFragment lowQRScoreFragment = new ViewQRScoreFragment(player.getStats().getLowestScore());
                 lowQRScoreFragment.show(getActivity().getSupportFragmentManager(), "high_qr_dialog");
                 break;
             case R.id.edit_player_info_button:
@@ -127,12 +127,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         TextView emailText = view.findViewById(R.id.player_email);
         TextView phoneText = view.findViewById(R.id.player_phone);
 
-        /* implement later
-        usernameText.setText("player's username");
-        emailText.setText("player's email");
-        phoneText.setText("player's phone number");
-         */
-
         String userName = player.getSettings().getUsername();
         String email = player.getSettings().getEmail();
         String phone = player.getSettings().getPhone();
@@ -150,10 +144,12 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         TextView totalScannedText = getActivity().findViewById(R.id.total_qr_scanned);
         TextView totalScoreText = getActivity().findViewById(R.id.total_qr_score);
 
-        /* implement later
-        totalScannedText.setText("player's total scanned");
-        totalScoreText.setText("player's total score");
-         */
+        String count = Integer.toString(player.getStats().getCounts());
+        String total = Integer.toString(player.getStats().getTotalScore());
+
+        totalScannedText.setText(count);
+        totalScoreText.setText(total);
+
     }
 
 }
