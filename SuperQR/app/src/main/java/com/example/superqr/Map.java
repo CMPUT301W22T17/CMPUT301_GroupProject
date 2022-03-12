@@ -2,9 +2,20 @@ package com.example.superqr;
 
 import android.location.Location;
 
+import androidx.annotation.NonNull;
+
 import com.example.superqr.Player;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Map implements Serializable {
@@ -16,6 +27,11 @@ public class Map implements Serializable {
      */
     public Map() {
         this.QRCodeLocations = new ArrayList<Location>();
+    }
+
+    public Map(Player player) {
+        this.QRCodeLocations = new ArrayList<Location>();
+        this.player = player;
     }
 
     /**
@@ -30,14 +46,10 @@ public class Map implements Serializable {
 
     /**
      * Adds a group of locations of nearby QR codes to the map's database
-     * @param QRCodes
-     *      Adds a list of QR code locations to the map's lsit of QR code locations
      */
 
-    public void addQRLocations(ArrayList<QRCode> QRCodes) {
-        for (QRCode code : QRCodes) {
-            this.QRCodeLocations.add(code.getLocation());
-        }
+    public void addQRLocations() {
+        return;
     }
 
     public ArrayList<Location> getQRLocations() {

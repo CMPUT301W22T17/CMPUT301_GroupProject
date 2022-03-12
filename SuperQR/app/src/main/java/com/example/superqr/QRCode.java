@@ -21,7 +21,7 @@ import java.util.ArrayList;
 public class QRCode implements Parcelable {
     private String hash;
     private int score;
-    private Location location;
+    private Location location = new Location("map_location");
     private ArrayList<String> comments = new ArrayList<>();
     private boolean scanned = false;
 
@@ -163,6 +163,10 @@ public class QRCode implements Parcelable {
 
     public void addComment(String comment) {
         this.comments.add(comment);
+    }
+
+    public void setLocation(Location newLocation) {
+        this.location = newLocation;
     }
 
     @Override
