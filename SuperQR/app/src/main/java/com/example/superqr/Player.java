@@ -81,6 +81,13 @@ public class Player implements Parcelable, Comparable<Player> {
         return this.stats;
     }
 
+    public void setSettings(PlayerSettings settings) {
+        this.settings = settings;
+    }
+
+    public void setStats(PlayerStats stats) {
+        this.stats = stats;
+    }
 
     //needed for parcelable
     @Override
