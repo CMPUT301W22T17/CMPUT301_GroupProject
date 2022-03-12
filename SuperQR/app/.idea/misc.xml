@@ -14,8 +14,9 @@
         <entry key="..\:/Users/jechw/Documents/uni/cmput301/CMPUT301_GroupProject/SuperQR/app/src/main/res/layout/fragment_player_codes.xml" value="0.1721014492753623" />
         <entry key="..\:/Users/jechw/Documents/uni/cmput301/CMPUT301_GroupProject/SuperQR/app/src/main/res/layout/fragment_scan.xml" value="0.1721014492753623" />
         <entry key="..\:/Users/jechw/Documents/uni/cmput301/CMPUT301_GroupProject/SuperQR/app/src/main/res/layout/fragment_search.xml" value="0.165" />
-        <entry key="..\:/Users/jechw/Documents/uni/cmput301/CMPUT301_GroupProject/SuperQR/app/src/main/res/layout/fragment_search_geolocation.xml" value="0.1" />
+        <entry key="..\:/Users/jechw/Documents/uni/cmput301/CMPUT301_GroupProject/SuperQR/app/src/main/res/layout/fragment_search_geolocation.xml" value="0.25" />
         <entry key="..\:/Users/jechw/Documents/uni/cmput301/CMPUT301_GroupProject/SuperQR/app/src/main/res/layout/leaderboard_content.xml" value="0.165" />
+        <entry key="..\:/Users/jechw/Documents/uni/cmput301/CMPUT301_GroupProject/SuperQR/app/src/main/res/layout/qr_geolocation_content.xml" value="0.45" />
         <entry key="..\:/Users/jechw/Documents/uni/cmput301/CMPUT301_GroupProject/SuperQR/app/src/main/res/layout/view_qr_score_fragment.xml" value="0.335" />
       </map>
     </option>
