@@ -74,6 +74,13 @@ public class QRCode implements Parcelable {
         return hexString.toString();
     }
 
+    /**
+     * Calculates score for a given QR code's contents based on
+     * SHA-256 hashing.
+     * @param hash
+     * @return
+     */
+
     private int calculateScore(String hash) {
         // Calculate score
         // https://www.geeksforgeeks.org/java-program-for-hexadecimal-to-decimal-conversion/

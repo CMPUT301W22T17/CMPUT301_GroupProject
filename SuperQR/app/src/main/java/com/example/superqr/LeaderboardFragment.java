@@ -1,17 +1,31 @@
 package com.example.superqr;
 
+import static android.content.ContentValues.TAG;
+
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,8 +45,11 @@ public class LeaderboardFragment extends Fragment {
     private ListView leaderboardList;
     private ArrayAdapter<Player> playerAdapter;
     private ArrayList<Player> playerList;
+    private ArrayList<Player> playersList;
     private Player player;
-
+    FirebaseFirestore db;
+    Task<QuerySnapshot> query;
+    List<DocumentSnapshot> x;
     public LeaderboardFragment() {
         // Required empty public constructor
     }
@@ -55,6 +72,27 @@ public class LeaderboardFragment extends Fragment {
         return fragment;
     }
 
+    public ArrayList<Player> getPlayersFromDatabase(){
+        db = FirebaseFirestore.getInstance();
+        playerList = new ArrayList<>();
+        db.collection("users")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            for (QueryDocumentSnapshot document : task.getResult()){
+                                player = document.toObject(Player.class);
+                                playerList.add(player);
+                            }
+                        }
+                    }
+                });
+        return playerList;
+    }
+
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,9 +108,10 @@ public class LeaderboardFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_leaderboard,null);
         leaderboardList = view.findViewById(R.id.leaderboard_list);
-        playerList = new ArrayList<>();
-        //Collections.sort(playerList);
-        playerAdapter = new LeaderboardListView(getActivity(), playerList);
+        playersList = new ArrayList<>();
+        playersList = getPlayersFromDatabase();
+        Collections.sort(playersList);
+        playerAdapter = new LeaderboardListView(getActivity(), playersList);
         leaderboardList.setAdapter(playerAdapter);
         return view;
     }
