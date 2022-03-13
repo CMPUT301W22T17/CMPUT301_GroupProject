@@ -164,9 +164,16 @@ public class MapFragment extends Fragment {
         map.getOverlays().add(playerMarker);
 
 
-        ArrayList<Location> QRCodeLocations = mapInfo.getQRLocations();
-        for (Location QRLocation : QRCodeLocations) {
-            GeoPoint QRPoint = new GeoPoint(QRLocation);
+
+        ArrayList<LocationStore> QRCodeLocations = mapInfo.getQRLocations();
+        for (LocationStore QRLocation : QRCodeLocations) {
+
+            Location location = new Location("test");
+            location.setLatitude(QRLocation.getLatitude());
+            location.setLongitude(QRLocation.getLongitude());
+
+            GeoPoint QRPoint = new GeoPoint(location);
+
             Marker QRMarker = new Marker(map);
             QRMarker.setIcon(QRPin);
             QRMarker.setPosition(QRPoint);

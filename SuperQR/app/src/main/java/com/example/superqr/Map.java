@@ -19,29 +19,19 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Map implements Serializable {
-    protected ArrayList<Location> QRCodeLocations;
+    protected ArrayList<LocationStore> QRCodeLocations;
     protected Player player;
 
     /**
      * Initializes a map class by creating a list of QR codes
      */
     public Map() {
-        this.QRCodeLocations = new ArrayList<Location>();
+        this.QRCodeLocations = new ArrayList<LocationStore>();
     }
 
     public Map(Player player) {
-        this.QRCodeLocations = new ArrayList<Location>();
+        this.QRCodeLocations = new ArrayList<LocationStore>();
         this.player = player;
-    }
-
-    /**
-     * Adds the locations of nearby QR codes to the map's database
-     * @param QRLocation
-     *      Location of QR code to be added to map's list of QR code locations
-     */
-
-    public void addAQRLocation(Location QRLocation) {
-        this.QRCodeLocations.add(QRLocation);
     }
 
     /**
@@ -49,10 +39,37 @@ public class Map implements Serializable {
      */
 
     public void addQRLocations() {
-        return;
+        // https://firebase.google.com/docs/firestore/query-data/queries#java_2
+        // https://stackoverflow.com/questions/53747054/firebase-get-an-arraylist-field-from-all-documents
+
+        // get all QRCodes from database
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        ArrayList<QRCode> QRCodes = new ArrayList<>();
+        db.collection("qrcodes")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                QRCode code = document.toObject(QRCode.class);
+                                QRCodes.add(code);
+                            }
+                        }
+                    }
+                });
+
+        for (QRCode code : QRCodes) {
+            if ((Math.abs(code.getStoreLocation().getLatitude() - player.getPlayerLocation().getLatitude()) < 0.5) &&
+                    (Math.abs(code.getStoreLocation().getLongitude() - player.getPlayerLocation().getLongitude()) < 0.5)) {
+                QRCodeLocations.add(code.getStoreLocation());
+            }
+        }
     }
 
-    public ArrayList<Location> getQRLocations() {
+    public ArrayList<LocationStore> getQRLocations() {
         return QRCodeLocations;
     }
 }

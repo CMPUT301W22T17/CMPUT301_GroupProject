@@ -169,7 +169,8 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
     @Override
     public void onQRScanned(QRCode qrCode) {
 
-        qrCode.setLocation(player.getPlayerLocation());
+
+        qrCode.setLocation(player.getPlayerLocation().getLatitude(), player.getPlayerLocation().getLongitude());
 
         PlayerStats playerStats = player.getStats();
         Log.d("debug", String.valueOf(playerStats.getQrCodes()));
@@ -179,12 +180,13 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
         db.collection("users").document(player.getSettings().getUsername()).update(
                 "stats.qrCodes", FieldValue.arrayUnion(qrCode));
 
-        db.collection("qrcodes").document(qrCode.getHash()).set(qrCode);
-        db.collection("qrcodes").document(qrCode.getHash())
+        db.collection("codes").document(qrCode.getHash()).set(qrCode);
+        db.collection("codes").document(qrCode.getHash())
                 .update(
                         "hash", qrCode.getHash(),
                         "score", qrCode.getScore(),
-                        "location", qrCode.getLocation(),
+                        "location.latitude", qrCode.getStoreLocation().getLatitude(),
+                        "location.longitude", qrCode.getStoreLocation().getLongitude(),
                         "scanned", qrCode.getScanned()
                 );
     }
