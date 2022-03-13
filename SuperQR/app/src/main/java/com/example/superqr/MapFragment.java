@@ -168,7 +168,7 @@ public class MapFragment extends Fragment {
         ArrayList<LocationStore> QRCodeLocations = mapInfo.getQRLocations();
         for (LocationStore QRLocation : QRCodeLocations) {
 
-            Location location = new Location("test");
+            Location location = new Location("map_location");
             location.setLatitude(QRLocation.getLatitude());
             location.setLongitude(QRLocation.getLongitude());
 
