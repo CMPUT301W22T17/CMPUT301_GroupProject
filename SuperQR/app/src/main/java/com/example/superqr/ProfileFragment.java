@@ -141,14 +141,16 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
      * Displays the player's QR stats about total scanned and total score for their QR codes
      */
     public void setQRInfo(View view) {
-        TextView totalScannedText = getActivity().findViewById(R.id.total_qr_scanned);
-        TextView totalScoreText = getActivity().findViewById(R.id.total_qr_score);
+        TextView totalScannedText = view.findViewById(R.id.total_qr_scanned);
+        TextView totalScoreText = view.findViewById(R.id.total_qr_score);
 
         String count = Integer.toString(player.getStats().getCounts());
         String total = Integer.toString(player.getStats().getTotalScore());
 
         totalScannedText.setText(count);
         totalScoreText.setText(total);
+
+
 
     }
 
