@@ -36,6 +36,9 @@ public class Player implements Parcelable, Comparable<Player> {
     private Location location;
     private LocationRequest locationRequest = LocationRequest.create();
 
+    public Player(){
+        //empty constructor
+    }
 
     public Player(String userName, String phone, String email) {
         this.settings = new PlayerSettings(userName, phone, email);
