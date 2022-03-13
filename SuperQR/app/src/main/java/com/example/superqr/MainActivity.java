@@ -43,6 +43,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.w3c.dom.Text;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class MainActivity extends AppCompatActivity implements EditInfoFragment.OnFragmentInteractionListener, ScanFragment.ScanFragmentListener {
 
@@ -170,7 +173,8 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
     @Override
     public void onQRScanned(QRCode qrCode) {
 
-        qrCode.setLocation(player.getPlayerLocation());
+
+        qrCode.setLocation(player.getPlayerLocation().getLatitude(), player.getPlayerLocation().getLongitude());
 
         PlayerStats playerStats = player.getStats();
         Log.d("debug", String.valueOf(playerStats.getQrCodes()));
@@ -197,14 +201,27 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
         db.collection("users").document(player.getSettings().getUsername()).update(
                 "stats.qrCodes", FieldValue.arrayUnion(qrCode));
 
-        db.collection("qrcodes").document(qrCode.getHash()).set(qrCode);
-        db.collection("qrcodes").document(qrCode.getHash())
+        // put QRCode into firestore
+        db.collection("codes").document(qrCode.getHash()).set(qrCode);
+        db.collection("codes").document(qrCode.getHash())
                 .update(
                         "hash", qrCode.getHash(),
                         "score", qrCode.getScore(),
-                        "location", qrCode.getLocation(),
+                        "location.latitude", qrCode.getStoreLocation().getLatitude(),
+                        "location.longitude", qrCode.getStoreLocation().getLongitude(),
                         "scanned", qrCode.getScanned()
                 );
+
+        // remove storeLocation
+        DocumentReference ref = db.collection("codes").document(qrCode.getHash());
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("storeLocation", FieldValue.delete());
+        ref.update(updates).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Log.d("Message: ", "REMOVED storeLocation field");
+            }
+        });
     }
 
     @Override

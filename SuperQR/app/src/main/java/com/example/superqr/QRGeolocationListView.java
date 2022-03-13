@@ -13,12 +13,12 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 
-public class QRGeolocationListView extends ArrayAdapter<Location> {
+public class QRGeolocationListView extends ArrayAdapter<LocationStore> {
 
-    private ArrayList<Location> QRCodes;
+    private ArrayList<LocationStore> QRCodes;
     private Context context;
 
-    public QRGeolocationListView(Context context, ArrayList<Location> QRCodes) {
+    public QRGeolocationListView(Context context, ArrayList<LocationStore> QRCodes) {
         super(context, 0, QRCodes);
         this.QRCodes = QRCodes;
         this.context = context;
@@ -31,7 +31,7 @@ public class QRGeolocationListView extends ArrayAdapter<Location> {
             view = LayoutInflater.from(context).inflate(R.layout.qr_geolocation_content,parent,false);
         }
 
-        Location codeLocation = QRCodes.get(position);
+        LocationStore codeLocation = QRCodes.get(position);
 
         TextView codeLatitudeText = view.findViewById(R.id.qr_latitude_text);
         TextView codeLongitudeText = view.findViewById(R.id.qr_longitude_text);
