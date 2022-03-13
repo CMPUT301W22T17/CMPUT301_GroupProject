@@ -127,16 +127,6 @@ public class QRCode implements Parcelable {
      *      Return the location
      */
 
-    /*
-    public Location getLocation() {
-
-        Location officialLocation = new Location("map_location");
-        officialLocation.setLatitude(location.getLatitude());
-        officialLocation.setLongitude(location.getLongitude());
-
-        return officialLocation;
-    }*/
-
     public LocationStore getStoreLocation() {
         return this.location;
     }
@@ -182,8 +172,6 @@ public class QRCode implements Parcelable {
         parcel.writeInt(this.score);
         parcel.writeList(this.comments);
         parcel.writeByte((byte) (this.scanned ? 1 : 0));
-        parcel.writeParcelable((Parcelable) this.location, i);
-
-
+        parcel.writeParcelable(this.location, i);
     }
 }

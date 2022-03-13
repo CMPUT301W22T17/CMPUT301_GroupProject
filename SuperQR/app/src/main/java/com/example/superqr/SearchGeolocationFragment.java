@@ -55,8 +55,8 @@ public class SearchGeolocationFragment extends Fragment {
 
         nearbyQRList = searchGeoView.findViewById(R.id.nearby_qr_codes);
         map = new Map(player);
-        map.addQRLocations();
-        nearbyQRCodes = map.getQRLocations();
+        nearbyQRCodes = map.getQRCodeLocations();
+
         nearbyQRAdapter = new QRGeolocationListView(requireContext(), nearbyQRCodes);
         nearbyQRList.setAdapter(nearbyQRAdapter);
 

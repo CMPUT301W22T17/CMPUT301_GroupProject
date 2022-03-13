@@ -43,6 +43,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.w3c.dom.Text;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class MainActivity extends AppCompatActivity implements EditInfoFragment.OnFragmentInteractionListener, ScanFragment.ScanFragmentListener {
 
@@ -180,6 +183,7 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
         db.collection("users").document(player.getSettings().getUsername()).update(
                 "stats.qrCodes", FieldValue.arrayUnion(qrCode));
 
+        // put QRCode into firestore
         db.collection("codes").document(qrCode.getHash()).set(qrCode);
         db.collection("codes").document(qrCode.getHash())
                 .update(
@@ -189,6 +193,17 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
                         "location.longitude", qrCode.getStoreLocation().getLongitude(),
                         "scanned", qrCode.getScanned()
                 );
+
+        // remove storeLocation
+        DocumentReference ref = db.collection("codes").document(qrCode.getHash());
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("storeLocation", FieldValue.delete());
+        ref.update(updates).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Log.d("Message: ", "REMOVED storeLocation field");
+            }
+        });
     }
 
     @Override

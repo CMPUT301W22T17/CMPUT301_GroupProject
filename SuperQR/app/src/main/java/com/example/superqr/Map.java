@@ -1,11 +1,13 @@
 package com.example.superqr;
 
 import android.location.Location;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
 import com.example.superqr.Player;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -17,6 +19,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Map implements Serializable {
     protected ArrayList<LocationStore> QRCodeLocations;
@@ -38,36 +41,30 @@ public class Map implements Serializable {
      * Adds a group of locations of nearby QR codes to the map's database
      */
 
-    public void addQRLocations() {
+    public ArrayList<LocationStore> getQRCodeLocations(){
         // https://firebase.google.com/docs/firestore/query-data/queries#java_2
         // https://stackoverflow.com/questions/53747054/firebase-get-an-arraylist-field-from-all-documents
-
-        // get all QRCodes from database
+        // https://stackoverflow.com/questions/46706433/firebase-firestore-get-data-from-collection
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        ArrayList<QRCode> QRCodes = new ArrayList<>();
-        db.collection("qrcodes")
+        ArrayList<LocationStore> codesList = new ArrayList<>();
+        db.collection("codes")
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        if (!queryDocumentSnapshots.isEmpty()) {
+                            for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                                 QRCode code = document.toObject(QRCode.class);
-                                QRCodes.add(code);
+                                codesList.add(code.getStoreLocation());
+
                             }
                         }
                     }
                 });
-
-        for (QRCode code : QRCodes) {
-            if ((Math.abs(code.getStoreLocation().getLatitude() - player.getPlayerLocation().getLatitude()) < 0.5) &&
-                    (Math.abs(code.getStoreLocation().getLongitude() - player.getPlayerLocation().getLongitude()) < 0.5)) {
-                QRCodeLocations.add(code.getStoreLocation());
-            }
-        }
+        return codesList;
     }
+
 
     public ArrayList<LocationStore> getQRLocations() {
         return QRCodeLocations;
