@@ -143,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
                     replaceFragment(newFragment);
                     break;
                 case R.id.scan:
+                    requestLocation();
                     newFragment = ScanFragment.newInstance(player);
                     replaceFragment(newFragment);
                     break;
