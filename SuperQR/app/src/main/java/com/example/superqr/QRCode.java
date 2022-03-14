@@ -1,11 +1,7 @@
 package com.example.superqr;
-
-import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import androidx.annotation.VisibleForTesting;
-
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -14,7 +10,7 @@ import java.util.ArrayList;
 
 /**
  * The QRCode class keeps track of the code, score, and geolocation of a QR code.
- * Takes photo of an object or location of the QR code.
+ * This class handles handles hashing of the QRCode object into a score for the player.
  */
 public class QRCode implements Parcelable {
     private String hash;
@@ -31,7 +27,7 @@ public class QRCode implements Parcelable {
     /**
      * Creates a QRCode object.
      * @param code
-     *      QR code to be hashed
+     * QR code to be hashed
      */
     public QRCode(String code) {
         try {
@@ -78,7 +74,9 @@ public class QRCode implements Parcelable {
      * Calculates score for a given QR code's contents based on
      * SHA-256 hashing.
      * @param hash
+     * hash is the string contents in of the QRCode (in SHA-256 form) scored.
      * @return
+     * Returns the total score of the QRCode being hashed
      */
 
     private int calculateScore(String hash) {
@@ -156,14 +154,33 @@ public class QRCode implements Parcelable {
         return comments;
     }
 
-    public void isScanned(boolean scanned) {
+    /**
+     * Sets the QRCode's scanned attribute to true
+     * to indicate that is scanned
+     */
+    public void isScanned() {
         this.scanned = true;
     }
+
+    /**
+     * Adds a comment to the QRCode's list of comments
+     * @param comment
+     *      comment string that is to be added
+     *      to the QRCode's list of comments
+     */
 
     public void addComment(String comment) {
         this.comments.add(comment);
     }
 
+    /**
+     * sets the QRCode's location in latitude
+     * and longitude
+     * @param latitude
+     *      QRCode's latitude
+     * @param longitude
+     *      QRCode's longitude
+     */
     public void setLocation(double latitude, double longitude) {
         this.location.setLocation(latitude, longitude);
     }

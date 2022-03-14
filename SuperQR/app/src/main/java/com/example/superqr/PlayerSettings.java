@@ -8,9 +8,8 @@ public class PlayerSettings implements Parcelable {
     private String phone;
     private String email;
     private QRCode loginQR;
-    private QRCode statusQR;
 
-    //temp empty constuctor
+    //temp empty constructor
     public PlayerSettings() {
         username = "NewUser";
         phone = "123-123-1234";
@@ -30,7 +29,6 @@ public class PlayerSettings implements Parcelable {
         phone = in.readString();
         email = in.readString();
         loginQR = in.readParcelable(QRCode.class.getClassLoader());
-        statusQR = in.readParcelable(QRCode.class.getClassLoader());
     }
 
     public static final Creator<PlayerSettings> CREATOR = new Creator<PlayerSettings>() {
@@ -89,6 +87,5 @@ public class PlayerSettings implements Parcelable {
         parcel.writeString(phone);
         parcel.writeString(email);
         parcel.writeParcelable(loginQR, i);
-        parcel.writeParcelable(statusQR, i);
     }
 }

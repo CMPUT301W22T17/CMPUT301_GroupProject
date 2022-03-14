@@ -27,6 +27,8 @@ public class EditInfoFragment extends DialogFragment {
     /**
      * initiates the DialogFragment
      * @param player
+     *      Player object that is to have
+     *      its info edited
      */
     public EditInfoFragment(Player player) {
         this.player = player;
@@ -34,17 +36,20 @@ public class EditInfoFragment extends DialogFragment {
     }
 
     /**
-     * Creates interface for onClicklister
+     * Creates interface for onClicklistener
      */
     public interface OnFragmentInteractionListener {
         /**
          * pass the information back to main activity
          * execute when player clicks ok
          * @param newUsername
+         *      Player's new username
          * @param newEmail
+         *      Player's new email
          * @param newPhone
+         *      Player's new phone number
          */
-        public void onOkPressed(String newUsername, String newEmail, String newPhone);
+        void onOkPressed(String newUsername, String newEmail, String newPhone);
     }
 
 
@@ -54,7 +59,7 @@ public class EditInfoFragment extends DialogFragment {
         if (context instanceof OnFragmentInteractionListener){
             listener = (OnFragmentInteractionListener) context;
         } else {
-            throw new RuntimeException(context.toString()
+            throw new RuntimeException(context
                     + " must implement OnFragmentInteractionListener");
         }
     }
@@ -64,7 +69,9 @@ public class EditInfoFragment extends DialogFragment {
      * creates AlertDialog
      * pass back information
      * @param savedInstanceState
+     *      Bundle to be passed to onCreateDialog
      * @return
+     *      Dialog box
      */
     @NonNull
     @Override
@@ -85,14 +92,11 @@ public class EditInfoFragment extends DialogFragment {
         builder.setTitle("EDIT INFORMATION");
         builder.setNegativeButton("Cancel", null);
 
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                String newUsername = editUsernameEditText.getText().toString();
-                String newEmail = editEmailEditText.getText().toString();
-                String newPhone = editPhoneEditText.getText().toString();
-                listener.onOkPressed(newUsername, newEmail, newPhone);
-            }
+        builder.setPositiveButton("OK", (dialogInterface, i) -> {
+            String newUsername = editUsernameEditText.getText().toString();
+            String newEmail = editEmailEditText.getText().toString();
+            String newPhone = editPhoneEditText.getText().toString();
+            listener.onOkPressed(newUsername, newEmail, newPhone);
         });
         return builder.create();
     }

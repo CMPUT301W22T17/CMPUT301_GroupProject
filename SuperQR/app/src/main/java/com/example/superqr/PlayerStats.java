@@ -114,7 +114,7 @@ public class PlayerStats implements Parcelable {
     }
 
     /**
-     * adds a QR code to the player's collecion of QR codes
+     * adds a QR code to the player's collection of QR codes
      * @param qrCode
      */
     public void addQrCode(QRCode qrCode) {
@@ -126,18 +126,18 @@ public class PlayerStats implements Parcelable {
     /**
      * increments number of QR codes the player has scanned
      */
-    public void setCounts() {
+    public void addCounts() {
 
         this.counts += 1;
     }
 
     /**
      * sets the total score of the player
-     * @param totalScore
+     * @param score
      */
-    public void setTotalScore(int totalScore) {
+    public void addTotalScore(int score) {
 
-        this.totalScore += totalScore;
+        this.totalScore += score;
     }
 
     /**
