@@ -100,7 +100,7 @@ public class MapFragment extends Fragment {
 
         controller = new MapController(map);
         mapInfo = new Map();
-        playerPoint = new GeoPoint(player.getPlayerLocation());
+        playerPoint = new GeoPoint(player.getPlayerLocation().getLatitude(), player.getPlayerLocation().getLongitude());
 
         createLocationIcons();
         setToUserLocation();

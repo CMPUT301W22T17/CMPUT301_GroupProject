@@ -86,16 +86,6 @@
 
     </TextView>
 
-    <Button
-        android:id="@+id/edit_player_info_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="24dp"
-        android:text="EDIT"
-        android:textSize="10sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4"></Button>
 
     <TextView
         android:id="@+id/total_qr_scanned"
@@ -136,33 +126,6 @@
 
     </TextView>
 
-    <Button
-        android:id="@+id/view_low_score_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="24dp"
-        android:text="View"
-        android:textSize="10sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_high_score_button">
-
-    </Button>
-
-
-
-    <Button
-        android:id="@+id/view_high_score_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="24dp"
-        android:text="View"
-        android:textSize="10sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/player_phone">
-
-    </Button>
 
     <TextView
         android:id="@+id/high_score_view"
