@@ -3,6 +3,7 @@ package com.example.superqr;
 import android.app.Activity;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +13,16 @@ import android.widget.ListView;
 
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class SearchGeolocationFragment extends Fragment {
 
@@ -24,7 +31,7 @@ public class SearchGeolocationFragment extends Fragment {
 
     private ListView nearbyQRList;
     private ArrayAdapter<LocationStore> nearbyQRAdapter;
-    private ArrayList<LocationStore> nearbyQRCodes;
+    private ArrayList<LocationStore> nearbyQRCodes = new ArrayList<>();
 
     private Map map;
 
@@ -54,11 +61,25 @@ public class SearchGeolocationFragment extends Fragment {
         player = (Player) getArguments().getParcelable(playerKey);
 
         nearbyQRList = searchGeoView.findViewById(R.id.nearby_qr_codes);
-        map = new Map(player);
-        nearbyQRCodes = map.getQRCodeLocations();
 
-        nearbyQRAdapter = new QRGeolocationListView(requireContext(), nearbyQRCodes);
-        nearbyQRList.setAdapter(nearbyQRAdapter);
+        // https://www.geeksforgeeks.org/how-to-create-dynamic-listview-in-android-using-firebase-firestore/
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("codes").get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        if (!queryDocumentSnapshots.isEmpty()) {
+                            List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
+                            for (DocumentSnapshot d : list) {
+                                QRCode code = d.toObject(QRCode.class);
+                                nearbyQRCodes.add(code.getStoreLocation());
+                            }
+                            QRGeolocationListView adapter = new QRGeolocationListView(requireContext(), nearbyQRCodes);
+                            nearbyQRList.setAdapter(adapter);
+                        }
+                    }
+                });
 
         return searchGeoView;
     }
