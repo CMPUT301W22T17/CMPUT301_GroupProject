@@ -125,6 +125,10 @@ public class LogInActivity extends AppCompatActivity implements ScanFragment.Sca
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) { // check if player is in database
                         player = document.toObject(Player.class);
+                        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("user", username);
+                        editor.apply();
                         // pass player back to MainActivity
                         Intent i = new Intent(LogInActivity.this, MainActivity.class);
                         i.putExtra("player", player);

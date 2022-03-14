@@ -1,55 +1,54 @@
 package com.example.superqr;
 
-
 import static android.content.ContentValues.TAG;
-
+import android.Manifest;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.location.Location;
+import android.location.LocationManager;
+import android.net.Uri;
+import android.os.Bundle;
+import android.provider.Settings;
+import android.util.Log;
+import android.widget.Toast;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-
-import android.Manifest;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-
-import android.app.Activity;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationManager;
-import android.os.Bundle;
-import android.provider.Settings;
-import android.util.Log;
-
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.example.superqr.databinding.ActivityMainBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import org.w3c.dom.Text;
-
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import java.util.HashMap;
 import java.util.Map;
-
+import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements EditInfoFragment.OnFragmentInteractionListener, ScanFragment.ScanFragmentListener {
-
+    private static int REQUEST_IMAGE_CAPTURE = 1;
     private ActivityMainBinding binding;
+    private StorageReference mStorageRef;
     Player player;
     FirebaseFirestore db;
     Fragment newFragment;
@@ -71,10 +70,41 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
                 }
             }
     );
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) { // Photo taken
+            String userName = player.getSettings().getUsername();
+            ArrayList<QRCode> qrCodes = player.getStats().getQrCodes();
+            StorageReference qrcodes = mStorageRef.child(String.format("%s/%s", userName, qrCodes.get(qrCodes.size() - 1).getHash()));
+
+            // Get data as Bitmap and convert it into byte[] to upload with putBytes
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] imageData = baos.toByteArray();
+
+            UploadTask uploadTask = qrcodes.putBytes(imageData);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(MainActivity.this, "Failed to upload", Toast.LENGTH_SHORT);
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Toast.makeText(MainActivity.this, "Successful upload", Toast.LENGTH_SHORT);
+                }
+            });
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mStorageRef = FirebaseStorage.getInstance().getReference();
         db = FirebaseFirestore.getInstance();
         // Get a top level reference to the collection
         loadData();
@@ -240,6 +270,9 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
             ps.setEmail(newEmail);
             ps.setPhone(newPhone);
             player.setSettings(ps);
+            // show new info
+            newFragment = ProfileFragment.newInstance(player);
+            replaceFragment(newFragment);
             Toast.makeText(MainActivity.this, "Successful Update...", Toast.LENGTH_LONG).show();
         }
         else {
@@ -277,6 +310,9 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.putString("user", newUsername);
                             editor.apply();
+                            // display new info
+                            newFragment = ProfileFragment.newInstance(player);
+                            replaceFragment(newFragment);
                         }
                     } else {
                         Log.d(TAG, "get failed with", task.getException());
@@ -284,8 +320,6 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
                 }
             });
         }
-        newFragment = ProfileFragment.newInstance(player);
-        replaceFragment(newFragment);
     }
 
     /**
