@@ -24,8 +24,11 @@ public class ExistingUserFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    /**
+     * Required empty constructor
+     */
     public ExistingUserFragment() {
-        // Required empty public constructor
+
     }
 
     /**

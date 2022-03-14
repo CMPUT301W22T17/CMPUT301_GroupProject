@@ -1,7 +1,4 @@
 package com.example.superqr;
-
-
-import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -10,6 +7,7 @@ import android.os.Parcelable;
  * Player is the main interface by which most classes are managed by.
  */
 
+@SuppressWarnings("ALL")
 public class Player implements Parcelable, Comparable<Player> {
     private PlayerSettings settings;
     private PlayerStats stats = new PlayerStats();
@@ -22,10 +20,13 @@ public class Player implements Parcelable, Comparable<Player> {
     }
 
     /**
-     * Constuctor for player using username, phone and email
+     * Constructor for player using username, phone and email
      * @param userName
+     * player's username
      * @param phone
+     * player's phone
      * @param email
+     * player's email
      */
     public Player(String userName, String phone, String email) {
         this.settings = new PlayerSettings(userName, phone, email);
@@ -60,7 +61,9 @@ public class Player implements Parcelable, Comparable<Player> {
     /**
      * Set player location
      * @param latitude
+     * player's latitude
      * @param longitude
+     * player's longitude
      */
     public void setPlayerLocation(double latitude, double longitude){
         this.location.setLocation(latitude, longitude);
