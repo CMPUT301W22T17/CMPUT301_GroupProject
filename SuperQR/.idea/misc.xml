@@ -3,6 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../../../layout/custom_preview.xml" value="0.17083333333333334" />
+        <entry key="..\:/301/CMPUT301_GroupProject/SuperQR/app/src/main/res/layout/activity_player_profile.xml" value="0.27447916666666666" />
+        <entry key="..\:/301/CMPUT301_GroupProject/SuperQR/app/src/main/res/menu/menu.xml" value="0.176" />
         <entry key="..\:/Users/steve/Desktop/CMPUT301_GroupProject/SuperQR/app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.2985" />
         <entry key="..\:/Users/steve/Desktop/CMPUT301_GroupProject/SuperQR/app/src/main/res/layout/activity_log_in.xml" value="0.33" />
         <entry key="..\:/Users/steve/Desktop/CMPUT301_GroupProject/SuperQR/app/src/main/res/layout/activity_main.xml" value="0.23529411764705882" />
@@ -11,10 +14,15 @@
         <entry key="..\:/Users/steve/Desktop/CMPUT301_GroupProject/SuperQR/app/src/main/res/menu/menu.xml" value="0.35658914728682173" />
         <entry key="app/src/main/res/layout/activity_log_in.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.17916666666666667" />
+        <entry key="app/src/main/res/layout/activity_player_profile.xml" value="0.21481481481481482" />
         <entry key="app/src/main/res/layout/activity_scan.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_edit_info.xml" value="0.2953125" />
         <entry key="app/src/main/res/layout/fragment_existing_user.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/fragment_new_user.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/fragment_player_codes.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/fragment_scan.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/login_qr_code_fragment.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/view_qr_score_fragment.xml" value="0.3435012817382812" />
         <entry key="app/src/main/res/menu/menu.xml" value="0.2953125" />
       </map>
     </option>

@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:fontFamily="sans-serif-medium"
-        android:text="RANKINGS"
+        android:text="LEADERBOARD"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         android:textColor="#FF0000"
         android:textSize="24sp"

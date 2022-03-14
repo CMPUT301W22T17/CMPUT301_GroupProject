@@ -17,7 +17,7 @@ public class PlayerStats implements Parcelable {
     private int lowestScore;
 
     /**
-     * Creates an PlayerStats object
+     * Creates a PlayerStats object
      *
      */
     public PlayerStats() {
@@ -79,6 +79,7 @@ public class PlayerStats implements Parcelable {
      *      counts integer
      */
     public int getCounts() {
+
         return counts;
     }
 
@@ -88,6 +89,7 @@ public class PlayerStats implements Parcelable {
      *      totalScore integer
      */
     public int getTotalScore() {
+
         return totalScore;
     }
 
@@ -97,6 +99,7 @@ public class PlayerStats implements Parcelable {
      *      highestScore integer
      */
     public int getHighestScore() {
+
         return highestScore;
     }
 
@@ -106,26 +109,52 @@ public class PlayerStats implements Parcelable {
      *      lowestScore integer
      */
     public int getLowestScore() {
+
         return lowestScore;
     }
 
-    public void setQrCodes(ArrayList<QRCode> qrCodes) {
-        this.qrCodes = qrCodes;
+    /**
+     * adds a QR code to the player's collecion of QR codes
+     * @param qrCode
+     */
+    public void addQrCode(QRCode qrCode) {
+
+        this.qrCodes.add(qrCode);
+
     }
 
-    public void setCounts(int counts) {
-        this.counts = counts;
+    /**
+     * increments number of QR codes the player has scanned
+     */
+    public void setCounts() {
+
+        this.counts += 1;
     }
 
+    /**
+     * sets the total score of the player
+     * @param totalScore
+     */
     public void setTotalScore(int totalScore) {
-        this.totalScore = totalScore;
+
+        this.totalScore += totalScore;
     }
 
+    /**
+     * sets the highest score of the player
+     * @param highestScore
+     */
     public void setHighestScore(int highestScore) {
+
         this.highestScore = highestScore;
     }
 
+    /**
+     * sets the lowest score of the player
+     * @param lowestScore
+     */
     public void setLowestScore(int lowestScore) {
+
         this.lowestScore = lowestScore;
     }
 
