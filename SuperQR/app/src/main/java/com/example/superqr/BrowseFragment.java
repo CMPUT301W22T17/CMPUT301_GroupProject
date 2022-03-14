@@ -91,8 +91,7 @@ public class BrowseFragment extends Fragment implements View.OnClickListener {
                 break;
 
             case R.id.search_geolocation_button:
-
-                Fragment searchGeolocationFragment = new SearchGeolocationFragment();
+                Fragment searchGeolocationFragment = SearchGeolocationFragment.newInstance(player);
                 displayFragment(searchGeolocationFragment);
                 break;
 

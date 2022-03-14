@@ -3,7 +3,6 @@ package com.example.superqr;
 import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 import androidx.annotation.VisibleForTesting;
 
@@ -11,7 +10,6 @@ import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.Array;
 import java.util.ArrayList;
 
 /**
@@ -21,7 +19,7 @@ import java.util.ArrayList;
 public class QRCode implements Parcelable {
     private String hash;
     private int score;
-    private Location location;
+    private LocationStore location = new LocationStore();
     private ArrayList<String> comments = new ArrayList<>();
     private boolean scanned = false;
 
@@ -47,7 +45,7 @@ public class QRCode implements Parcelable {
     protected QRCode(Parcel in) {
         hash = in.readString();
         score = in.readInt();
-        location = in.readParcelable(Location.class.getClassLoader());
+        location = in.readParcelable(LocationStore.class.getClassLoader());
         comments = in.createStringArrayList();
         scanned = in.readByte() != 0;
     }
@@ -75,6 +73,13 @@ public class QRCode implements Parcelable {
 
         return hexString.toString();
     }
+
+    /**
+     * Calculates score for a given QR code's contents based on
+     * SHA-256 hashing.
+     * @param hash
+     * @return
+     */
 
     private int calculateScore(String hash) {
         // Calculate score
@@ -128,8 +133,9 @@ public class QRCode implements Parcelable {
      * @return
      *      Return the location
      */
-    public Location getLocation() {
-        return location;
+
+    public LocationStore getStoreLocation() {
+        return this.location;
     }
 
     /**
@@ -158,6 +164,10 @@ public class QRCode implements Parcelable {
         this.comments.add(comment);
     }
 
+    public void setLocation(double latitude, double longitude) {
+        this.location.setLocation(latitude, longitude);
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -170,7 +180,5 @@ public class QRCode implements Parcelable {
         parcel.writeList(this.comments);
         parcel.writeByte((byte) (this.scanned ? 1 : 0));
         parcel.writeParcelable(this.location, i);
-
-
     }
 }
