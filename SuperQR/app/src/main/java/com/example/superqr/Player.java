@@ -13,7 +13,7 @@ import android.os.Parcelable;
 public class Player implements Parcelable, Comparable<Player> {
     private PlayerSettings settings;
     private PlayerStats stats = new PlayerStats();
-    private Location location = new Location("map_location");
+    private LocationStore location = new LocationStore();
 
     /**
      * empty constructor needed for Firebase
@@ -34,7 +34,7 @@ public class Player implements Parcelable, Comparable<Player> {
     protected Player(Parcel in) {
         settings = in.readParcelable(PlayerSettings.class.getClassLoader());
         stats = in.readParcelable(PlayerStats.class.getClassLoader());
-        location = in.readParcelable(Location.class.getClassLoader());
+        location = in.readParcelable(LocationStore.class.getClassLoader());
     }
 
     public static final Creator<Player> CREATOR = new Creator<Player>() {
@@ -53,7 +53,7 @@ public class Player implements Parcelable, Comparable<Player> {
      * Return player location
      * @return Player Location
      */
-    public Location getPlayerLocation() {
+    public LocationStore getPlayerLocation() {
         return this.location;
     }
 
@@ -63,8 +63,7 @@ public class Player implements Parcelable, Comparable<Player> {
      * @param longitude
      */
     public void setPlayerLocation(double latitude, double longitude){
-        this.location.setLatitude(latitude);
-        this.location.setLongitude(longitude);
+        this.location.setLocation(latitude, longitude);
     }
 
     /**
