@@ -146,6 +146,13 @@ public class LogInActivity extends AppCompatActivity implements ScanFragment.Sca
 
         @Override
         public void onBackPressed() {
+            loginFrameLayout.setVisibility(View.INVISIBLE);
+            newUserButton.setVisibility(View.VISIBLE);
+            existingUserButton.setVisibility(View.VISIBLE);
+            signupButton.setVisibility(View.INVISIBLE);
+            usernameEditText.setVisibility(View.INVISIBLE);
+            emailEditText.setVisibility(View.INVISIBLE);
+            phoneEditText.setVisibility(View.INVISIBLE);
             Toast.makeText(LogInActivity.this, "MAKE A SELECTION", Toast.LENGTH_SHORT).show();
         }
 }
