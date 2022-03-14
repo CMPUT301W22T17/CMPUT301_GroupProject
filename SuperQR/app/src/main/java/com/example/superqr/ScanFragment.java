@@ -1,7 +1,5 @@
 package com.example.superqr;
 
-import static java.lang.System.exit;
-
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -16,11 +14,13 @@ import androidx.fragment.app.Fragment;
 
 import android.provider.MediaStore;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 
 import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.CodeScannerView;
@@ -54,6 +54,7 @@ public class ScanFragment extends Fragment {
     private CodeScanner codeScanner;
     private boolean cameraDenied; // permission permanently denied
     private ScanFragmentListener listener;
+    private ScanFragmentListener1 listener1;
     private int scanAction;
 
     // https://stackoverflow.com/questions/35091857/passing-object-from-fragment-to-activity
@@ -61,6 +62,9 @@ public class ScanFragment extends Fragment {
         void onQRScanned(QRCode qrCode);
     }
 
+    public interface ScanFragmentListener1 {
+        void onQRScanned1(String username);
+    }
 
     public ScanFragment() {
         // Required empty public constructor
@@ -121,12 +125,12 @@ public class ScanFragment extends Fragment {
                                 listener.onQRScanned(qrCode); // Sends QRCode object to MainActivity
                                 Toast.makeText(activity, result.getText(), Toast.LENGTH_SHORT).show();
                                 showQRStats(qrCode);
-                                Log.d("debug", "startActivity");
                             }
                         }
 
                         else if (scanAction == 1) { // Login scan
-
+                            Toast.makeText(activity, result.getText(), Toast.LENGTH_SHORT).show();
+                            listener1.onQRScanned1(result.getText()); // sends result back to LoginActivity
                         }
 
                         else if (scanAction == 2) { // Show player profile
@@ -152,11 +156,15 @@ public class ScanFragment extends Fragment {
         if (context instanceof ScanFragmentListener) {
             listener = (ScanFragmentListener) context;
         }
+        if (context instanceof ScanFragmentListener1) {
+            listener1 = (ScanFragmentListener1) context;
+        }
     }
 
     @Override
     public void onDetach() {
         listener = null;
+        listener1 = null;
         super.onDetach();
     }
 
