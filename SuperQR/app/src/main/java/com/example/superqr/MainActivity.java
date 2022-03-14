@@ -164,6 +164,7 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
         // When clicking on the navigation buttons, we open a new fragment to display
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        requestLocation();
 
         //we make the default "home" screen profile
         newFragment = ProfileFragment.newInstance(player);
@@ -182,6 +183,7 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
                     replaceFragment(newFragment);
                     break;
                 case R.id.scan:
+                    requestLocation();
                     newFragment = ScanFragment.newInstance(player, 0);
                     replaceFragment(newFragment);
                     break;
