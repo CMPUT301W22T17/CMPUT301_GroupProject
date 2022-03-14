@@ -211,8 +211,8 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
         PlayerStats playerStats = player.getStats();
         Log.d("debug", String.valueOf(playerStats.getQrCodes()));
         playerStats.addQrCode(qrCode);
-        playerStats.setCounts();
-        playerStats.setTotalScore(qrCode.getScore());
+        playerStats.addCounts();
+        playerStats.addTotalScore(qrCode.getScore());
 
         int highScore = playerStats.getQrCodes().get(0).getScore();
         int lowScore = playerStats.getQrCodes().get(0).getScore();

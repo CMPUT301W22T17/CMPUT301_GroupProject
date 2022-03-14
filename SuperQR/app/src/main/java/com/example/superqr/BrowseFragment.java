@@ -1,5 +1,4 @@
 package com.example.superqr;
-
 import android.os.Bundle;
 
 import androidx.fragment.app.DialogFragment;
@@ -21,7 +20,6 @@ public class BrowseFragment extends Fragment implements View.OnClickListener {
     //initialize variables and key used to pass through
     private static final String playerKey = "playerKey";
     private Player player;
-
     private Button playerSearchButton;
     private Button viewRankingButton;
     private Button viewCodesButton;
