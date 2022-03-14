@@ -1,28 +1,29 @@
 package com.example.superqr;
 
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class LogInActivity extends AppCompatActivity {
+public class LogInActivity extends AppCompatActivity implements ScanFragment.ScanFragmentListener1 {
 
     Button newUserButton, existingUserButton, signupButton;
     EditText usernameEditText, emailEditText, phoneEditText;
+    FrameLayout loginFrameLayout;
     FirebaseFirestore db;
     Player player;
 
@@ -37,6 +38,7 @@ public class LogInActivity extends AppCompatActivity {
         usernameEditText = findViewById(R.id.userNameEditText);
         emailEditText = findViewById(R.id.emailEditText);
         phoneEditText = findViewById(R.id.phoneEditText);
+        loginFrameLayout = findViewById(R.id.logInFrameLayout);
 
         // Access a Cloud Firestore instance from your Activity
         db = FirebaseFirestore.getInstance();
@@ -60,9 +62,11 @@ public class LogInActivity extends AppCompatActivity {
         existingUserButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.logInFrameLayout, new ExistingUserFragment()).commit();
-                newUserButton.setVisibility(View.GONE);
-                existingUserButton.setVisibility(View.GONE);
+                ScanFragment scanFragment = new ScanFragment().newInstance(player, 1);
+                getSupportFragmentManager().beginTransaction().replace(R.id.logInFrameLayout, scanFragment).commit();
+                newUserButton.setVisibility(View.INVISIBLE);
+                existingUserButton.setVisibility(View.INVISIBLE);
+                loginFrameLayout.setVisibility(View.VISIBLE);
             }
         });
 
@@ -109,4 +113,46 @@ public class LogInActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public void onQRScanned1(String username) {
+        // check if username already exists
+        DocumentReference docRef = db.collection("users").document(username);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) { // check if player is in database
+                        player = document.toObject(Player.class);
+                        // pass player back to MainActivity
+                        Intent i = new Intent(LogInActivity.this, MainActivity.class);
+                        i.putExtra("player", player);
+                        setResult(RESULT_OK, i);
+                        finish();
+                    }
+                    else {
+                        loginFrameLayout.setVisibility(View.INVISIBLE);
+                        Toast.makeText(LogInActivity.this,
+                                "Please make an account",
+                                Toast.LENGTH_LONG).show();
+                        newUserButton.setVisibility(View.VISIBLE);
+                        existingUserButton.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+            });
+        }
+
+        @Override
+        public void onBackPressed() {
+            loginFrameLayout.setVisibility(View.INVISIBLE);
+            newUserButton.setVisibility(View.VISIBLE);
+            existingUserButton.setVisibility(View.VISIBLE);
+            signupButton.setVisibility(View.INVISIBLE);
+            usernameEditText.setVisibility(View.INVISIBLE);
+            emailEditText.setVisibility(View.INVISIBLE);
+            phoneEditText.setVisibility(View.INVISIBLE);
+            Toast.makeText(LogInActivity.this, "MAKE A SELECTION", Toast.LENGTH_SHORT).show();
+        }
 }
