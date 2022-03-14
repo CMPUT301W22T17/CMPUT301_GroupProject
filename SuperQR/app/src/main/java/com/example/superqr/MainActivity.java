@@ -3,6 +3,21 @@ package com.example.superqr;
 
 import static android.content.ContentValues.TAG;
 
+import android.Manifest;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
+import android.os.Bundle;
+import android.provider.Settings;
+import android.util.Log;
+import android.widget.Toast;
+
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -14,24 +29,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.Manifest;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-
-import android.app.Activity;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationManager;
-import android.os.Bundle;
-import android.provider.Settings;
-import android.util.Log;
-
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.example.superqr.databinding.ActivityMainBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -40,8 +37,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import org.w3c.dom.Text;
 
 
 public class MainActivity extends AppCompatActivity implements EditInfoFragment.OnFragmentInteractionListener, ScanFragment.ScanFragmentListener {
@@ -192,6 +187,9 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
             ps.setEmail(newEmail);
             ps.setPhone(newPhone);
             player.setSettings(ps);
+            // show new info
+            newFragment = ProfileFragment.newInstance(player);
+            replaceFragment(newFragment);
             Toast.makeText(MainActivity.this, "Successful Update...", Toast.LENGTH_LONG).show();
         }
         else {
@@ -229,6 +227,9 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.putString("user", newUsername);
                             editor.apply();
+                            // display new info
+                            newFragment = ProfileFragment.newInstance(player);
+                            replaceFragment(newFragment);
                         }
                     } else {
                         Log.d(TAG, "get failed with", task.getException());
@@ -236,8 +237,6 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
                 }
             });
         }
-        newFragment = ProfileFragment.newInstance(player);
-        replaceFragment(newFragment);
     }
 
     /**
