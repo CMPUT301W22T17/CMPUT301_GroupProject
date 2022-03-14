@@ -12,7 +12,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -29,6 +28,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import com.example.superqr.databinding.ActivityMainBinding;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -41,6 +41,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -353,7 +354,21 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
             } else {
                 Toast.makeText(this, "Unable to find location.", Toast.LENGTH_SHORT).show();
             }
+           /* List<String> providers = locationManager.getProviders(true);
+            Location bestLocation = null;
+            for (String provider : providers){
+                Location l = locationManager.getLastKnownLocation(provider);
+                if (l == null){
+                    continue;
+                }
+                if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()){
+                    bestLocation = l;
+                }
+            }
+            player.setPlayerLocation(bestLocation.getLatitude(), bestLocation.getLongitude());*/
         }
+
+
     }
 
     /**
