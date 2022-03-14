@@ -165,6 +165,7 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
         // When clicking on the navigation buttons, we open a new fragment to display
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        requestLocation();
 
         //we make the default "home" screen profile
         newFragment = ProfileFragment.newInstance(player);
@@ -183,6 +184,7 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
                     replaceFragment(newFragment);
                     break;
                 case R.id.scan:
+                    requestLocation();
                     newFragment = ScanFragment.newInstance(player, 0);
                     replaceFragment(newFragment);
                     break;
@@ -211,8 +213,8 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
         PlayerStats playerStats = player.getStats();
         Log.d("debug", String.valueOf(playerStats.getQrCodes()));
         playerStats.addQrCode(qrCode);
-        playerStats.setCounts();
-        playerStats.setTotalScore(qrCode.getScore());
+        playerStats.addCounts();
+        playerStats.addTotalScore(qrCode.getScore());
 
         int highScore = playerStats.getQrCodes().get(0).getScore();
         int lowScore = playerStats.getQrCodes().get(0).getScore();
