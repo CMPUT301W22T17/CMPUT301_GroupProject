@@ -4,12 +4,9 @@
       <root url="jar://$PROJECT_DIR$/../../../TEST/lab6/CMPUT-301-CustomList/app/caches/transforms-3/71da45f9336ea5cf5ec6225021012807/transformed/activity-1.2.4/annotations.zip!/" />
     </ANNOTATIONS>
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/d8ae99f90fa01a6e12039a9d593e94a6/transformed/activity-1.2.4/res" />
-      <root url="file://$PROJECT_DIR$/../../../TEST/lab6/CMPUT-301-CustomList/app/caches/transforms-3/d8ae99f90fa01a6e12039a9d593e94a6/transformed/activity-1.2.4/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/71da45f9336ea5cf5ec6225021012807/transformed/activity-1.2.4/res" />
-      <root url="file://$PROJECT_DIR$/../../../TEST/lab6/CMPUT-301-CustomList/app/caches/transforms-3/71da45f9336ea5cf5ec6225021012807/transformed/activity-1.2.4/AndroidManifest.xml" />
       <root url="jar://$PROJECT_DIR$/../../../TEST/lab6/CMPUT-301-CustomList/app/caches/transforms-3/71da45f9336ea5cf5ec6225021012807/transformed/activity-1.2.4/jars/classes.jar!/" />
       <root url="file://$PROJECT_DIR$/../../../TEST/lab6/CMPUT-301-CustomList/app/caches/transforms-3/71da45f9336ea5cf5ec6225021012807/transformed/activity-1.2.4/res" />
+      <root url="file://$PROJECT_DIR$/../../../TEST/lab6/CMPUT-301-CustomList/app/caches/transforms-3/71da45f9336ea5cf5ec6225021012807/transformed/activity-1.2.4/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

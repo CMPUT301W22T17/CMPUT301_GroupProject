@@ -1,11 +1,8 @@
 <component name="libraryTable">
   <library name="Gradle: androidx.arch.core:core-runtime:2.0.0@aar">
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/4f2bc8f8bbec378cd02f580539dcfaa1/transformed/core-runtime-2.0.0/res" />
-      <root url="file://$PROJECT_DIR$/../../../TEST/lab6/CMPUT-301-CustomList/app/caches/transforms-3/4f2bc8f8bbec378cd02f580539dcfaa1/transformed/core-runtime-2.0.0/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/ef7cb081f1d5e1b5b1373c63e72750fa/transformed/core-runtime-2.0.0/res" />
-      <root url="file://$PROJECT_DIR$/../../../TEST/lab6/CMPUT-301-CustomList/app/caches/transforms-3/ef7cb081f1d5e1b5b1373c63e72750fa/transformed/core-runtime-2.0.0/res" />
       <root url="jar://$PROJECT_DIR$/../../../TEST/lab6/CMPUT-301-CustomList/app/caches/transforms-3/ef7cb081f1d5e1b5b1373c63e72750fa/transformed/core-runtime-2.0.0/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../../../TEST/lab6/CMPUT-301-CustomList/app/caches/transforms-3/ef7cb081f1d5e1b5b1373c63e72750fa/transformed/core-runtime-2.0.0/res" />
       <root url="file://$PROJECT_DIR$/../../../TEST/lab6/CMPUT-301-CustomList/app/caches/transforms-3/ef7cb081f1d5e1b5b1373c63e72750fa/transformed/core-runtime-2.0.0/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
