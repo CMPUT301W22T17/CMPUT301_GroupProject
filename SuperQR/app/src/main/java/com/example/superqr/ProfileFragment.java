@@ -58,7 +58,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View profileView = inflater.inflate(R.layout.activity_player_profile, container, false);
+        View profileView = inflater.inflate(R.layout.fragment_profile, container, false);
         qrHighScoreButton = (Button) profileView.findViewById(R.id.view_high_score_button);
         qrHighScoreButton.setOnClickListener(this);
 

@@ -7,8 +7,9 @@
 
     <EditText
         android:id="@+id/search_EditText"
-        android:layout_width="297dp"
+        android:layout_width="0dp"
         android:layout_height="48dp"
+        android:layout_marginStart="16dp"
         android:hint="Enter Username"
         android:textColorHint="#757575"
         app:layout_constraintBottom_toBottomOf="parent"
