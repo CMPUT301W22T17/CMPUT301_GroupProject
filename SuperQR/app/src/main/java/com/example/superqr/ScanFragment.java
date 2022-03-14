@@ -8,6 +8,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+
+import android.provider.MediaStore;
 import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,6 +49,7 @@ public class ScanFragment extends Fragment {
     // https://github.com/Karumi/Dexter
     //initialize variables and key used to pass through
     private static final String playerKey = "playerKey";
+    private final int REQUEST_IMAGE_CAPTURE = 1;
     private Player player;
     private CodeScanner codeScanner;
     private boolean cameraDenied; // permission permanently denied
@@ -118,6 +124,7 @@ public class ScanFragment extends Fragment {
                             if (!sameHash) {
                                 listener.onQRScanned(qrCode); // Sends QRCode object to MainActivity
                                 Toast.makeText(activity, result.getText(), Toast.LENGTH_SHORT).show();
+                                showQRStats(qrCode);
                             }
                         }
 
@@ -211,6 +218,60 @@ public class ScanFragment extends Fragment {
         }).onSameThread().check();
     }
 
+    /**
+     * Shows how many points was the QR code, prompts user if they want to take photo of the object,
+     * store geolocation and executes those actions if they are checked off.
+     * @param qrCode
+     */
+    public void showQRStats(QRCode qrCode) {
+        final Activity activity = getActivity();
+
+        String[] options = {"Store photo of the object?", "Record geolocation of the QR code?"};
+        boolean[] checkedOptions = {true, true};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(String.format("You got %d points!", qrCode.getScore()));
+        if (qrCode.getScanned()) {
+            builder.setMessage("This QR code has been scanned by another player!");
+        }
+        builder.setMultiChoiceItems(options, checkedOptions, new DialogInterface.OnMultiChoiceClickListener(){
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i, boolean b) {
+                switch (i) {
+                    case 0:
+                        if (b) {
+                            checkedOptions[0] = true;
+                        }
+                        else {
+                            checkedOptions[0] = false;
+                        }
+                    break;
+                    case 1:
+                        if (b) {
+                            checkedOptions[1] = true;
+                        }
+                        else {
+                            checkedOptions[1] = false;
+                        }
+                }
+            }
+        });
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+                if (checkedOptions[0]) { // Take photo
+                    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    activity.startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE); // Camera
+                }
+                if (checkedOptions[1]) { // Store geolocation
+                    // TODO: Need to implement storing geolocation
+                }
+            }
+        });
+        builder.show();
+    }
+
     // Prompts player to change their camera permission to use the QR scan feature
     public void showSettingsDialog() {
         final Activity activity = getActivity();
@@ -228,7 +289,7 @@ public class ScanFragment extends Fragment {
                 Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
                 Uri uri = Uri.fromParts("package", activity.getPackageName(), null);
                 intent.setData(uri);
-                startActivityForResult(intent, 101); // should use ActivityResultLauncher, but don't know what to do with result
+                activity.startActivityForResult(intent, 101);
             }
         });
         builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
