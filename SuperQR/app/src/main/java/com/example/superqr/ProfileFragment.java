@@ -1,30 +1,15 @@
 package com.example.superqr;
 
-import static android.content.ContentValues.TAG;
-import static android.content.Context.MODE_PRIVATE;
-
-import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.DialogFragment;
-
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+
 import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
@@ -41,6 +26,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     private Button qrHighScoreButton;
     private Button qrLowScoreButton;
     private Button editInfoButton;
+    private Button loginCodeButton;
     private FirebaseFirestore db;
     public ProfileFragment() {
         // Required empty public constructor
@@ -72,7 +58,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View profileView = inflater.inflate(R.layout.activity_player_profile, container, false);
+        View profileView = inflater.inflate(R.layout.fragment_profile, container, false);
         qrHighScoreButton = (Button) profileView.findViewById(R.id.view_high_score_button);
         qrHighScoreButton.setOnClickListener(this);
 
@@ -80,6 +66,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         qrLowScoreButton.setOnClickListener(this);
         editInfoButton = (Button) profileView.findViewById(R.id.edit_player_info_button);
         editInfoButton.setOnClickListener(this);
+        loginCodeButton = (Button) profileView.findViewById(R.id.login_code_button);
+        loginCodeButton.setOnClickListener(this);
 
         player = (Player) getArguments().getParcelable(playerKey);
 
@@ -109,6 +97,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.edit_player_info_button:
                 editInfo();
+                break;
+            case R.id.login_code_button:
+                DialogFragment loginCodeFragment = new ViewLoginCodeFragment(player.getSettings().getUsername());
+                loginCodeFragment.show(getActivity().getSupportFragmentManager(), "login_code_dialog");
                 break;
         }
     }

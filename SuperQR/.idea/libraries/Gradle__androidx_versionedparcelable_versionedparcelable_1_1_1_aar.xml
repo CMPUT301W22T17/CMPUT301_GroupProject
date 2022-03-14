@@ -1,6 +1,7 @@
 <component name="libraryTable">
   <library name="Gradle: androidx.versionedparcelable:versionedparcelable:1.1.1@aar">
     <CLASSES>
+<<<<<<< HEAD
       <root url="jar://$PROJECT_DIR$/../../../TEST/lab6/CMPUT-301-CustomList/app/caches/transforms-3/9109591f717c07cb82823175536ca8c6/transformed/versionedparcelable-1.1.1/jars/classes.jar!/" />
       <root url="file://$PROJECT_DIR$/../../../TEST/lab6/CMPUT-301-CustomList/app/caches/transforms-3/9109591f717c07cb82823175536ca8c6/transformed/versionedparcelable-1.1.1/res" />
       <root url="file://$PROJECT_DIR$/../../../TEST/lab6/CMPUT-301-CustomList/app/caches/transforms-3/9109591f717c07cb82823175536ca8c6/transformed/versionedparcelable-1.1.1/AndroidManifest.xml" />
@@ -8,6 +9,22 @@
     <JAVADOC />
     <SOURCES>
       <root url="jar://$PROJECT_DIR$/../../../TEST/lab6/CMPUT-301-CustomList/app/caches/modules-2/files-2.1/androidx.versionedparcelable/versionedparcelable/1.1.1/d9085927216387af679d18b6f472bc0fc5c7cc81/versionedparcelable-1.1.1-sources.jar!/" />
+=======
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/2df74d9279148af31c563a4f985550aa/transformed/versionedparcelable-1.1.1/res" />
+      <root url="file://$USER_HOME$/TEST/lab6/CMPUT-301-CustomList/app/caches/transforms-3/2df74d9279148af31c563a4f985550aa/transformed/versionedparcelable-1.1.1/res" />
+      <root url="file://$USER_HOME$/TEST/lab6/CMPUT-301-CustomList/app/caches/transforms-3/2df74d9279148af31c563a4f985550aa/transformed/versionedparcelable-1.1.1/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/TEST/lab6/CMPUT-301-CustomList/app/caches/transforms-3/2df74d9279148af31c563a4f985550aa/transformed/versionedparcelable-1.1.1/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/9109591f717c07cb82823175536ca8c6/transformed/versionedparcelable-1.1.1/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/9899786a038396cb07355d4cfd9c3984/transformed/versionedparcelable-1.1.1/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/f3a4371e11ca1de3c8eeb33bfac4de1e/transformed/versionedparcelable-1.1.1/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/f3a4371e11ca1de3c8eeb33bfac4de1e/transformed/versionedparcelable-1.1.1/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/f3a4371e11ca1de3c8eeb33bfac4de1e/transformed/versionedparcelable-1.1.1/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/TEST/lab6/CMPUT-301-CustomList/app/caches/modules-2/files-2.1/androidx.versionedparcelable/versionedparcelable/1.1.1/d9085927216387af679d18b6f472bc0fc5c7cc81/versionedparcelable-1.1.1-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/androidx.versionedparcelable/versionedparcelable/1.1.1/d9085927216387af679d18b6f472bc0fc5c7cc81/versionedparcelable-1.1.1-sources.jar!/" />
+>>>>>>> 00dc97f5bcb9fcfe1740302c506fc42c2e89aac3
     </SOURCES>
   </library>
 </component>

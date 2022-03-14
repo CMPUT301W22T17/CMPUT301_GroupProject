@@ -1,6 +1,7 @@
 <component name="libraryTable">
   <library name="Gradle: androidx.cardview:cardview:1.0.0@aar">
     <CLASSES>
+<<<<<<< HEAD
       <root url="jar://$PROJECT_DIR$/../../../TEST/lab6/CMPUT-301-CustomList/app/caches/transforms-3/c9ad2d4b84027388a9467a8ff02ddb67/transformed/cardview-1.0.0/jars/classes.jar!/" />
       <root url="file://$PROJECT_DIR$/../../../TEST/lab6/CMPUT-301-CustomList/app/caches/transforms-3/c9ad2d4b84027388a9467a8ff02ddb67/transformed/cardview-1.0.0/res" />
       <root url="file://$PROJECT_DIR$/../../../TEST/lab6/CMPUT-301-CustomList/app/caches/transforms-3/c9ad2d4b84027388a9467a8ff02ddb67/transformed/cardview-1.0.0/AndroidManifest.xml" />
@@ -8,6 +9,19 @@
     <JAVADOC />
     <SOURCES>
       <root url="jar://$PROJECT_DIR$/../../../TEST/lab6/CMPUT-301-CustomList/app/caches/modules-2/files-2.1/androidx.cardview/cardview/1.0.0/c9f3ce7ca74ad2c978230f4094ba6804c5166f9c/cardview-1.0.0-sources.jar!/" />
+=======
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/00a2ec88d523189ef2f9f3b5c5c1d2e1/transformed/cardview-1.0.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/00a2ec88d523189ef2f9f3b5c5c1d2e1/transformed/cardview-1.0.0/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/00a2ec88d523189ef2f9f3b5c5c1d2e1/transformed/cardview-1.0.0/res" />
+      <root url="file://$USER_HOME$/TEST/lab6/CMPUT-301-CustomList/app/caches/transforms-3/b8f3cd1adc2299894ae656ed8cc2c6e7/transformed/cardview-1.0.0/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/TEST/lab6/CMPUT-301-CustomList/app/caches/transforms-3/b8f3cd1adc2299894ae656ed8cc2c6e7/transformed/cardview-1.0.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/TEST/lab6/CMPUT-301-CustomList/app/caches/transforms-3/b8f3cd1adc2299894ae656ed8cc2c6e7/transformed/cardview-1.0.0/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/TEST/lab6/CMPUT-301-CustomList/app/caches/modules-2/files-2.1/androidx.cardview/cardview/1.0.0/c9f3ce7ca74ad2c978230f4094ba6804c5166f9c/cardview-1.0.0-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/androidx.cardview/cardview/1.0.0/c9f3ce7ca74ad2c978230f4094ba6804c5166f9c/cardview-1.0.0-sources.jar!/" />
+>>>>>>> 00dc97f5bcb9fcfe1740302c506fc42c2e89aac3
     </SOURCES>
   </library>
 </component>
