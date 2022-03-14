@@ -34,7 +34,7 @@ public class Player implements Parcelable, Comparable<Player> {
     protected Player(Parcel in) {
         settings = in.readParcelable(PlayerSettings.class.getClassLoader());
         stats = in.readParcelable(PlayerStats.class.getClassLoader());
-        location = in.readParcelable(Location.class.getClassLoader());
+        location = in.readParcelable(LocationStore.class.getClassLoader());
     }
 
     public static final Creator<Player> CREATOR = new Creator<Player>() {
