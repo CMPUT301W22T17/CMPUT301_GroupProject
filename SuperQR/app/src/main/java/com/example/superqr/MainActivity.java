@@ -43,6 +43,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.w3c.dom.Text;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class MainActivity extends AppCompatActivity implements EditInfoFragment.OnFragmentInteractionListener, ScanFragment.ScanFragmentListener {
 
@@ -163,18 +166,62 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
     }
 
     /**
-     * Adds QRCcode to the player and updates the database.
+     * Adds QRCcode to the player,updates the database, and update's the player's
+     * QRCode stats as necessary.
      * @param qrCode
      */
     @Override
     public void onQRScanned(QRCode qrCode) {
+
+
+        qrCode.setLocation(player.getPlayerLocation().getLatitude(), player.getPlayerLocation().getLongitude());
+
         PlayerStats playerStats = player.getStats();
         Log.d("debug", String.valueOf(playerStats.getQrCodes()));
         playerStats.addQrCode(qrCode);
+        playerStats.setCounts();
+        playerStats.setTotalScore(qrCode.getScore());
+
+        int highScore = playerStats.getQrCodes().get(0).getScore();
+        int lowScore = playerStats.getQrCodes().get(0).getScore();
+        for (int i = 0; i < playerStats.getQrCodes().size(); i++) {
+            if (playerStats.getQrCodes().get(i).getScore() > highScore) {
+                highScore = playerStats.getQrCodes().get(i).getScore();
+            }
+            else if (playerStats.getQrCodes().get(i).getScore() < lowScore) {
+                lowScore = playerStats.getQrCodes().get(i).getScore();
+            }
+        }
+
+        playerStats.setHighestScore(highScore);
+        playerStats.setLowestScore(lowScore);
+
         Log.d("deb", String.valueOf(playerStats.getQrCodes()));
         player.setStats(playerStats);
         db.collection("users").document(player.getSettings().getUsername()).update(
                 "stats.qrCodes", FieldValue.arrayUnion(qrCode));
+
+        // put QRCode into firestore
+        db.collection("codes").document(qrCode.getHash()).set(qrCode);
+        db.collection("codes").document(qrCode.getHash())
+                .update(
+                        "hash", qrCode.getHash(),
+                        "score", qrCode.getScore(),
+                        "location.latitude", qrCode.getStoreLocation().getLatitude(),
+                        "location.longitude", qrCode.getStoreLocation().getLongitude(),
+                        "scanned", qrCode.getScanned()
+                );
+
+        // remove storeLocation
+        DocumentReference ref = db.collection("codes").document(qrCode.getHash());
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("storeLocation", FieldValue.delete());
+        ref.update(updates).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Log.d("Message: ", "REMOVED storeLocation field");
+            }
+        });
     }
 
     @Override

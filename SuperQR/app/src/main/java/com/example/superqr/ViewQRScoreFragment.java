@@ -14,9 +14,10 @@ import androidx.fragment.app.DialogFragment;
 public class ViewQRScoreFragment extends DialogFragment {
 
     private TextView qrText;
-    private String qrScore;
+    private int qrScore;
 
-    public ViewQRScoreFragment(String score) {
+    public ViewQRScoreFragment(int score) {
+
         this.qrScore = score;
     }
 
@@ -26,7 +27,7 @@ public class ViewQRScoreFragment extends DialogFragment {
         View qr_score_view = LayoutInflater.from(getActivity()).inflate(R.layout.view_qr_score_fragment, null);
         qrText = qr_score_view.findViewById(R.id.qr_score_text);
 
-        qrText.setText(qrScore);
+        qrText.setText(Integer.toString(qrScore));
 
         // still need to figure out how to place in picture
 
