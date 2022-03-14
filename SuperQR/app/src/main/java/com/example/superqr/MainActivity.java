@@ -239,6 +239,9 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
             ps.setEmail(newEmail);
             ps.setPhone(newPhone);
             player.setSettings(ps);
+            // show new info
+            newFragment = ProfileFragment.newInstance(player);
+            replaceFragment(newFragment);
             Toast.makeText(MainActivity.this, "Successful Update...", Toast.LENGTH_LONG).show();
         }
         else {
@@ -276,6 +279,8 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.putString("user", newUsername);
                             editor.apply();
+                            newFragment = ProfileFragment.newInstance(player);
+                            replaceFragment(newFragment);
                         }
                     } else {
                         Log.d(TAG, "get failed with", task.getException());
@@ -283,8 +288,6 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
                 }
             });
         }
-        newFragment = ProfileFragment.newInstance(player);
-        replaceFragment(newFragment);
     }
 
     /**
