@@ -21,6 +21,7 @@
         <entry key="app/src/main/res/layout/fragment_existing_user.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/fragment_new_user.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/fragment_player_codes.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.17147922998986828" />
         <entry key="app/src/main/res/layout/fragment_scan.xml" value="0.25" />
         <entry key="app/src/main/res/layout/login_qr_code_fragment.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/view_qr_score_fragment.xml" value="0.3435012817382812" />
