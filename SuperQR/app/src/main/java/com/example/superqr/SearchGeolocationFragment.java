@@ -73,7 +73,11 @@ public class SearchGeolocationFragment extends Fragment {
                             List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
                             for (DocumentSnapshot d : list) {
                                 QRCode code = d.toObject(QRCode.class);
-                                nearbyQRCodes.add(code.getStoreLocation());
+
+                                if ((Math.abs(code.getStoreLocation().getLatitude() - player.getPlayerLocation().getLatitude()) < 0.5) &&
+                                        (Math.abs(code.getStoreLocation().getLongitude()) - player.getPlayerLocation().getLongitude()) < 0.5) {
+                                    nearbyQRCodes.add(code.getStoreLocation());
+                                }
                             }
                             QRGeolocationListView adapter = new QRGeolocationListView(requireContext(), nearbyQRCodes);
                             nearbyQRList.setAdapter(adapter);
