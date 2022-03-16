@@ -202,6 +202,7 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
      * Adds QRCcode to the player, updates the database, and update's the player's
      * QRCode stats as necessary.
      * @param qrCode
+     *      QRCode that is scanned
      */
     @Override
     public void onQRScanned(QRCode qrCode, boolean geo) {
@@ -233,7 +234,11 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
         Log.d("deb", String.valueOf(playerStats.getQrCodes()));
         player.setStats(playerStats);
         db.collection("users").document(player.getSettings().getUsername()).update(
-                "stats.qrCodes", FieldValue.arrayUnion(qrCode));
+                "stats.qrCodes", FieldValue.arrayUnion(qrCode),
+                "stats.counts", (playerStats.getCounts()),
+                "stats.highestScore", (playerStats.getHighestScore()),
+                "stats.lowestScore", (playerStats.getLowestScore()),
+                "stats.totalScore", (playerStats.getTotalScore()));
 
         // put QRCode into firestore
         db.collection("codes").document(qrCode.getHash()).set(qrCode);
@@ -245,6 +250,9 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
                         "location.longitude", qrCode.getStoreLocation().getLongitude(),
                         "scanned", qrCode.getScanned()
                 );
+
+
+
 
         // remove storeLocation
         DocumentReference ref = db.collection("codes").document(qrCode.getHash());
