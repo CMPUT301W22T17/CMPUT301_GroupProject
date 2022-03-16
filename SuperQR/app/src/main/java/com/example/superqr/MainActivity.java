@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
             StorageReference qrcodes = mStorageRef.child(String.format("%s/%s", userName, qrCodes.get(qrCodes.size() - 1).getHash()));
 
             // Get data as Bitmap and convert it into byte[] to upload with putBytes
+            // https://stackoverflow.com/questions/56699632/how-to-upload-file-bitmap-to-cloud-firestore
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -198,21 +199,23 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
     }
 
     /**
-     * Adds QRCcode to the player,updates the database, and update's the player's
+     * Adds QRCcode to the player, updates the database, and update's the player's
      * QRCode stats as necessary.
      * @param qrCode
+     *      QRCode that is scanned
      */
     @Override
-    public void onQRScanned(QRCode qrCode) {
-
-
-        qrCode.setLocation(player.getPlayerLocation().getLatitude(), player.getPlayerLocation().getLongitude());
+    public void onQRScanned(QRCode qrCode, boolean geo) {
+        if (geo) {
+            qrCode.setLocation(player.getPlayerLocation().getLatitude(), player.getPlayerLocation().getLongitude());
+            Log.d("debug", "geo is true");
+        }
 
         PlayerStats playerStats = player.getStats();
         Log.d("debug", String.valueOf(playerStats.getQrCodes()));
         playerStats.addQrCode(qrCode);
-        playerStats.setCounts();
-        playerStats.setTotalScore(qrCode.getScore());
+        playerStats.addCounts();
+        playerStats.addTotalScore(qrCode.getScore());
 
         int highScore = playerStats.getQrCodes().get(0).getScore();
         int lowScore = playerStats.getQrCodes().get(0).getScore();
@@ -231,7 +234,11 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
         Log.d("deb", String.valueOf(playerStats.getQrCodes()));
         player.setStats(playerStats);
         db.collection("users").document(player.getSettings().getUsername()).update(
-                "stats.qrCodes", FieldValue.arrayUnion(qrCode));
+                "stats.qrCodes", FieldValue.arrayUnion(qrCode),
+                "stats.counts", (playerStats.getCounts()),
+                "stats.highestScore", (playerStats.getHighestScore()),
+                "stats.lowestScore", (playerStats.getLowestScore()),
+                "stats.totalScore", (playerStats.getTotalScore()));
 
         // put QRCode into firestore
         db.collection("codes").document(qrCode.getHash()).set(qrCode);
@@ -243,6 +250,9 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
                         "location.longitude", qrCode.getStoreLocation().getLongitude(),
                         "scanned", qrCode.getScanned()
                 );
+
+
+
 
         // remove storeLocation
         DocumentReference ref = db.collection("codes").document(qrCode.getHash());
@@ -297,7 +307,7 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
                             docRefOldName.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void unused) {
-                                    Log.d(TAG, "DocumentSnapShot successfuly deleted");
+                                    Log.d(TAG, "DocumentSnapShot successfully deleted");
                                 }
                             });
                             PlayerSettings ps = player.getSettings();
