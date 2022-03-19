@@ -86,13 +86,13 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             case R.id.view_high_score_button:
                 // replace 2 with the high qr score player has
                 // https://stackoverflow.com/questions/25887373/calling-dialogfragment-from-fragment-not-fragmentactivity
-                DialogFragment highQRScoreFragment = new ViewQRScoreFragment(player.getStats().getHighestScore());
+                DialogFragment highQRScoreFragment = new ViewQRScoreFragment(player.getStats().getHighestScore().getScore());
                 highQRScoreFragment.show(getActivity().getSupportFragmentManager(), "high_qr_dialog");
                 break;
 
             case R.id.view_low_score_button:
                 // replace 1 with the low qr score player has
-                DialogFragment lowQRScoreFragment = new ViewQRScoreFragment(player.getStats().getLowestScore());
+                DialogFragment lowQRScoreFragment = new ViewQRScoreFragment(player.getStats().getLowestScore().getScore());
                 lowQRScoreFragment.show(getActivity().getSupportFragmentManager(), "high_qr_dialog");
                 break;
             case R.id.edit_player_info_button:
