@@ -166,6 +166,7 @@ public class MapFragment extends Fragment {
     private void addLocationMarkers() {
 
         playerMarker.setPosition(playerPoint);
+        playerMarker.setTitle(Double.toString(player.getPlayerLocation().getLatitude()) + ", " + Double.toString(player.getPlayerLocation().getLongitude()));
         playerMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
         map.getOverlays().add(playerMarker);
 
@@ -195,6 +196,7 @@ public class MapFragment extends Fragment {
                                     Marker QRMarker = new Marker(map);
                                     QRMarker.setIcon(QRPin);
                                     QRMarker.setPosition(QRPoint);
+                                    QRMarker.setTitle(Double.toString(code.getStoreLocation().getLatitude()) + ", " + Double.toString(code.getStoreLocation().getLongitude()));
                                     QRMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
                                     map.getOverlays().add(QRMarker);
                                 }
