@@ -18,6 +18,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
@@ -26,6 +31,7 @@ import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -124,7 +130,7 @@ public class MapFragment extends Fragment {
     /**
      * Create location icons used to show where the player is.
      */
-    public void createLocationIcons() {
+    private void createLocationIcons() {
         //https://stackoverflow.com/questions/60301641/customized-icon-in-osmdroid-marker-android
         // Player Map Marker Icon: <a href="https://www.flaticon.com/free-icons/location" title="location icons">Location icons created by IconMarketPK - Flaticon</a>
         // QR Map Marker Icon: <a href="https://www.flaticon.com/free-icons/location" title="location icons">Location icons created by IconMarketPK - Flaticon</a>
@@ -143,7 +149,7 @@ public class MapFragment extends Fragment {
     /**
      * Set the zoom and center the map onto user location.
      */
-    public void setToUserLocation() {
+    private void setToUserLocation() {
         // https://stackoverflow.com/questions/40257342/how-to-display-user-location-on-osmdroid-mapview
 
         controller.setZoom(18);
@@ -157,29 +163,45 @@ public class MapFragment extends Fragment {
     /**
      * Put markers onto the map of the nearby QR codes and player.
      */
-    public void addLocationMarkers() {
+    private void addLocationMarkers() {
 
         playerMarker.setPosition(playerPoint);
         playerMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
         map.getOverlays().add(playerMarker);
 
+        addQRLocationMarkers();
+    }
 
+    private void addQRLocationMarkers() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        ArrayList<LocationStore> QRCodeLocations = mapInfo.getQRLocations();
-        for (LocationStore QRLocation : QRCodeLocations) {
+        db.collection("codes").get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        if (!queryDocumentSnapshots.isEmpty()) {
+                            List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
+                            for (DocumentSnapshot d : list) {
+                                QRCode code = d.toObject(QRCode.class);
 
-            Location location = new Location("map_location");
-            location.setLatitude(QRLocation.getLatitude());
-            location.setLongitude(QRLocation.getLongitude());
+                                if ((Math.abs(code.getStoreLocation().getLatitude() - player.getPlayerLocation().getLatitude()) < 0.5) &&
+                                        (Math.abs(code.getStoreLocation().getLongitude()) - player.getPlayerLocation().getLongitude()) < 0.5) {
+                                    Location location = new Location("map_location");
+                                    location.setLatitude(code.getStoreLocation().getLatitude());
+                                    location.setLongitude(code.getStoreLocation().getLongitude());
 
-            GeoPoint QRPoint = new GeoPoint(location);
+                                    GeoPoint QRPoint = new GeoPoint(location);
 
-            Marker QRMarker = new Marker(map);
-            QRMarker.setIcon(QRPin);
-            QRMarker.setPosition(QRPoint);
-            QRMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-            map.getOverlays().add(QRMarker);
-        }
+                                    Marker QRMarker = new Marker(map);
+                                    QRMarker.setIcon(QRPin);
+                                    QRMarker.setPosition(QRPoint);
+                                    QRMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+                                    map.getOverlays().add(QRMarker);
+                                }
+                            }
+                        }
+                    }
+                });
     }
 
 }
