@@ -188,7 +188,7 @@ public class MapFragment extends Fragment {
     }
 
     /**
-     * Put markers onto the map of the nearby QR codes and player.
+     * Put markers onto the map of the player.
      */
     private void addLocationMarkers() {
 
@@ -200,6 +200,9 @@ public class MapFragment extends Fragment {
         addQRLocationMarkers();
     }
 
+    /**
+     * Put markers onto the map of the QR codes that are nearby the player
+     */
     private void addQRLocationMarkers() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
