@@ -47,13 +47,13 @@ public class MapFragment extends Fragment {
     // At: https://osmdroid.github.io/osmdroid/How-to-use-the-osmdroid-library.html
     // Reference: https://osmdroid.github.io/osmdroid/javadocs/osmdroid-android/debug/index.html?org/osmdroid/views/MapView.html
 
-    Map mapInfo;
     MapView map;
     MapController controller;
     Marker playerMarker;
     Drawable playerPin;
     Drawable QRPin;
     GeoPoint playerPoint;
+    LocationStore singleCodeLocation = null;
 
     public MapFragment() {
         // Required empty public constructor
@@ -96,21 +96,48 @@ public class MapFragment extends Fragment {
         // https://stackoverflow.com/questions/14897143/integrating-osmdroid-with-fragments
         View view = inflater.inflate(R.layout.activity_display_map, container, false);
 
+
+        Bundle codeLocationBundle = getArguments();
+        if (codeLocationBundle != null) {
+            singleCodeLocation = codeLocationBundle.getParcelable("code_location");
+        }
+
         Context mapContext = getActivity().getApplicationContext();
         Configuration.getInstance().load(mapContext, PreferenceManager.getDefaultSharedPreferences(mapContext));
         map = view.findViewById(R.id.map);
         map.setTileSource(TileSourceFactory.MAPNIK);
-
-        //get Player from MainActivity
-        player= (Player) getArguments().getParcelable(playerKey);
-
         controller = new MapController(map);
-        mapInfo = new Map();
-        playerPoint = new GeoPoint(player.getPlayerLocation().getLatitude(), player.getPlayerLocation().getLongitude());
-
         createLocationIcons();
-        setToUserLocation();
-        addLocationMarkers();
+
+        if (singleCodeLocation == null) {
+
+            //get Player from MainActivity
+            player = (Player) getArguments().getParcelable(playerKey);
+            playerPoint = new GeoPoint(player.getPlayerLocation().getLatitude(), player.getPlayerLocation().getLongitude());
+
+            setToUserLocation();
+            addLocationMarkers();
+        }
+
+        else {
+
+            // create qr marker
+            Marker codeMarker = new Marker(map);
+            codeMarker.setIcon(QRPin);
+            GeoPoint codePoint = new GeoPoint(singleCodeLocation.getLatitude(), singleCodeLocation.getLongitude());
+            codeMarker.setPosition(codePoint);
+            codeMarker.setTitle(Double.toString(singleCodeLocation.getLatitude()) + ", " + Double.toString(singleCodeLocation.getLongitude()));
+            codeMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+            map.getOverlays().add(codeMarker);
+
+            // set to qr marker location
+            controller.setZoom(18);
+            controller.zoomIn();
+
+            controller.animateTo(codePoint);
+            controller.setCenter(codePoint);
+
+        }
 
         return view;
     }

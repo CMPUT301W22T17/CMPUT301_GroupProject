@@ -7,11 +7,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
@@ -81,6 +84,27 @@ public class SearchGeolocationFragment extends Fragment {
                             }
                             QRGeolocationListView adapter = new QRGeolocationListView(requireContext(), nearbyQRCodes);
                             nearbyQRList.setAdapter(adapter);
+                            nearbyQRList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                    Toast.makeText(getContext(), "position " + (i), Toast.LENGTH_SHORT).show();
+                                    LocationStore codeLocation = nearbyQRCodes.get(i);
+                                    // open map fragment here
+
+                                    // https://stackoverflow.com/questions/17063378/how-to-pass-bundle-from-fragment-to-fragment
+                                    Bundle codeBundle = new Bundle();
+                                    codeBundle.putParcelable("code_location", codeLocation);
+                                    Fragment mapFragment = new MapFragment();
+                                    mapFragment.setArguments(codeBundle);
+
+                                    FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
+
+                                    fragmentTransaction.replace(R.id.map_container, mapFragment);
+                                    fragmentTransaction.addToBackStack(null);
+                                    fragmentTransaction.commit();
+
+                                }
+                            });
                         }
                     }
                 });
