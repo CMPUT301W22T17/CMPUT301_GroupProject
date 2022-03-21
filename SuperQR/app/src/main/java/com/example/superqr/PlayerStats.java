@@ -13,8 +13,8 @@ public class PlayerStats implements Parcelable {
     private ArrayList<QRCode> qrCodes;
     private int counts;
     private int totalScore;
-    private QRCode highestScore;
-    private QRCode lowestScore;
+    private QRCode highestScore = new QRCode();
+    private QRCode lowestScore = new QRCode();
 
     /**
      * Creates a PlayerStats object

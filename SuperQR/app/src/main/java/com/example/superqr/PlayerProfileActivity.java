@@ -24,7 +24,7 @@ public class PlayerProfileActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // the 2 is a test number - need player's actual data to replace
                 // need to pass in actual qr picture
-                new ViewQRScoreFragment(player.getStats().getHighestScore().getScore()).show(getSupportFragmentManager(), "VIEW_HIGH_QR");
+                new ViewQRScoreFragment(player.getSettings().getUsername(), player.getStats().getHighestScore()).show(getSupportFragmentManager(), "VIEW_HIGH_QR");
             }
         });
 
@@ -33,7 +33,7 @@ public class PlayerProfileActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // the 1 is a test number - need player's actual data to replace
                 // need to pass in actual qr picture
-                new ViewQRScoreFragment(player.getStats().getLowestScore().getScore()).show(getSupportFragmentManager(), "VIEW_LOW_QR");
+                new ViewQRScoreFragment(player.getSettings().getUsername(), player.getStats().getLowestScore()).show(getSupportFragmentManager(), "VIEW_LOW_QR");
             }
         });
     }
