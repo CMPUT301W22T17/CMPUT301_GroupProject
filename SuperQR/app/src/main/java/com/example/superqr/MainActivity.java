@@ -1,126 +1,381 @@
 package com.example.superqr;
 
 import static android.content.ContentValues.TAG;
-
+import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Bundle;
-
-import android.preference.PreferenceManager;
-import android.util.Log;
-import android.widget.Toast;
-
 import com.example.superqr.databinding.ActivityMainBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.CollectionReference;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.lang.reflect.Type;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
-
-public class MainActivity extends AppCompatActivity {
-
+public class MainActivity extends AppCompatActivity implements EditInfoFragment.OnFragmentInteractionListener, ScanFragment.ScanFragmentListener, LocationListener {
+    private static int REQUEST_IMAGE_CAPTURE = 1;
     private ActivityMainBinding binding;
+    private StorageReference mStorageRef;
     Player player;
     FirebaseFirestore db;
+    Fragment newFragment;
+    LocationManager locationManager;
+
+
+    // from: https://stackoverflow.com/questions/62671106/onactivityresult-method-is-deprecated-what-is-the-alternative
+    // author: https://stackoverflow.com/users/4147849/muntashir-akon
+    // used to pass Player object through into fragments.
+    ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent data = result.getData();
+                        player = (Player) data.getParcelableExtra("player");
+                        loadFragments();
+                    }
+                }
+            }
+    );
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) { // Photo taken
+            String userName = player.getSettings().getUsername();
+            ArrayList<QRCode> qrCodes = player.getStats().getQrCodes();
+            StorageReference qrcodes = mStorageRef.child(String.format("%s/%s", userName, qrCodes.get(qrCodes.size() - 1).getHash()));
+
+            // Get data as Bitmap and convert it into byte[] to upload with putBytes
+            // https://stackoverflow.com/questions/56699632/how-to-upload-file-bitmap-to-cloud-firestore
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] imageData = baos.toByteArray();
+
+            UploadTask uploadTask = qrcodes.putBytes(imageData);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(MainActivity.this, "Failed to upload", Toast.LENGTH_SHORT);
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Toast.makeText(MainActivity.this, "Successful upload", Toast.LENGTH_SHORT);
+                }
+            });
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        //retrieve player from database
+        mStorageRef = FirebaseStorage.getInstance().getReference();
         db = FirebaseFirestore.getInstance();
         // Get a top level reference to the collection
-        final CollectionReference collectionReference = db.collection("Users");
-
         loadData();
-
-        // All fragments are launched from this main activity.
-        // When clicking on the navigation buttons, we open a new fragment to display
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-
-        //we make the default "home" screen profile
-        replaceFragment(new ProfileFragment());
-
-        //https://www.youtube.com/watch?v=Bb8SgfI4Cm4
-        binding.bottomNav.setOnItemSelectedListener(menuItem -> {
-            switch (menuItem.getItemId()) {
-                case R.id.profile:
-                    replaceFragment(new ProfileFragment());
-                    break;
-                case R.id.map:
-                    replaceFragment(new MapFragment());
-                    break;
-                case R.id.scan:
-                    replaceFragment(new ScanFragment());
-                    break;
-                case R.id.browse:
-                    replaceFragment(new BrowseFragment());
-                    break;
-            }
-            return true;
-        });
-
     }
 
     /**
      * Places a fragment on frame_layout in the main activity
+     *
      * @param fragment
      */
-    private void replaceFragment(Fragment fragment){
+    private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout, fragment);
         fragmentTransaction.commit();
     }
 
-
-    // TODO: ACTUALLY IMPLEMENT PROPERLY
-    /*public void checkNewUser(){
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-        //https://stackoverflow.com/questions/35681693/checking-if-shared-preferences-exist
-        boolean ranBefore = sharedPrefs.getBoolean("ranBefore", false);
-        if (!ranBefore) {
-            SharedPreferences.Editor editor = sharedPrefs.edit();
-            editor.putBoolean("ranBefore", true);
-            editor.commit();
-            Intent intent = new Intent(MainActivity.this, LogInActivity.class);
-            startActivity(intent);
-        }
-        Intent intent = new Intent(MainActivity.this, LogInActivity.class);
-        startActivity(intent);
-    }*/
-
+    /**
+     * Load user profile from database.
+     */
     private void loadData() {
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
-        //Gson gson = new Gson();
         String userName = sharedPreferences.getString("user", "");
-        //Log.d("userName:", userName);
-        if (userName == ""){
+        if (userName == "") {
             Intent intent = new Intent(MainActivity.this, LogInActivity.class);
-            startActivity(intent);
-        }
-
-        else {
+            resultLauncher.launch(intent);
+        } else {
+            Log.d("username", userName);
             DocumentReference docRef = db.collection("users").document(userName);
-            docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
-                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                    player = documentSnapshot.toObject(Player.class);
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    Log.d(TAG, "onComplete: executing");
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            Log.d(TAG, "onComplete: data does exist");
+                            player = document.toObject(Player.class);
+                            //Load fragments after getting data, as Firestore is slow
+                            loadFragments();
+                        } else {
+                            // should handle this
+                            Log.d(TAG, "onComplete: data not exist");
+                        }
+                    } else {
+                        Log.d(TAG, "get failed with", task.getException());
+                    }
                 }
             });
         }
+    }
 
+    /**
+     * Load fragments for main activity, and handle requests for location and such.
+     */
+    public void loadFragments() {
+        // All fragments are launched from this main activity.
+        // When clicking on the navigation buttons, we open a new fragment to display
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        requestLocation();
+
+        //we make the default "home" screen profile
+        newFragment = ProfileFragment.newInstance(player);
+        replaceFragment(newFragment);
+
+        //https://www.youtube.com/watch?v=Bb8SgfI4Cm4
+        binding.bottomNav.setOnItemSelectedListener(menuItem -> {
+            switch (menuItem.getItemId()) {
+                case R.id.profile:
+                    newFragment = ProfileFragment.newInstance(player);
+                    replaceFragment(newFragment);
+                    break;
+                case R.id.map:
+                    requestLocation();
+                    newFragment = MapFragment.newInstance(player);
+                    replaceFragment(newFragment);
+                    break;
+                case R.id.scan:
+                    requestLocation();
+                    newFragment = ScanFragment.newInstance(player, 0);
+                    replaceFragment(newFragment);
+                    break;
+                case R.id.browse:
+                    requestLocation();
+                    newFragment = BrowseFragment.newInstance(player);
+                    replaceFragment(newFragment);
+                    break;
+            }
+            return true;
+        });
+    }
+
+    /**
+     * Adds QRCcode to the player, updates the database, and update's the player's
+     * QRCode stats as necessary.
+     *
+     * @param qrCode
+     *      QRCode that is scanned
+     */
+    @Override
+    public void onQRScanned(QRCode qrCode, boolean geo) {
+        if (geo) {
+            qrCode.setLocation(player.getPlayerLocation().getLatitude(), player.getPlayerLocation().getLongitude());
+            Log.d("debug", "geo is true");
+        }
+
+        PlayerStats playerStats = player.getStats();
+        Log.d("debug", String.valueOf(playerStats.getQrCodes()));
+        playerStats.addQrCode(qrCode);
+        playerStats.addCounts();
+        playerStats.addTotalScore(qrCode.getScore());
+
+        int highScore = playerStats.getQrCodes().get(0).getScore();
+        int lowScore = playerStats.getQrCodes().get(0).getScore();
+        for (int i = 0; i < playerStats.getQrCodes().size(); i++) {
+            if (playerStats.getQrCodes().get(i).getScore() > highScore) {
+                highScore = playerStats.getQrCodes().get(i).getScore();
+            } else if (playerStats.getQrCodes().get(i).getScore() < lowScore) {
+                lowScore = playerStats.getQrCodes().get(i).getScore();
+            }
+        }
+
+        playerStats.setHighestScore(highScore);
+        playerStats.setLowestScore(lowScore);
+
+        Log.d("deb", String.valueOf(playerStats.getQrCodes()));
+        player.setStats(playerStats);
+        db.collection("users").document(player.getSettings().getUsername()).update(
+                "stats.qrCodes", FieldValue.arrayUnion(qrCode),
+                "stats.counts", (playerStats.getCounts()),
+                "stats.highestScore", (playerStats.getHighestScore()),
+                "stats.lowestScore", (playerStats.getLowestScore()),
+                "stats.totalScore", (playerStats.getTotalScore()));
+
+        // put QRCode into firestore
+        db.collection("codes").document(qrCode.getHash()).set(qrCode);
+        db.collection("codes").document(qrCode.getHash())
+                .update(
+                        "hash", qrCode.getHash(),
+                        "score", qrCode.getScore(),
+                        "location.latitude", qrCode.getStoreLocation().getLatitude(),
+                        "location.longitude", qrCode.getStoreLocation().getLongitude(),
+                        "scanned", qrCode.getScanned()
+                );
+
+
+
+
+        // remove storeLocation
+        DocumentReference ref = db.collection("codes").document(qrCode.getHash());
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("storeLocation", FieldValue.delete());
+        ref.update(updates).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Log.d("Message: ", "REMOVED storeLocation field");
+            }
+        });
+    }
+
+    @Override
+    public void onOkPressed(String newUsername, String newEmail, String newPhone) {
+        String name = player.getSettings().getUsername();
+        if (name.equals(newUsername) || newUsername.isEmpty()) {
+            player.getSettings().setEmail(newEmail);
+            player.getSettings().setPhone(newPhone);
+            db.collection("users").document(name)
+                    .update(
+                            "settings.email", newEmail,
+                            "settings.phone", newPhone
+                    );
+            PlayerSettings ps = player.getSettings();
+            ps.setEmail(newEmail);
+            ps.setPhone(newPhone);
+            player.setSettings(ps);
+            // show new info
+            newFragment = ProfileFragment.newInstance(player);
+            replaceFragment(newFragment);
+            Toast.makeText(MainActivity.this, "Successful Update...", Toast.LENGTH_LONG).show();
+        } else {
+            DocumentReference docRef = db.collection("users").document(newUsername);
+            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    Log.d(TAG, "onComplete: executing");
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            Log.d(TAG, "onComplete: data does exist");
+                            // do not add
+                            Toast.makeText(MainActivity.this, "Unsuccessful Update. Username already exists...", Toast.LENGTH_LONG).show();
+                        } else {
+                            // rename and add to database
+                            Log.d(TAG, "onComplete: data not exist");
+                            // delete existing user collection
+                            DocumentReference docRefOldName = db.collection("users")
+                                    .document(player.getSettings().getUsername());
+                            docRefOldName.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void unused) {
+                                    Log.d(TAG, "DocumentSnapShot successfully deleted");
+                                }
+                            });
+                            PlayerSettings ps = player.getSettings();
+                            ps.setUsername(newUsername);
+                            ps.setEmail(newEmail);
+                            ps.setPhone(newPhone);
+                            player.setSettings(ps);
+                            // create new document references to newUsername
+                            db.collection("users").document(newUsername).set(player);
+                            SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString("user", newUsername);
+                            editor.apply();
+                            // display new info
+                            newFragment = ProfileFragment.newInstance(player);
+                            replaceFragment(newFragment);
+                        }
+                    } else {
+                        Log.d(TAG, "get failed with", task.getException());
+                    }
+                }
+            });
+        }
+    }
+
+    /**
+     * Used to request location from user. If gps is enabled, update player location
+     */
+    private void requestLocation() {
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        //based on Ravi Tamada's code on https://www.androidhive.info/2015/02/android-location-api-using-google-play-services/
+        try {
+            locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, this);
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onLocationChanged(@NonNull Location location) {
+        player.setPlayerLocation(location.getLatitude(), location.getLongitude());
+    }
+
+    @Override
+    public void onProviderDisabled(@NonNull String provider) {
+        Toast.makeText(MainActivity.this, "Please enable GPS and Internet", Toast.LENGTH_SHORT).show();
+    }
+
+    //required method for LocationListener
+    @Override
+    public void onLocationChanged(@NonNull List<Location> locations) {
+    }
+    //required method for LocationListener
+    @Override
+    public void onFlushComplete(int requestCode) {
+    }
+    //required method for LocationListener
+    @Override
+    public void onProviderEnabled(@NonNull String provider) {
+    }
+    //required method for LocationListener
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+    }
+    //required method for LocationListener
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
     }
 
 }

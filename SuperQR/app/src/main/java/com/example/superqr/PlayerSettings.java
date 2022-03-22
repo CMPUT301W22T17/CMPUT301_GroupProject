@@ -1,12 +1,15 @@
 package com.example.superqr;
 
-public class PlayerSettings {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class PlayerSettings implements Parcelable {
     private String username;
     private String phone;
     private String email;
     private QRCode loginQR;
-    private QRCode statusQR;
 
+    //temp empty constructor
     public PlayerSettings() {
         username = "NewUser";
         phone = "123-123-1234";
@@ -20,14 +23,28 @@ public class PlayerSettings {
     }
 
     // returns a QR code for player login
-  
-    public QRCode getLoginQR() {
-        return loginQR;
+
+    protected PlayerSettings(Parcel in) {
+        username = in.readString();
+        phone = in.readString();
+        email = in.readString();
+        loginQR = in.readParcelable(QRCode.class.getClassLoader());
     }
 
-    // returns player status QR code
-    public QRCode getStatusQR() {
-        return statusQR;
+    public static final Creator<PlayerSettings> CREATOR = new Creator<PlayerSettings>() {
+        @Override
+        public PlayerSettings createFromParcel(Parcel in) {
+            return new PlayerSettings(in);
+        }
+
+        @Override
+        public PlayerSettings[] newArray(int size) {
+            return new PlayerSettings[size];
+        }
+    };
+
+    public QRCode getLoginQR() {
+        return loginQR;
     }
 
     public String getUsername() {
@@ -58,7 +75,17 @@ public class PlayerSettings {
         this.loginQR = loginQR;
     }
 
-    public void setStatusQR(QRCode statusQR) {
-        this.statusQR = statusQR;
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(username);
+        parcel.writeString(phone);
+        parcel.writeString(email);
+        parcel.writeParcelable(loginQR, i);
     }
 }

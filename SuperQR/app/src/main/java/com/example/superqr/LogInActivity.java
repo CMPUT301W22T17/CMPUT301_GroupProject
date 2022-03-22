@@ -1,22 +1,31 @@
 package com.example.superqr;
 
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.Toast;
 
-import com.google.firebase.firestore.CollectionReference;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class LogInActivity extends AppCompatActivity {
+public class LogInActivity extends AppCompatActivity implements ScanFragment.ScanFragmentListener1 {
 
     Button newUserButton, existingUserButton, signupButton;
     EditText usernameEditText, emailEditText, phoneEditText;
+    FrameLayout loginFrameLayout;
     FirebaseFirestore db;
+    Player player;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,11 +38,10 @@ public class LogInActivity extends AppCompatActivity {
         usernameEditText = findViewById(R.id.userNameEditText);
         emailEditText = findViewById(R.id.emailEditText);
         phoneEditText = findViewById(R.id.phoneEditText);
+        loginFrameLayout = findViewById(R.id.logInFrameLayout);
 
         // Access a Cloud Firestore instance from your Activity
         db = FirebaseFirestore.getInstance();
-        // Get a top level reference to the collection
-        final CollectionReference collectionReference = db.collection("Users");
 
         newUserButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,36 +62,101 @@ public class LogInActivity extends AppCompatActivity {
         existingUserButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.logInFrameLayout, new ExistingUserFragment()).commit();
-                newUserButton.setVisibility(View.GONE);
-                existingUserButton.setVisibility(View.GONE);
+                ScanFragment scanFragment = new ScanFragment().newInstance(player, 1);
+                getSupportFragmentManager().beginTransaction().replace(R.id.logInFrameLayout, scanFragment).commit();
+                newUserButton.setVisibility(View.INVISIBLE);
+                existingUserButton.setVisibility(View.INVISIBLE);
+                loginFrameLayout.setVisibility(View.VISIBLE);
             }
         });
 
         signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // adapt the user's information from EditTexts
                 String userName = usernameEditText.getText().toString();
                 String email = emailEditText.getText().toString();
                 String phone = phoneEditText.getText().toString();
 
-                PlayerSettings playerSettings = new PlayerSettings(userName, phone, email);
-                PlayerStats playerStats = new PlayerStats();
-                Player player = new Player(playerSettings, playerStats);
-                db.collection("users").document(userName).set(player);
-                SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString("user", userName);
-                editor.apply();
-                finish();
+                // check if username already exists
+                DocumentReference docRef = db.collection("users").document(userName);
+                docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot ds = task.getResult();
+                            if (ds.exists()) {
+                                Toast.makeText(LogInActivity.this,
+                                        "Username already exists...", Toast.LENGTH_LONG)
+                                        .show();
+                            }
+                            else {
+                                // create new player class
+                                player = new Player(userName, phone, email);
+                                // save class in Firestore
+                                db.collection("users").document(userName).set(player);
+                                // save username in SharedPreferences
+                                SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putString("user", userName);
+                                editor.apply();
+
+                                // pass player back to MainActivity
+                                Intent i = new Intent(LogInActivity.this, MainActivity.class);
+                                i.putExtra("player", player);
+                                setResult(RESULT_OK, i);
+                                finish();
+                            }
+                        }
+                    }
+                });
             }
         });
     }
 
-   /* private void saveData(String userName) {
-        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("user", userName);
-        editor.apply();
-    }*/
+    @Override
+    public void onQRScanned1(String username) {
+        // check if username already exists
+        DocumentReference docRef = db.collection("users").document(username);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) { // check if player is in database
+                        player = document.toObject(Player.class);
+                        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("user", username);
+                        editor.apply();
+                        // pass player back to MainActivity
+                        Intent i = new Intent(LogInActivity.this, MainActivity.class);
+                        i.putExtra("player", player);
+                        setResult(RESULT_OK, i);
+                        finish();
+                    }
+                    else {
+                        loginFrameLayout.setVisibility(View.INVISIBLE);
+                        Toast.makeText(LogInActivity.this,
+                                "Please make an account",
+                                Toast.LENGTH_LONG).show();
+                        newUserButton.setVisibility(View.VISIBLE);
+                        existingUserButton.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+            });
+        }
+
+        @Override
+        public void onBackPressed() {
+            loginFrameLayout.setVisibility(View.INVISIBLE);
+            newUserButton.setVisibility(View.VISIBLE);
+            existingUserButton.setVisibility(View.VISIBLE);
+            signupButton.setVisibility(View.INVISIBLE);
+            usernameEditText.setVisibility(View.INVISIBLE);
+            emailEditText.setVisibility(View.INVISIBLE);
+            phoneEditText.setVisibility(View.INVISIBLE);
+            Toast.makeText(LogInActivity.this, "MAKE A SELECTION", Toast.LENGTH_SHORT).show();
+        }
 }

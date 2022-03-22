@@ -1,72 +1,120 @@
 package com.example.superqr;
-
-import android.location.Location;
-
-import com.himanshurawat.hasher.HashType;
-import com.himanshurawat.hasher.Hasher;
-
-import java.sql.Array;
+import android.os.Parcel;
+import android.os.Parcelable;
+import androidx.annotation.VisibleForTesting;
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 /**
  * The QRCode class keeps track of the code, score, and geolocation of a QR code.
- * Takes photo of an object or location of the QR code.
+ * This class handles handles hashing of the QRCode object into a score for the player.
  */
-public class QRCode {
-    private String code;
+public class QRCode implements Parcelable {
+    private String hash;
     private int score;
-    private Location location;
+    private LocationStore location = new LocationStore();
     private ArrayList<String> comments = new ArrayList<>();
     private boolean scanned = false;
+
+    // Firebase requirement
+    public QRCode() {
+
+    }
 
     /**
      * Creates a QRCode object.
      * @param code
-     *      QR code to be hashed
+     * QR code to be hashed
      */
     public QRCode(String code) {
-        // hash and score will be calculated and stored
-        this.code = code;
+        try {
+            this.hash = hashCode(code);
+        } catch (NoSuchAlgorithmException e) {
+            System.out.println("Exception thrown for incorrect algorithm: " + e);
+        }
+        this.score = calculateScore(this.hash);
+    }
+
+    protected QRCode(Parcel in) {
+        hash = in.readString();
+        score = in.readInt();
+        comments = in.createStringArrayList();
+        scanned = in.readByte() != 0;
+        location = in.readParcelable(LocationStore.class.getClassLoader());
+    }
+
+    public static final Creator<QRCode> CREATOR = new Creator<QRCode>() {
+        @Override
+        public QRCode createFromParcel(Parcel in) {
+            return new QRCode(in);
+        }
+
+        @Override
+        public QRCode[] newArray(int size) {
+            return new QRCode[size];
+        }
+    };
+
+    @VisibleForTesting
+    private String hashCode(String code) throws NoSuchAlgorithmException{
+        // Hashes the code
+        // https://www.geeksforgeeks.org/sha-256-hash-in-java/
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
+        byte[] hashBytes = md.digest(code.getBytes(StandardCharsets.UTF_8));
+        BigInteger number = new BigInteger(1, hashBytes);
+        StringBuilder hexString = new StringBuilder(number.toString(16));
+
+        return hexString.toString();
     }
 
     /**
-     * Calculates the hash/score of a QR code.
+     * Calculates score for a given QR code's contents based on
+     * SHA-256 hashing.
+     * @param hash
+     * hash is the string contents in of the QRCode (in SHA-256 form) scored.
+     * @return
+     * Returns the total score of the QRCode being hashed
      */
-    public void hashContents() {
-        String contents = code;
-        String hash = Hasher.Companion.hash(contents, HashType.SHA_256);
-        char[] charArray = contents.toCharArray();
-        ArrayList<Character> duplicates = new ArrayList<Character>();
-        for (int i = 0; i < contents.length(); i++) {
-            for (int j = i + 1; j < contents.length(); j++) {
-                if (charArray[i] == charArray[j]) {
-                    duplicates.add(charArray[j]);
-                    break;
-                }
+
+    private int calculateScore(String hash) {
+        // Calculate score
+        // https://www.geeksforgeeks.org/java-program-for-hexadecimal-to-decimal-conversion/
+        char[] hashChars = hash.toCharArray();
+        char prevChar = hashChars[0];
+        int duplicates = 0, totalScore = 0, base = 0;
+        for (int i = 1; i < hash.length(); i++) {
+            if (hashChars[i] == prevChar) {
+                duplicates += 1;
             }
+            else if (duplicates != 0) {
+                if (prevChar == '0') {
+                    base = 20;
+                }
+                else if (prevChar >= '1' && prevChar <= '9') { // 1-9
+                    base = prevChar - 48; // 2-9
+                }
+                else if (prevChar >= 'a' && prevChar <= 'g') { // a-g
+                    base = prevChar - 87; // 10-16
+                }
+                totalScore += Math.pow(base, duplicates); // base^duplicates
+                duplicates = 0;
+            }
+            prevChar = hashChars[i];
         }
 
-        ArrayList<Integer> dupeCount = new ArrayList<Integer>();
-        for (int a = 0; a < charArray.length; a++) {
-            int count = 0;
-            for (int b = 0; b < contents.length(); b++) {
-                if (contents.charAt(b) == charArray[a]) {
-                    count++;
-                }
-            }
-            dupeCount.add(count);
-        }
-
-        // this.score = hashedContents; // store this QRCode's score
+        return totalScore;
     }
 
     /**
-     * Returns the string of a QR code
+     * Returns the hash of a QR code.
      * @return
      *      Return the code
      */
-    public String getCode() {
-        return code;
+    public String getHash() {
+        return hash;
     }
 
     /**
@@ -83,8 +131,9 @@ public class QRCode {
      * @return
      *      Return the location
      */
-    public Location getLocation() {
-        return location;
+
+    public LocationStore getStoreLocation() {
+        return this.location;
     }
 
     /**
@@ -105,23 +154,48 @@ public class QRCode {
         return comments;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    /**
+     * Sets the QRCode's scanned attribute to true
+     * to indicate that is scanned
+     */
+    public void isScanned() {
+        this.scanned = true;
     }
 
-    public void setScore(int score) {
-        this.score = score;
+    /**
+     * Adds a comment to the QRCode's list of comments
+     * @param comment
+     *      comment string that is to be added
+     *      to the QRCode's list of comments
+     */
+
+    public void addComment(String comment) {
+        this.comments.add(comment);
     }
 
-    public void setLocation(Location location) {
-        this.location = location;
+    /**
+     * sets the QRCode's location in latitude
+     * and longitude
+     * @param latitude
+     *      QRCode's latitude
+     * @param longitude
+     *      QRCode's longitude
+     */
+    public void setLocation(double latitude, double longitude) {
+        this.location.setLocation(latitude, longitude);
     }
 
-    public void setScanned(Boolean scanned) {
-        this.scanned = scanned;
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public void setComments(ArrayList<String> comments) {
-        this.comments = comments;
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(this.hash);
+        parcel.writeInt(this.score);
+        parcel.writeList(this.comments);
+        parcel.writeByte((byte) (this.scanned ? 1 : 0));
+        parcel.writeParcelable(this.location, i);
     }
 }

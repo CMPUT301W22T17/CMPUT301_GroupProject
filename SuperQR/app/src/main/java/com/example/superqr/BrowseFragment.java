@@ -1,5 +1,4 @@
 package com.example.superqr;
-
 import android.os.Bundle;
 
 import androidx.fragment.app.DialogFragment;
@@ -18,15 +17,9 @@ import android.widget.Button;
  */
 public class BrowseFragment extends Fragment implements View.OnClickListener {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
+    //initialize variables and key used to pass through
+    private static final String playerKey = "playerKey";
+    private Player player;
     private Button playerSearchButton;
     private Button viewRankingButton;
     private Button viewCodesButton;
@@ -40,27 +33,21 @@ public class BrowseFragment extends Fragment implements View.OnClickListener {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param player current player of the game
      * @return A new instance of fragment BrowseFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static BrowseFragment newInstance(String param1, String param2) {
+    public static BrowseFragment newInstance(Player player) {
         BrowseFragment fragment = new BrowseFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(playerKey, player);
+        fragment.setArguments(bundle);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -69,21 +56,20 @@ public class BrowseFragment extends Fragment implements View.OnClickListener {
         // Inflate the layout for this fragment
         View browseView = inflater.inflate(R.layout.fragment_browse, container, false);
 
-
-
-        playerSearchButton = (Button) browseView.findViewById(R.id.player_search_button);
+        playerSearchButton = browseView.findViewById(R.id.player_search_button);
         playerSearchButton.setOnClickListener(this);
 
-        viewRankingButton = (Button) browseView.findViewById(R.id.view_ranking_button);
+        viewRankingButton =  browseView.findViewById(R.id.view_ranking_button);
         viewRankingButton.setOnClickListener(this);
 
-        viewCodesButton = (Button) browseView.findViewById(R.id.view_codes_button);
+        viewCodesButton = browseView.findViewById(R.id.view_codes_button);
         viewCodesButton.setOnClickListener(this);
 
-        searchGeolocationButton = (Button) browseView.findViewById(R.id.search_geolocation_button);
+        searchGeolocationButton = browseView.findViewById(R.id.search_geolocation_button);
         searchGeolocationButton.setOnClickListener(this);
-
         showButtons();
+
+        player = (Player) getArguments().getParcelable(playerKey);
 
         return browseView;
     }
@@ -93,17 +79,17 @@ public class BrowseFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.player_search_button:
                 // https://stackoverflow.com/questions/16728426/android-nested-fragment-approach
-
                 Fragment searchPlayerFragment = new SearchPlayerFragment();
                 displayFragment(searchPlayerFragment);
                 break;
 
             case R.id.view_ranking_button:
+                Fragment leaderboardFragment = new LeaderboardFragment();
+                displayFragment(leaderboardFragment);
                 break;
 
             case R.id.search_geolocation_button:
-
-                Fragment searchGeolocationFragment = new SearchGeolocationFragment();
+                Fragment searchGeolocationFragment = SearchGeolocationFragment.newInstance(player);
                 displayFragment(searchGeolocationFragment);
                 break;
 
@@ -115,6 +101,10 @@ public class BrowseFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    /**
+     * Places a fragment on frame_layout in the main activity
+     * @param fragment
+     */
     public void displayFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
 
@@ -125,6 +115,9 @@ public class BrowseFragment extends Fragment implements View.OnClickListener {
         hideButtons();
     }
 
+    /**
+     * Hide buttons when a choice is clicked
+     */
     public void hideButtons() {
         playerSearchButton.setVisibility(View.INVISIBLE);
         viewRankingButton.setVisibility(View.INVISIBLE);
@@ -132,6 +125,9 @@ public class BrowseFragment extends Fragment implements View.OnClickListener {
         searchGeolocationButton.setVisibility(View.INVISIBLE);
     }
 
+    /**
+     * Show the buttons in the fragment
+     */
     public void showButtons() {
         playerSearchButton.setVisibility(View.VISIBLE);
         viewRankingButton.setVisibility(View.VISIBLE);
