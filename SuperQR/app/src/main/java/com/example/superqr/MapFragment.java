@@ -26,6 +26,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
@@ -38,7 +39,7 @@ import java.util.List;
  * Use the {@link MapFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MapFragment extends Fragment {
+public class MapFragment extends Fragment implements View.OnClickListener {
     //initialize variables, and key used to pass through
     private static final String playerKey = "playerKey";
     private Player player;
@@ -54,6 +55,8 @@ public class MapFragment extends Fragment {
     Drawable QRPin;
     GeoPoint playerPoint;
     LocationStore singleCodeLocation = null;
+    Button zoomInButton;
+    Button zoomOutButton;
 
     public MapFragment() {
         // Required empty public constructor
@@ -96,6 +99,11 @@ public class MapFragment extends Fragment {
         // https://stackoverflow.com/questions/14897143/integrating-osmdroid-with-fragments
         View view = inflater.inflate(R.layout.activity_display_map, container, false);
 
+        zoomInButton = view.findViewById(R.id.zoom_in_button);
+        zoomInButton.setOnClickListener(this);
+
+        zoomOutButton = view.findViewById(R.id.zoom_out_button);
+        zoomOutButton.setOnClickListener(this);
 
         Bundle codeLocationBundle = getArguments();
         if (codeLocationBundle != null) {
@@ -108,14 +116,17 @@ public class MapFragment extends Fragment {
         map.setTileSource(TileSourceFactory.MAPNIK);
         controller = new MapController(map);
         createLocationIcons();
+        map.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.NEVER);
 
         if (singleCodeLocation == null) {
 
-            //get Player from MainActivity
+            // get Player from MainActivity
             player = (Player) getArguments().getParcelable(playerKey);
-            playerPoint = new GeoPoint(player.getPlayerLocation().getLatitude(), player.getPlayerLocation().getLongitude());
-
-            setToUserLocation();
+            Location playerLocation = new Location("map_location");
+            playerLocation.setLatitude(player.getPlayerLocation().getLatitude());
+            playerLocation.setLongitude(player.getPlayerLocation().getLongitude());
+            playerPoint = new GeoPoint(playerLocation);
+            setToLocation(playerPoint);
             addLocationMarkers();
         }
 
@@ -124,18 +135,16 @@ public class MapFragment extends Fragment {
             // create qr marker
             Marker codeMarker = new Marker(map);
             codeMarker.setIcon(QRPin);
-            GeoPoint codePoint = new GeoPoint(singleCodeLocation.getLatitude(), singleCodeLocation.getLongitude());
+
+            Location codeLocation = new Location("map_location");
+            codeLocation.setLatitude(singleCodeLocation.getLatitude());
+            codeLocation.setLongitude(singleCodeLocation.getLongitude());
+            GeoPoint codePoint = new GeoPoint(codeLocation);
             codeMarker.setPosition(codePoint);
             codeMarker.setTitle(Double.toString(singleCodeLocation.getLatitude()) + ", " + Double.toString(singleCodeLocation.getLongitude()));
             codeMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
             map.getOverlays().add(codeMarker);
-
-            // set to qr marker location
-            controller.setZoom(18);
-            controller.zoomIn();
-
-            controller.animateTo(codePoint);
-            controller.setCenter(codePoint);
+            setToLocation(codePoint);
 
         }
 
@@ -152,6 +161,19 @@ public class MapFragment extends Fragment {
     public void onPause() {
         super.onPause();
         map.onPause();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.zoom_in_button:
+                controller.zoomIn();
+                break;
+
+            case R.id.zoom_out_button:
+                controller.zoomOut();
+                break;
+        }
     }
 
     /**
@@ -174,17 +196,16 @@ public class MapFragment extends Fragment {
     }
 
     /**
-     * Set the zoom and center the map onto user location.
+     * Set the zoom and center the map onto the central given location.
      */
-    private void setToUserLocation() {
+    private void setToLocation(GeoPoint point) {
         // https://stackoverflow.com/questions/40257342/how-to-display-user-location-on-osmdroid-mapview
 
         controller.setZoom(18);
         controller.zoomIn();
-
-        controller.animateTo(playerPoint);
-        controller.setCenter(playerPoint);
-
+        controller.setZoom(2);
+        controller.animateTo(point);
+        controller.setCenter(point);
     }
 
     /**

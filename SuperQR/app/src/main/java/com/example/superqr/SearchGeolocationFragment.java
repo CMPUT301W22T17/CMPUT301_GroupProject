@@ -87,7 +87,6 @@ public class SearchGeolocationFragment extends Fragment {
                             nearbyQRList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                    Toast.makeText(getContext(), "position " + (i), Toast.LENGTH_SHORT).show();
                                     LocationStore codeLocation = nearbyQRCodes.get(i);
                                     // open map fragment here
 
