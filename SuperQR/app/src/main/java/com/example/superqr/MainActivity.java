@@ -3,18 +3,14 @@ package com.example.superqr;
 import static android.content.ContentValues.TAG;
 import android.Manifest;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
 import androidx.activity.result.ActivityResult;
@@ -29,7 +25,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import com.example.superqr.databinding.ActivityMainBinding;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -55,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
     FirebaseFirestore db;
     Fragment newFragment;
     LocationManager locationManager;
+
 
     // from: https://stackoverflow.com/questions/62671106/onactivityresult-method-is-deprecated-what-is-the-alternative
     // author: https://stackoverflow.com/users/4147849/muntashir-akon
@@ -103,10 +99,11 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
             });
         }
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        //retrieve player from database
         mStorageRef = FirebaseStorage.getInstance().getReference();
         db = FirebaseFirestore.getInstance();
         // Get a top level reference to the collection
@@ -115,9 +112,10 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
 
     /**
      * Places a fragment on frame_layout in the main activity
+     *
      * @param fragment
      */
-    private void replaceFragment(Fragment fragment){
+    private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout, fragment);
@@ -162,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
     /**
      * Load fragments for main activity, and handle requests for location and such.
      */
-    public void loadFragments(){
+    public void loadFragments() {
         // All fragments are launched from this main activity.
         // When clicking on the navigation buttons, we open a new fragment to display
         binding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -203,6 +201,7 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
     /**
      * Adds QRCcode to the player, updates the database, and update's the player's
      * QRCode stats as necessary.
+     *
      * @param qrCode
      */
     @Override
@@ -223,8 +222,7 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
         for (int i = 0; i < playerStats.getQrCodes().size(); i++) {
             if (playerStats.getQrCodes().get(i).getScore() > highScore) {
                 highScore = playerStats.getQrCodes().get(i).getScore();
-            }
-            else if (playerStats.getQrCodes().get(i).getScore() < lowScore) {
+            } else if (playerStats.getQrCodes().get(i).getScore() < lowScore) {
                 lowScore = playerStats.getQrCodes().get(i).getScore();
             }
         }
@@ -279,8 +277,7 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
             newFragment = ProfileFragment.newInstance(player);
             replaceFragment(newFragment);
             Toast.makeText(MainActivity.this, "Successful Update...", Toast.LENGTH_LONG).show();
-        }
-        else {
+        } else {
             DocumentReference docRef = db.collection("users").document(newUsername);
             docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
@@ -330,14 +327,13 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
     /**
      * Used to request location from user. If gps is enabled, update player location
      */
-    private void requestLocation(){
-        ActivityCompat.requestPermissions( this,
-                new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+    private void requestLocation() {
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         try {
             locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, this);
-        }
-        catch(SecurityException e) {
+        } catch (SecurityException e) {
             e.printStackTrace();
         }
     }
@@ -355,25 +351,22 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
     //required method for LocationListener
     @Override
     public void onLocationChanged(@NonNull List<Location> locations) {
-        LocationListener.super.onLocationChanged(locations);
     }
-
     //required method for LocationListener
     @Override
     public void onFlushComplete(int requestCode) {
-        LocationListener.super.onFlushComplete(requestCode);
     }
-
     //required method for LocationListener
     @Override
     public void onProviderEnabled(@NonNull String provider) {
-        LocationListener.super.onProviderEnabled(provider);
     }
-
     //required method for LocationListener
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
-        super.onPointerCaptureChanged(hasCapture);
+    }
+    //required method for LocationListener
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
     }
 
 }
