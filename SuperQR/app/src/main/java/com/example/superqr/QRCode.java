@@ -41,9 +41,9 @@ public class QRCode implements Parcelable {
     protected QRCode(Parcel in) {
         hash = in.readString();
         score = in.readInt();
-        location = in.readParcelable(LocationStore.class.getClassLoader());
         comments = in.createStringArrayList();
         scanned = in.readByte() != 0;
+        location = in.readParcelable(LocationStore.class.getClassLoader());
     }
 
     public static final Creator<QRCode> CREATOR = new Creator<QRCode>() {
