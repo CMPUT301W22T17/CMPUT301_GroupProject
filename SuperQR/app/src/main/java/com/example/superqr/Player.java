@@ -42,6 +42,8 @@ public class Player implements Parcelable, Comparable<Player> {
         stats = in.readParcelable(PlayerStats.class.getClassLoader());
         location = in.readParcelable(LocationStore.class.getClassLoader());
         playerID = in.readString();
+        isAdmin = in.readByte() != 0;
+
     }
 
     public static final Creator<Player> CREATOR = new Creator<Player>() {
@@ -115,6 +117,7 @@ public class Player implements Parcelable, Comparable<Player> {
         parcel.writeParcelable(stats, i);
         parcel.writeParcelable(location, i);
         parcel.writeString(playerID);
+        parcel.writeByte((byte) (this.isAdmin ? 1 : 0));
     }
 
     //used to compare players for the leaderboard
