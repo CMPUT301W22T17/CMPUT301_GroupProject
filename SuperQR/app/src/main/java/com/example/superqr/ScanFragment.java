@@ -1,5 +1,7 @@
 package com.example.superqr;
 
+import static android.content.ContentValues.TAG;
+
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -18,6 +20,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -26,6 +29,12 @@ import androidx.fragment.app.Fragment;
 import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.CodeScannerView;
 import com.budiyev.android.codescanner.DecodeCallback;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.zxing.Result;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -36,6 +45,7 @@ import com.karumi.dexter.listener.PermissionRequestErrorListener;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -58,6 +68,7 @@ public class ScanFragment extends Fragment {
     private ScanFragmentListener1 listener1;
     private int scanAction;
     private QRCode qrCode;
+    private FirebaseFirestore db;
 
     // https://stackoverflow.com/questions/35091857/passing-object-from-fragment-to-activity
     public interface ScanFragmentListener {
@@ -92,6 +103,7 @@ public class ScanFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        db = FirebaseFirestore.getInstance();
     }
 
     @Override
@@ -124,9 +136,23 @@ public class ScanFragment extends Fragment {
                                 }
                             }
                             if (!sameHash) {
-                                // TODO: Check the QR cdoe databse for if it already exist and update to isScanned()
-                                Toast.makeText(activity, result.getText(), Toast.LENGTH_SHORT).show();
-                                showQRStats(qrCode);
+                                // https://firebase.google.com/docs/firestore/query-data/queries
+                                Query beenScanned = db.collection("codes").whereIn("hash", Arrays.asList(qrCode.getHash()));
+                                beenScanned
+                                        .get()
+                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                if (task.isSuccessful()) {
+                                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                                        if (document.getId().equals(qrCode.getHash()))
+                                                            qrCode.isScanned();
+                                                    }
+                                                }
+                                                Toast.makeText(activity, result.getText(), Toast.LENGTH_SHORT).show();
+                                                showQRStats(qrCode);
+                                            }
+                                        });
                             }
                         }
 
@@ -228,13 +254,14 @@ public class ScanFragment extends Fragment {
     public void showQRStats(QRCode qrCode) {
         final Activity activity = getActivity();
 
-        String[] options = {"Store photo of the object?", "Record geolocation of the QR code?"};
+        String[] options = {"Store photo", "Record geolocation"};
         boolean[] checkedOptions = {true, true};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(String.format("You got %d points!", qrCode.getScore()));
         if (qrCode.getScanned()) {
-            builder.setMessage("This QR code has been scanned by another player!");
+            View scanned = getLayoutInflater().inflate(R.layout.fragment_scanned, null);
+            builder.setView(scanned);
         }
         builder.setMultiChoiceItems(options, checkedOptions, new DialogInterface.OnMultiChoiceClickListener(){
             @Override
@@ -271,6 +298,8 @@ public class ScanFragment extends Fragment {
                 listener.onQRScanned(qrCode, checkedOptions[1]); // Sends QRCode object to MainActivity
             }
         });
+
+
         builder.show();
     }
 
