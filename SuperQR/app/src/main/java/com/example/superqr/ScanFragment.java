@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,10 +57,11 @@ public class ScanFragment extends Fragment {
     private ScanFragmentListener listener;
     private ScanFragmentListener1 listener1;
     private int scanAction;
+    private QRCode qrCode;
 
     // https://stackoverflow.com/questions/35091857/passing-object-from-fragment-to-activity
     public interface ScanFragmentListener {
-        void onQRScanned(QRCode qrCode);
+        void onQRScanned(QRCode qrCode, boolean geo);
     }
 
     public interface ScanFragmentListener1 {
@@ -113,7 +115,7 @@ public class ScanFragment extends Fragment {
                         // Change code later to create a QRCode object or scan user's QR codes
                         boolean sameHash = false;
                         if (scanAction == 0) { // generate QR code scan
-                            QRCode qrCode = new QRCode(result.getText());
+                            qrCode = new QRCode(result.getText());
                             ArrayList<QRCode> playerCodes = player.getStats().getQrCodes();
                             for (int i = 0; i < playerCodes.size(); i++) {
                                 if (qrCode.getHash().equals(playerCodes.get(i).getHash())) {
@@ -122,7 +124,7 @@ public class ScanFragment extends Fragment {
                                 }
                             }
                             if (!sameHash) {
-                                listener.onQRScanned(qrCode); // Sends QRCode object to MainActivity
+                                // TODO: Check the QR cdoe databse for if it already exist and update to isScanned()
                                 Toast.makeText(activity, result.getText(), Toast.LENGTH_SHORT).show();
                                 showQRStats(qrCode);
                             }
@@ -261,12 +263,12 @@ public class ScanFragment extends Fragment {
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.cancel();
                 if (checkedOptions[0]) { // Take photo
+                    // https://developer.android.com/training/camera/photobasics
                     Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     activity.startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE); // Camera
                 }
-                if (checkedOptions[1]) { // Store geolocation
-                    // TODO: Need to implement storing geolocation
-                }
+                // checkedOptions[1]: true; store geolocation
+                listener.onQRScanned(qrCode, checkedOptions[1]); // Sends QRCode object to MainActivity
             }
         });
         builder.show();
