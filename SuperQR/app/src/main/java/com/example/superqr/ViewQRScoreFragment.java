@@ -34,7 +34,7 @@ public class ViewQRScoreFragment extends DialogFragment {
     private StorageReference imageRef;
 
     public ViewQRScoreFragment(String userName, QRCode qrCode) {
-        this.imageRef = FirebaseStorage.getInstance().getReference().child(userName).child(qrCode.getHash());
+        this.imageRef = FirebaseStorage.getInstance().getReference().child(userName).child(qrCode.getHash()); // Gets image
         this.qrCode = qrCode;
     }
 
@@ -48,6 +48,7 @@ public class ViewQRScoreFragment extends DialogFragment {
 
         qrText.setText(Integer.toString(qrCode.getScore()));
         // https://www.youtube.com/watch?v=7QnhepFaMLM
+        // Retrieving image
         imageRef.getBytes(1024*1024) // One MB
                 .addOnSuccessListener(new OnSuccessListener<byte[]>() {
                     @Override

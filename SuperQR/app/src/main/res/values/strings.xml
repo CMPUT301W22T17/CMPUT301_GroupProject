@@ -7,4 +7,5 @@
     <string name="Scan">Scan</string>
     <string name="Browse">Browse</string>
     <string name="New_User">New User</string>
+    <string name="Scanned">Scanned by another player!</string>
 </resources>
