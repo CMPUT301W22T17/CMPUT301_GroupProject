@@ -125,7 +125,7 @@ public class Player implements Parcelable, Comparable<Player> {
     public int compareTo(Player player) {
         if (this.stats.getHighestScore() == player.stats.getHighestScore()) {
             return 0;
-        } else if (this.stats.getHighestScore() > player.stats.getHighestScore()) {
+        } else if (this.stats.getHighestScore().getScore() > player.stats.getHighestScore().getScore()) {
             return -1;
         } else {
             return 1;

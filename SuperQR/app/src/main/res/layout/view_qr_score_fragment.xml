@@ -15,7 +15,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="15dp"
-            android:text="Score: "></TextView>
+            android:text="Score: ">
+
+        </TextView>
 
         <TextView
             android:id="@+id/qr_score_text"
@@ -27,5 +29,31 @@
         </TextView>
 
     </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center">
+
+        <ProgressBar
+            android:id="@+id/loading_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:layout_centerInParent="true">
+
+        </ProgressBar>>
+
+        <ImageView
+            android:id="@+id/qr_image"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            android:layout_centerInParent="true">
+
+        </ImageView>
+
+    </RelativeLayout>
+
 
 </LinearLayout>
