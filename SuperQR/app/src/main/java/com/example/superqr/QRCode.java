@@ -132,7 +132,7 @@ public class QRCode implements Parcelable {
      *      Return the location
      */
 
-    public LocationStore getStoreLocation() {
+    public LocationStore getLocation() {
         return this.location;
     }
 

@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -33,6 +34,7 @@ import org.osmdroid.views.overlay.Marker;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -57,6 +59,7 @@ public class MapFragment extends Fragment implements View.OnClickListener {
     LocationStore singleCodeLocation = null;
     Button zoomInButton;
     Button zoomOutButton;
+    double radius = 0.15;
 
     public MapFragment() {
         // Required empty public constructor
@@ -235,19 +238,20 @@ public class MapFragment extends Fragment implements View.OnClickListener {
                             List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
                             for (DocumentSnapshot d : list) {
                                 QRCode code = d.toObject(QRCode.class);
+                                double latDifference = (double) (Math.abs(code.getLocation().getLatitude() - player.getPlayerLocation().getLatitude()));
+                                double longDifference = (double) (Math.abs(code.getLocation().getLongitude() - player.getPlayerLocation().getLongitude()));
+                                if (latDifference < radius && longDifference < radius) {
 
-                                if ((Math.abs(code.getStoreLocation().getLatitude() - player.getPlayerLocation().getLatitude()) < 0.5) &&
-                                        (Math.abs(code.getStoreLocation().getLongitude()) - player.getPlayerLocation().getLongitude()) < 0.5) {
                                     Location location = new Location("map_location");
-                                    location.setLatitude(code.getStoreLocation().getLatitude());
-                                    location.setLongitude(code.getStoreLocation().getLongitude());
+                                    location.setLatitude(code.getLocation().getLatitude());
+                                    location.setLongitude(code.getLocation().getLongitude());
 
                                     GeoPoint QRPoint = new GeoPoint(location);
 
                                     Marker QRMarker = new Marker(map);
                                     QRMarker.setIcon(QRPin);
                                     QRMarker.setPosition(QRPoint);
-                                    QRMarker.setTitle(Double.toString(code.getStoreLocation().getLatitude()) + ", " + Double.toString(code.getStoreLocation().getLongitude()));
+                                    QRMarker.setTitle(Double.toString(code.getLocation().getLatitude()) + ", " + Double.toString(code.getLocation().getLongitude()));
                                     QRMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
                                     map.getOverlays().add(QRMarker);
                                 }
