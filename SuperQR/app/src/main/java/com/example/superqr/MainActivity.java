@@ -1,6 +1,7 @@
 package com.example.superqr;
 
 import static android.content.ContentValues.TAG;
+
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
@@ -13,6 +14,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
+
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -24,6 +26,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
 import com.example.superqr.databinding.ActivityMainBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -36,11 +39,14 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements EditInfoFragment.OnFragmentInteractionListener, ScanFragment.ScanFragmentListener, LocationListener {
     private static int REQUEST_IMAGE_CAPTURE = 1;
@@ -75,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) { // Photo taken
             String userName = player.getSettings().getUsername();
             ArrayList<QRCode> qrCodes = player.getStats().getQrCodes();
-            StorageReference qrcodes = mStorageRef.child(String.format("%s/%s", userName, qrCodes.get(qrCodes.size() - 1).getHash()));
+            StorageReference qrcodes = mStorageRef.child(String.format("%s/%s", player.getPlayerID(), qrCodes.get(qrCodes.size() - 1).getHash()));
 
             // Get data as Bitmap and convert it into byte[] to upload with putBytes
             // https://stackoverflow.com/questions/56699632/how-to-upload-file-bitmap-to-cloud-firestore
@@ -146,7 +152,9 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
                             //Load fragments after getting data, as Firestore is slow
                             loadFragments();
                         } else {
-                            // should handle this
+                            Toast.makeText(MainActivity.this, "Player Deleted", Toast.LENGTH_LONG);
+                            Intent intent = new Intent(MainActivity.this, LogInActivity.class);
+                            resultLauncher.launch(intent);
                             Log.d(TAG, "onComplete: data not exist");
                         }
                     } else {
