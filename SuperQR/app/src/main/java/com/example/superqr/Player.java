@@ -16,6 +16,7 @@ public class Player implements Parcelable, Comparable<Player> {
     private PlayerStats stats = new PlayerStats();
     private LocationStore location = new LocationStore();
     private String playerID = generateID();
+    private Boolean isAdmin = false;
 
     /**
      * empty constructor needed for Firebase
@@ -156,4 +157,11 @@ public class Player implements Parcelable, Comparable<Player> {
         return sb.toString();
     }
 
+    /**
+     * check if player is the owner
+     * @return
+     */
+    public Boolean getAdmin() {
+        return isAdmin;
+    }
 }

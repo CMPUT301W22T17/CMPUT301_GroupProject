@@ -149,7 +149,9 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
                             //Load fragments after getting data, as Firestore is slow
                             loadFragments();
                         } else {
-                            // should handle this
+                            Toast.makeText(MainActivity.this, "Player Deleted", Toast.LENGTH_LONG);
+                            Intent intent = new Intent(MainActivity.this, LogInActivity.class);
+                            resultLauncher.launch(intent);
                             Log.d(TAG, "onComplete: data not exist");
                         }
                     } else {
