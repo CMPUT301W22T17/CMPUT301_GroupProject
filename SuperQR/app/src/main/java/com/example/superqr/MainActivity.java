@@ -72,9 +72,9 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) { // Photo taken
-            String userName = player.getSettings().getUsername();
+            String playerID = player.getPlayerID();
             ArrayList<QRCode> qrCodes = player.getStats().getQrCodes();
-            StorageReference qrcodes = mStorageRef.child(String.format("%s/%s", player.getPlayerID(), qrCodes.get(qrCodes.size() - 1).getHash()));
+            StorageReference qrcodes = mStorageRef.child(String.format("%s/%s", playerID, qrCodes.get(qrCodes.size() - 1).getHash()));
 
             // Get data as Bitmap and convert it into byte[] to upload with putBytes
             // https://stackoverflow.com/questions/56699632/how-to-upload-file-bitmap-to-cloud-firestore

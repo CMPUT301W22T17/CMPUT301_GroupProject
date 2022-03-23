@@ -33,8 +33,8 @@ public class ViewQRScoreFragment extends DialogFragment {
     private QRCode qrCode;
     private StorageReference imageRef;
 
-    public ViewQRScoreFragment(String userName, QRCode qrCode) {
-        this.imageRef = FirebaseStorage.getInstance().getReference().child(userName).child(qrCode.getHash()); // Gets image
+    public ViewQRScoreFragment(String playerID, QRCode qrCode) {
+        this.imageRef = FirebaseStorage.getInstance().getReference().child(playerID).child(qrCode.getHash()); // Gets image
         this.qrCode = qrCode;
     }
 

@@ -136,7 +136,6 @@ public class ScanFragment extends Fragment {
                                 }
                             }
                             if (!sameHash) {
-                                // TODO: Check the QR cdoe databse for if it already exist and update to isScanned()
                                 // https://firebase.google.com/docs/firestore/query-data/queries
                                 Query beenScanned = db.collection("codes").whereIn("hash", Arrays.asList(qrCode.getHash()));
                                 beenScanned
