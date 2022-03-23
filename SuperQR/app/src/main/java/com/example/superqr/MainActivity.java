@@ -3,18 +3,14 @@ package com.example.superqr;
 import static android.content.ContentValues.TAG;
 import android.Manifest;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
 import androidx.activity.result.ActivityResult;
@@ -41,11 +37,12 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements EditInfoFragment.OnFragmentInteractionListener, ScanFragment.ScanFragmentListener {
+public class MainActivity extends AppCompatActivity implements EditInfoFragment.OnFragmentInteractionListener, ScanFragment.ScanFragmentListener, LocationListener {
     private static int REQUEST_IMAGE_CAPTURE = 1;
     private ActivityMainBinding binding;
     private StorageReference mStorageRef;
@@ -77,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) { // Photo taken
             String userName = player.getSettings().getUsername();
             ArrayList<QRCode> qrCodes = player.getStats().getQrCodes();
-            StorageReference qrcodes = mStorageRef.child(String.format("%s/%s", userName, qrCodes.get(qrCodes.size() - 1).getHash()));
+            StorageReference qrcodes = mStorageRef.child(String.format("%s/%s", player.getPlayerID(), qrCodes.get(qrCodes.size() - 1).getHash()));
 
             // Get data as Bitmap and convert it into byte[] to upload with putBytes
             // https://stackoverflow.com/questions/56699632/how-to-upload-file-bitmap-to-cloud-firestore
@@ -104,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        //retrieve player from database
         mStorageRef = FirebaseStorage.getInstance().getReference();
         db = FirebaseFirestore.getInstance();
         // Get a top level reference to the collection
@@ -115,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
      * Places a fragment on frame_layout in the main activity
      * @param fragment
      */
-    private void replaceFragment(Fragment fragment){
+    private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout, fragment);
@@ -146,7 +143,9 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
                             //Load fragments after getting data, as Firestore is slow
                             loadFragments();
                         } else {
-                            // should handle this
+                            Toast.makeText(MainActivity.this, "Player Deleted", Toast.LENGTH_LONG);
+                            Intent intent = new Intent(MainActivity.this, LogInActivity.class);
+                            resultLauncher.launch(intent);
                             Log.d(TAG, "onComplete: data not exist");
                         }
                     } else {
@@ -160,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
     /**
      * Load fragments for main activity, and handle requests for location and such.
      */
-    public void loadFragments(){
+    public void loadFragments() {
         // All fragments are launched from this main activity.
         // When clicking on the navigation buttons, we open a new fragment to display
         binding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -317,55 +316,49 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
     }
 
     /**
-     * Used to request location from user. If gps is enabled, update player location, else, enable GPS.
+     * Used to request location from user. If gps is enabled, update player location
      */
-    private void requestLocation(){
-        ActivityCompat.requestPermissions( this,
-                new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            OnGPS();
-        }
-        else {
-            getLocation();
-        }
-    }
-
-    /**
-     * Gets location from GPS, then updates the player location.
-     */
-    private void getLocation() {
-        if (ActivityCompat.checkSelfPermission(
-                MainActivity.this,Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-        } else {
-            Location locationGPS = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            if (locationGPS != null) {
-                player.setPlayerLocation(locationGPS.getLatitude(), locationGPS.getLongitude());
-            } else {
-                Toast.makeText(this, "Unable to find location.", Toast.LENGTH_SHORT).show();
-            }
+    private void requestLocation() {
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        //based on Ravi Tamada's code on https://www.androidhive.info/2015/02/android-location-api-using-google-play-services/
+        try {
+            locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, this);
+        } catch (SecurityException e) {
+            e.printStackTrace();
         }
     }
 
-    /**
-     * Checks if user has enabled GPS or not
-     */
-    private void OnGPS() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Enable GPS").setCancelable(false).setPositiveButton("Yes", new  DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-            }
-        }).setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-        final AlertDialog alertDialog = builder.create();
-        alertDialog.show();
+    @Override
+    public void onLocationChanged(@NonNull Location location) {
+        player.setPlayerLocation(location.getLatitude(), location.getLongitude());
     }
+
+    @Override
+    public void onProviderDisabled(@NonNull String provider) {
+        Toast.makeText(MainActivity.this, "Please enable GPS and Internet", Toast.LENGTH_SHORT).show();
+    }
+
+    //required method for LocationListener
+    @Override
+    public void onLocationChanged(@NonNull List<Location> locations) {
+    }
+    //required method for LocationListener
+    @Override
+    public void onFlushComplete(int requestCode) {
+    }
+    //required method for LocationListener
+    @Override
+    public void onProviderEnabled(@NonNull String provider) {
+    }
+    //required method for LocationListener
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+    }
+    //required method for LocationListener
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+    }
+
 }
