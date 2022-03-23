@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: org.osmdroid:osmdroid-geopackage:6.1.1@aar">
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/a98a3315fd0e754ffab20abbc178fb19/transformed/osmdroid-geopackage-6.1.1/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/a98a3315fd0e754ffab20abbc178fb19/transformed/osmdroid-geopackage-6.1.1/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/a98a3315fd0e754ffab20abbc178fb19/transformed/osmdroid-geopackage-6.1.1/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/f5793c3aeb29565c7e479da2801cee61/transformed/jetified-osmdroid-geopackage-6.1.1/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/f5793c3aeb29565c7e479da2801cee61/transformed/jetified-osmdroid-geopackage-6.1.1/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/f5793c3aeb29565c7e479da2801cee61/transformed/jetified-osmdroid-geopackage-6.1.1/res" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.osmdroid/osmdroid-geopackage/6.1.1/713106e9eb1485bbcb024a716b0057e0eb671470/osmdroid-geopackage-6.1.1-javadoc.jar!/" />
