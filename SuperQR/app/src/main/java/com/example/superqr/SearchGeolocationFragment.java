@@ -1,30 +1,22 @@
 package com.example.superqr;
 
-import android.app.Activity;
-import android.location.Location;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class SearchGeolocationFragment extends Fragment {
@@ -78,8 +70,8 @@ public class SearchGeolocationFragment extends Fragment {
                             for (DocumentSnapshot d : list) {
                                 QRCode code = d.toObject(QRCode.class);
 
-                                double latDifference = (double) (Math.abs(code.getLocation().getLatitude() - player.getPlayerLocation().getLatitude()));
-                                double longDifference = (double) (Math.abs(code.getLocation().getLongitude() - player.getPlayerLocation().getLongitude()));
+                                double latDifference = (double) (Math.abs(code.getLocation().getLatitude() - player.getLocation().getLatitude()));
+                                double longDifference = (double) (Math.abs(code.getLocation().getLongitude() - player.getLocation().getLongitude()));
                                 if (latDifference < radius && longDifference < radius) {
                                     nearbyQRCodes.add(code.getLocation());
                                 }
