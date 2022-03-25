@@ -17,22 +17,31 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link MapFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MapFragment extends Fragment {
+public class MapFragment extends Fragment implements View.OnClickListener {
     //initialize variables, and key used to pass through
     private static final String playerKey = "playerKey";
     private Player player;
@@ -41,13 +50,16 @@ public class MapFragment extends Fragment {
     // At: https://osmdroid.github.io/osmdroid/How-to-use-the-osmdroid-library.html
     // Reference: https://osmdroid.github.io/osmdroid/javadocs/osmdroid-android/debug/index.html?org/osmdroid/views/MapView.html
 
-    Map mapInfo;
     MapView map;
     MapController controller;
     Marker playerMarker;
     Drawable playerPin;
     Drawable QRPin;
     GeoPoint playerPoint;
+    LocationStore singleCodeLocation = null;
+    Button zoomInButton;
+    Button zoomOutButton;
+    double radius = 0.15;
 
     public MapFragment() {
         // Required empty public constructor
@@ -90,21 +102,54 @@ public class MapFragment extends Fragment {
         // https://stackoverflow.com/questions/14897143/integrating-osmdroid-with-fragments
         View view = inflater.inflate(R.layout.activity_display_map, container, false);
 
+        zoomInButton = view.findViewById(R.id.zoom_in_button);
+        zoomInButton.setOnClickListener(this);
+
+        zoomOutButton = view.findViewById(R.id.zoom_out_button);
+        zoomOutButton.setOnClickListener(this);
+
+        Bundle codeLocationBundle = getArguments();
+        if (codeLocationBundle != null) {
+            singleCodeLocation = codeLocationBundle.getParcelable("code_location");
+        }
+
         Context mapContext = getActivity().getApplicationContext();
         Configuration.getInstance().load(mapContext, PreferenceManager.getDefaultSharedPreferences(mapContext));
         map = view.findViewById(R.id.map);
         map.setTileSource(TileSourceFactory.MAPNIK);
-
-        //get Player from MainActivity
-        player= (Player) getArguments().getParcelable(playerKey);
-
         controller = new MapController(map);
-        mapInfo = new Map();
-        playerPoint = new GeoPoint(player.getPlayerLocation().getLatitude(), player.getPlayerLocation().getLongitude());
-
         createLocationIcons();
-        setToUserLocation();
-        addLocationMarkers();
+        map.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.NEVER);
+
+        if (singleCodeLocation == null) {
+
+            // get Player from MainActivity
+            player = (Player) getArguments().getParcelable(playerKey);
+            Location playerLocation = new Location("map_location");
+            playerLocation.setLatitude(player.getPlayerLocation().getLatitude());
+            playerLocation.setLongitude(player.getPlayerLocation().getLongitude());
+            playerPoint = new GeoPoint(playerLocation);
+            setToLocation(playerPoint);
+            addLocationMarkers();
+        }
+
+        else {
+
+            // create qr marker
+            Marker codeMarker = new Marker(map);
+            codeMarker.setIcon(QRPin);
+
+            Location codeLocation = new Location("map_location");
+            codeLocation.setLatitude(singleCodeLocation.getLatitude());
+            codeLocation.setLongitude(singleCodeLocation.getLongitude());
+            GeoPoint codePoint = new GeoPoint(codeLocation);
+            codeMarker.setPosition(codePoint);
+            codeMarker.setTitle(Double.toString(singleCodeLocation.getLatitude()) + ", " + Double.toString(singleCodeLocation.getLongitude()));
+            codeMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+            map.getOverlays().add(codeMarker);
+            setToLocation(codePoint);
+
+        }
 
         return view;
     }
@@ -121,10 +166,23 @@ public class MapFragment extends Fragment {
         map.onPause();
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.zoom_in_button:
+                controller.zoomIn();
+                break;
+
+            case R.id.zoom_out_button:
+                controller.zoomOut();
+                break;
+        }
+    }
+
     /**
      * Create location icons used to show where the player is.
      */
-    public void createLocationIcons() {
+    private void createLocationIcons() {
         //https://stackoverflow.com/questions/60301641/customized-icon-in-osmdroid-marker-android
         // Player Map Marker Icon: <a href="https://www.flaticon.com/free-icons/location" title="location icons">Location icons created by IconMarketPK - Flaticon</a>
         // QR Map Marker Icon: <a href="https://www.flaticon.com/free-icons/location" title="location icons">Location icons created by IconMarketPK - Flaticon</a>
@@ -141,45 +199,66 @@ public class MapFragment extends Fragment {
     }
 
     /**
-     * Set the zoom and center the map onto user location.
+     * Set the zoom and center the map onto the central given location.
      */
-    public void setToUserLocation() {
+    private void setToLocation(GeoPoint point) {
         // https://stackoverflow.com/questions/40257342/how-to-display-user-location-on-osmdroid-mapview
 
         controller.setZoom(18);
         controller.zoomIn();
-
-        controller.animateTo(playerPoint);
-        controller.setCenter(playerPoint);
-
+        controller.setZoom(2);
+        controller.animateTo(point);
+        controller.setCenter(point);
     }
 
     /**
-     * Put markers onto the map of the nearby QR codes and player.
+     * Put markers onto the map of the player.
      */
-    public void addLocationMarkers() {
+    private void addLocationMarkers() {
 
         playerMarker.setPosition(playerPoint);
+        playerMarker.setTitle(Double.toString(player.getPlayerLocation().getLatitude()) + ", " + Double.toString(player.getPlayerLocation().getLongitude()));
         playerMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
         map.getOverlays().add(playerMarker);
 
+        addQRLocationMarkers();
+    }
 
+    /**
+     * Put markers onto the map of the QR codes that are nearby the player
+     */
+    private void addQRLocationMarkers() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        ArrayList<LocationStore> QRCodeLocations = mapInfo.getQRLocations();
-        for (LocationStore QRLocation : QRCodeLocations) {
+        db.collection("codes").get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        if (!queryDocumentSnapshots.isEmpty()) {
+                            List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
+                            for (DocumentSnapshot d : list) {
+                                QRCode code = d.toObject(QRCode.class);
+                                double latDifference = (double) (Math.abs(code.getLocation().getLatitude() - player.getPlayerLocation().getLatitude()));
+                                double longDifference = (double) (Math.abs(code.getLocation().getLongitude() - player.getPlayerLocation().getLongitude()));
+                                if (latDifference < radius && longDifference < radius) {
 
-            Location location = new Location("map_location");
-            location.setLatitude(QRLocation.getLatitude());
-            location.setLongitude(QRLocation.getLongitude());
+                                    Location location = new Location("map_location");
+                                    location.setLatitude(code.getLocation().getLatitude());
+                                    location.setLongitude(code.getLocation().getLongitude());
 
-            GeoPoint QRPoint = new GeoPoint(location);
+                                    GeoPoint QRPoint = new GeoPoint(location);
 
-            Marker QRMarker = new Marker(map);
-            QRMarker.setIcon(QRPin);
-            QRMarker.setPosition(QRPoint);
-            QRMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-            map.getOverlays().add(QRMarker);
-        }
+                                    Marker QRMarker = new Marker(map);
+                                    QRMarker.setIcon(QRPin);
+                                    QRMarker.setPosition(QRPoint);
+                                    QRMarker.setTitle(Double.toString(code.getLocation().getLatitude()) + ", " + Double.toString(code.getLocation().getLongitude()));
+                                    QRMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+                                    map.getOverlays().add(QRMarker);
+                                }
+                            }
+                        }
+                    }
+                });
     }
 
 }

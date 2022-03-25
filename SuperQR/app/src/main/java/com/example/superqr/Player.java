@@ -1,6 +1,9 @@
 package com.example.superqr;
+
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import java.util.Random;
 
 
 /**
@@ -12,6 +15,8 @@ public class Player implements Parcelable, Comparable<Player> {
     private PlayerSettings settings;
     private PlayerStats stats = new PlayerStats();
     private LocationStore location = new LocationStore();
+    private String playerID = generateID();
+    private Boolean isAdmin = false;
 
     /**
      * empty constructor needed for Firebase
@@ -36,6 +41,9 @@ public class Player implements Parcelable, Comparable<Player> {
         settings = in.readParcelable(PlayerSettings.class.getClassLoader());
         stats = in.readParcelable(PlayerStats.class.getClassLoader());
         location = in.readParcelable(LocationStore.class.getClassLoader());
+        playerID = in.readString();
+        isAdmin = in.readByte() != 0;
+
     }
 
     public static final Creator<Player> CREATOR = new Creator<Player>() {
@@ -88,6 +96,10 @@ public class Player implements Parcelable, Comparable<Player> {
 
     }
 
+    public String getPlayerID() {
+        return playerID;
+    }
+
     public void setStats(PlayerStats stats) {
         this.stats = stats;
     }
@@ -104,6 +116,8 @@ public class Player implements Parcelable, Comparable<Player> {
         parcel.writeParcelable(settings, i);
         parcel.writeParcelable(stats, i);
         parcel.writeParcelable(location, i);
+        parcel.writeString(playerID);
+        parcel.writeByte((byte) (this.isAdmin ? 1 : 0));
     }
 
     //used to compare players for the leaderboard
@@ -111,11 +125,46 @@ public class Player implements Parcelable, Comparable<Player> {
     public int compareTo(Player player) {
         if (this.stats.getHighestScore() == player.stats.getHighestScore()) {
             return 0;
-        } else if (this.stats.getHighestScore() > player.stats.getHighestScore()) {
+        } else if (this.stats.getHighestScore().getScore() > player.stats.getHighestScore().getScore()) {
             return -1;
         } else {
             return 1;
         }
     }
 
+    /**
+     * generate a random string that represents player ID
+     *
+     * @return String
+     */
+    private String generateID() {
+        // https://www.programiz.com/java-programming/examples/generate-random-string
+        String upperAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String lowerAlphabet = "abcdefghijklmnopqrstuvwxyz";
+        String numbers = "0123456789";
+        String alphaNumeric = upperAlphabet + lowerAlphabet + numbers;
+
+        StringBuilder sb = new StringBuilder();
+
+        Random random = new Random();
+
+        int length = 10;
+
+        for (int i = 0; i < length; i++) {
+            int randomInt = random.nextInt(alphaNumeric.length());
+
+            char randomChar = alphaNumeric.charAt(randomInt);
+
+            sb.append(randomChar);
+        }
+        return sb.toString();
+    }
+
+    /**
+     * check if player is the owner
+     * @return
+     */
+    public Boolean getAdmin() {
+        return isAdmin;
+    }
 }

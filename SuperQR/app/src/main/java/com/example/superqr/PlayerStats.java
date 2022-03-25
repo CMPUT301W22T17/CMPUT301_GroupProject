@@ -13,8 +13,8 @@ public class PlayerStats implements Parcelable {
     private ArrayList<QRCode> qrCodes;
     private int counts;
     private int totalScore;
-    private int highestScore;
-    private int lowestScore;
+    private QRCode highestScore = new QRCode();
+    private QRCode lowestScore = new QRCode();
 
     /**
      * Creates a PlayerStats object
@@ -23,8 +23,6 @@ public class PlayerStats implements Parcelable {
     public PlayerStats() {
         counts = 0;
         totalScore = 0;
-        highestScore = 0;
-        lowestScore = 0;
         qrCodes = new ArrayList<>();
     }
 
@@ -36,7 +34,7 @@ public class PlayerStats implements Parcelable {
      * @param highestScore
      * @param lowestScore
      */
-    public PlayerStats(ArrayList<QRCode> qrCodes, int counts, int totalScore, int highestScore, int lowestScore) {
+    public PlayerStats(ArrayList<QRCode> qrCodes, int counts, int totalScore, QRCode highestScore, QRCode lowestScore) {
         this.qrCodes = qrCodes;
         this.counts = counts;
         this.totalScore = totalScore;
@@ -48,8 +46,8 @@ public class PlayerStats implements Parcelable {
         qrCodes = in.createTypedArrayList(QRCode.CREATOR);
         counts = in.readInt();
         totalScore = in.readInt();
-        highestScore = in.readInt();
-        lowestScore = in.readInt();
+        highestScore = in.readParcelable(QRCode.class.getClassLoader());
+        lowestScore = in.readParcelable(QRCode.class.getClassLoader());
     }
 
     public static final Creator<PlayerStats> CREATOR = new Creator<PlayerStats>() {
@@ -79,7 +77,6 @@ public class PlayerStats implements Parcelable {
      *      counts integer
      */
     public int getCounts() {
-
         return counts;
     }
 
@@ -89,74 +86,51 @@ public class PlayerStats implements Parcelable {
      *      totalScore integer
      */
     public int getTotalScore() {
-
         return totalScore;
     }
 
     /**
-     * gets the highest score QR code of a player
+     * Returns the highest scoring QR code of a player
      * @return
-     *      highestScore integer
+     *      Return the code
      */
-    public int getHighestScore() {
-
+    public QRCode getHighestScore() {
         return highestScore;
     }
 
     /**
-     * gets the lowest score QR code of a player
+     * Returns the lowest scoring QR code of a player
      * @return
-     *      lowestScore integer
+     *      Return the code
      */
-    public int getLowestScore() {
-
+    public QRCode getLowestScore() {
         return lowestScore;
     }
 
     /**
-     * adds a QR code to the player's collection of QR codes
+     * Adds a QR code to the player's collection of QR codes and updates highest score,
+     * lowest score, counts, and totalScore.
      * @param qrCode
      */
     public void addQrCode(QRCode qrCode) {
+        int score = qrCode.getScore();
 
         this.qrCodes.add(qrCode);
-
-    }
-
-    /**
-     * increments number of QR codes the player has scanned
-     */
-    public void addCounts() {
-
         this.counts += 1;
-    }
-
-    /**
-     * sets the total score of the player
-     * @param score
-     */
-    public void addTotalScore(int score) {
-
         this.totalScore += score;
+
+        if (this.qrCodes.size() == 1) { // First QR code
+            highestScore = qrCode;
+            lowestScore = qrCode;
+        }
+        else if (score > highestScore.getScore()) {
+            highestScore = qrCode;
+        }
+        else if (score < lowestScore.getScore()) {
+            lowestScore = qrCode;
+        }
     }
 
-    /**
-     * sets the highest score of the player
-     * @param highestScore
-     */
-    public void setHighestScore(int highestScore) {
-
-        this.highestScore = highestScore;
-    }
-
-    /**
-     * sets the lowest score of the player
-     * @param lowestScore
-     */
-    public void setLowestScore(int lowestScore) {
-
-        this.lowestScore = lowestScore;
-    }
 
     @Override
     public int describeContents() {
@@ -168,7 +142,7 @@ public class PlayerStats implements Parcelable {
         parcel.writeTypedList(qrCodes);
         parcel.writeInt(counts);
         parcel.writeInt(totalScore);
-        parcel.writeInt(highestScore);
-        parcel.writeInt(lowestScore);
+        parcel.writeParcelable(highestScore, i);
+        parcel.writeParcelable(lowestScore, i);
     }
 }

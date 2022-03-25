@@ -51,7 +51,6 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
     Fragment newFragment;
     LocationManager locationManager;
 
-
     // from: https://stackoverflow.com/questions/62671106/onactivityresult-method-is-deprecated-what-is-the-alternative
     // author: https://stackoverflow.com/users/4147849/muntashir-akon
     // used to pass Player object through into fragments.
@@ -73,9 +72,9 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) { // Photo taken
-            String userName = player.getSettings().getUsername();
+            String playerID = player.getPlayerID();
             ArrayList<QRCode> qrCodes = player.getStats().getQrCodes();
-            StorageReference qrcodes = mStorageRef.child(String.format("%s/%s", userName, qrCodes.get(qrCodes.size() - 1).getHash()));
+            StorageReference qrcodes = mStorageRef.child(String.format("%s/%s", playerID, qrCodes.get(qrCodes.size() - 1).getHash()));
 
             // Get data as Bitmap and convert it into byte[] to upload with putBytes
             // https://stackoverflow.com/questions/56699632/how-to-upload-file-bitmap-to-cloud-firestore
@@ -99,7 +98,6 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
             });
         }
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,7 +110,6 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
 
     /**
      * Places a fragment on frame_layout in the main activity
-     *
      * @param fragment
      */
     private void replaceFragment(Fragment fragment) {
@@ -146,7 +143,9 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
                             //Load fragments after getting data, as Firestore is slow
                             loadFragments();
                         } else {
-                            // should handle this
+                            Toast.makeText(MainActivity.this, "Player Deleted", Toast.LENGTH_LONG);
+                            Intent intent = new Intent(MainActivity.this, LogInActivity.class);
+                            resultLauncher.launch(intent);
                             Log.d(TAG, "onComplete: data not exist");
                         }
                     } else {
@@ -201,7 +200,6 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
     /**
      * Adds QRCcode to the player, updates the database, and update's the player's
      * QRCode stats as necessary.
-     *
      * @param qrCode
      *      QRCode that is scanned
      */
@@ -212,27 +210,11 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
             Log.d("debug", "geo is true");
         }
 
+        // Adds QR code to playerStats
         PlayerStats playerStats = player.getStats();
-        Log.d("debug", String.valueOf(playerStats.getQrCodes()));
         playerStats.addQrCode(qrCode);
-        playerStats.addCounts();
-        playerStats.addTotalScore(qrCode.getScore());
-
-        int highScore = playerStats.getQrCodes().get(0).getScore();
-        int lowScore = playerStats.getQrCodes().get(0).getScore();
-        for (int i = 0; i < playerStats.getQrCodes().size(); i++) {
-            if (playerStats.getQrCodes().get(i).getScore() > highScore) {
-                highScore = playerStats.getQrCodes().get(i).getScore();
-            } else if (playerStats.getQrCodes().get(i).getScore() < lowScore) {
-                lowScore = playerStats.getQrCodes().get(i).getScore();
-            }
-        }
-
-        playerStats.setHighestScore(highScore);
-        playerStats.setLowestScore(lowScore);
-
-        Log.d("deb", String.valueOf(playerStats.getQrCodes()));
         player.setStats(playerStats);
+
         db.collection("users").document(player.getSettings().getUsername()).update(
                 "stats.qrCodes", FieldValue.arrayUnion(qrCode),
                 "stats.counts", (playerStats.getCounts()),
@@ -242,28 +224,6 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
 
         // put QRCode into firestore
         db.collection("codes").document(qrCode.getHash()).set(qrCode);
-        db.collection("codes").document(qrCode.getHash())
-                .update(
-                        "hash", qrCode.getHash(),
-                        "score", qrCode.getScore(),
-                        "location.latitude", qrCode.getStoreLocation().getLatitude(),
-                        "location.longitude", qrCode.getStoreLocation().getLongitude(),
-                        "scanned", qrCode.getScanned()
-                );
-
-
-
-
-        // remove storeLocation
-        DocumentReference ref = db.collection("codes").document(qrCode.getHash());
-        Map<String, Object> updates = new HashMap<>();
-        updates.put("storeLocation", FieldValue.delete());
-        ref.update(updates).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                Log.d("Message: ", "REMOVED storeLocation field");
-            }
-        });
     }
 
     @Override
@@ -285,7 +245,8 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
             newFragment = ProfileFragment.newInstance(player);
             replaceFragment(newFragment);
             Toast.makeText(MainActivity.this, "Successful Update...", Toast.LENGTH_LONG).show();
-        } else {
+        }
+        else {
             DocumentReference docRef = db.collection("users").document(newUsername);
             docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override

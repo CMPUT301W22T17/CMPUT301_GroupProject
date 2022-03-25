@@ -56,7 +56,7 @@ public class Map implements Serializable {
                         if (!queryDocumentSnapshots.isEmpty()) {
                             for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                                 QRCode code = document.toObject(QRCode.class);
-                                codesList.add(code.getStoreLocation());
+                                codesList.add(code.getLocation());
 
                             }
                         }
