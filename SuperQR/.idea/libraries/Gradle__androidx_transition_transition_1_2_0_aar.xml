@@ -1,6 +1,18 @@
 <component name="libraryTable">
   <library name="Gradle: androidx.transition:transition:1.2.0@aar">
     <ANNOTATIONS>
+<<<<<<< HEAD
+      <root url="jar://$PROJECT_DIR$/../../../TEST/lab6/CMPUT-301-CustomList/app/caches/transforms-3/545cde3c65c76330df9b6187b9eda181/transformed/transition-1.2.0/annotations.zip!/" />
+    </ANNOTATIONS>
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../../TEST/lab6/CMPUT-301-CustomList/app/caches/transforms-3/545cde3c65c76330df9b6187b9eda181/transformed/transition-1.2.0/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../../../TEST/lab6/CMPUT-301-CustomList/app/caches/transforms-3/545cde3c65c76330df9b6187b9eda181/transformed/transition-1.2.0/res" />
+      <root url="file://$PROJECT_DIR$/../../../TEST/lab6/CMPUT-301-CustomList/app/caches/transforms-3/545cde3c65c76330df9b6187b9eda181/transformed/transition-1.2.0/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../../../TEST/lab6/CMPUT-301-CustomList/app/caches/modules-2/files-2.1/androidx.transition/transition/1.2.0/65d2a5dab39f120d3f584fdead252ce81ec7dbee/transition-1.2.0-sources.jar!/" />
+=======
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/75fba30823c55fa8c3aac0ae64620666/transformed/transition-1.2.0/annotations.zip!/" />
       <root url="jar://$USER_HOME$/TEST/lab6/CMPUT-301-CustomList/app/caches/transforms-3/2104a3b47c2ad91cbf74de817ce56cb2/transformed/transition-1.2.0/annotations.zip!/" />
     </ANNOTATIONS>
@@ -16,6 +28,7 @@
     <SOURCES>
       <root url="jar://$USER_HOME$/TEST/lab6/CMPUT-301-CustomList/app/caches/modules-2/files-2.1/androidx.transition/transition/1.2.0/65d2a5dab39f120d3f584fdead252ce81ec7dbee/transition-1.2.0-sources.jar!/" />
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/androidx.transition/transition/1.2.0/65d2a5dab39f120d3f584fdead252ce81ec7dbee/transition-1.2.0-sources.jar!/" />
+>>>>>>> 00dc97f5bcb9fcfe1740302c506fc42c2e89aac3
     </SOURCES>
   </library>
 </component>
