@@ -1,6 +1,15 @@
 <component name="libraryTable">
   <library name="Gradle: androidx.legacy:legacy-support-core-utils:1.0.0@aar">
     <CLASSES>
+<<<<<<< HEAD
+      <root url="jar://$PROJECT_DIR$/../../../TEST/lab6/CMPUT-301-CustomList/app/caches/transforms-3/cc244135175325bb8f4fec73886c78ae/transformed/legacy-support-core-utils-1.0.0/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../../../TEST/lab6/CMPUT-301-CustomList/app/caches/transforms-3/cc244135175325bb8f4fec73886c78ae/transformed/legacy-support-core-utils-1.0.0/res" />
+      <root url="file://$PROJECT_DIR$/../../../TEST/lab6/CMPUT-301-CustomList/app/caches/transforms-3/cc244135175325bb8f4fec73886c78ae/transformed/legacy-support-core-utils-1.0.0/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../../../TEST/lab6/CMPUT-301-CustomList/app/caches/modules-2/files-2.1/androidx.legacy/legacy-support-core-utils/1.0.0/46c37f178088153618cfb0afef08ec96c48f93cb/legacy-support-core-utils-1.0.0-sources.jar!/" />
+=======
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/6aab3b11836e18c263be3a542ebcf766/transformed/legacy-support-core-utils-1.0.0/res" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/cc244135175325bb8f4fec73886c78ae/transformed/legacy-support-core-utils-1.0.0/res" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/d132ab35cbaf180b827ea9de2812fc2f/transformed/legacy-support-core-utils-1.0.0/res" />
@@ -16,6 +25,7 @@
     <SOURCES>
       <root url="jar://$USER_HOME$/TEST/lab6/CMPUT-301-CustomList/app/caches/modules-2/files-2.1/androidx.legacy/legacy-support-core-utils/1.0.0/46c37f178088153618cfb0afef08ec96c48f93cb/legacy-support-core-utils-1.0.0-sources.jar!/" />
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/androidx.legacy/legacy-support-core-utils/1.0.0/46c37f178088153618cfb0afef08ec96c48f93cb/legacy-support-core-utils-1.0.0-sources.jar!/" />
+>>>>>>> 00dc97f5bcb9fcfe1740302c506fc42c2e89aac3
     </SOURCES>
   </library>
 </component>

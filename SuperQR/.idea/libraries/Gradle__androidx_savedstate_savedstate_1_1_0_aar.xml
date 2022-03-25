@@ -1,6 +1,15 @@
 <component name="libraryTable">
   <library name="Gradle: androidx.savedstate:savedstate:1.1.0@aar">
     <CLASSES>
+<<<<<<< HEAD
+      <root url="jar://$PROJECT_DIR$/../../../TEST/lab6/CMPUT-301-CustomList/app/caches/transforms-3/d35f9eae663a46be6d3669f232ad7b24/transformed/savedstate-1.1.0/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../../../TEST/lab6/CMPUT-301-CustomList/app/caches/transforms-3/d35f9eae663a46be6d3669f232ad7b24/transformed/savedstate-1.1.0/res" />
+      <root url="file://$PROJECT_DIR$/../../../TEST/lab6/CMPUT-301-CustomList/app/caches/transforms-3/d35f9eae663a46be6d3669f232ad7b24/transformed/savedstate-1.1.0/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../../../TEST/lab6/CMPUT-301-CustomList/app/caches/modules-2/files-2.1/androidx.savedstate/savedstate/1.1.0/73464c2c55129727354a95ffa91dc9c2cf0c78b/savedstate-1.1.0-sources.jar!/" />
+=======
       <root url="file://$USER_HOME$/TEST/lab6/CMPUT-301-CustomList/app/caches/transforms-3/8cd6392141b5b672c5b7704b06edc1af/transformed/savedstate-1.1.0/AndroidManifest.xml" />
       <root url="file://$USER_HOME$/TEST/lab6/CMPUT-301-CustomList/app/caches/transforms-3/8cd6392141b5b672c5b7704b06edc1af/transformed/savedstate-1.1.0/res" />
       <root url="jar://$USER_HOME$/TEST/lab6/CMPUT-301-CustomList/app/caches/transforms-3/8cd6392141b5b672c5b7704b06edc1af/transformed/savedstate-1.1.0/jars/classes.jar!/" />
@@ -12,6 +21,7 @@
     <SOURCES>
       <root url="jar://$USER_HOME$/TEST/lab6/CMPUT-301-CustomList/app/caches/modules-2/files-2.1/androidx.savedstate/savedstate/1.1.0/73464c2c55129727354a95ffa91dc9c2cf0c78b/savedstate-1.1.0-sources.jar!/" />
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/androidx.savedstate/savedstate/1.1.0/73464c2c55129727354a95ffa91dc9c2cf0c78b/savedstate-1.1.0-sources.jar!/" />
+>>>>>>> 00dc97f5bcb9fcfe1740302c506fc42c2e89aac3
     </SOURCES>
   </library>
 </component>

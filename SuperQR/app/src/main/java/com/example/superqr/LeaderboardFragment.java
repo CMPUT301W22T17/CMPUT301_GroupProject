@@ -1,7 +1,5 @@
 package com.example.superqr;
 
-import static android.content.ContentValues.TAG;
-
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -16,10 +14,8 @@ import android.widget.ListView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -44,8 +40,7 @@ public class LeaderboardFragment extends Fragment {
     private String mParam2;
     private ListView leaderboardList;
     private ArrayAdapter<Player> playerAdapter;
-    private ArrayList<Player> playerList;
-    private ArrayList<Player> playersList;
+    private static ArrayList<Player> playersList;
     private Player player;
     FirebaseFirestore db;
     Task<QuerySnapshot> query;
@@ -72,27 +67,10 @@ public class LeaderboardFragment extends Fragment {
         return fragment;
     }
 
-    public ArrayList<Player> getPlayersFromDatabase(){
-        db = FirebaseFirestore.getInstance();
-        playerList = new ArrayList<>();
-        db.collection("users")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful()){
-                            for (QueryDocumentSnapshot document : task.getResult()){
-                                player = document.toObject(Player.class);
-                                playerList.add(player);
-                            }
-                        }
-                    }
-                });
-        return playerList;
-    }
 
-
-
+    /**
+     * Runs on the creation of the leaderboard fragment
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,16 +81,43 @@ public class LeaderboardFragment extends Fragment {
 
     }
 
+
+    /**
+     * Gets Players from the Database and creates the View for the Leaderboard Fragment
+     * @return View of the leaderboard
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_leaderboard,null);
         leaderboardList = view.findViewById(R.id.leaderboard_list);
         playersList = new ArrayList<>();
-        playersList = getPlayersFromDatabase();
+        db = FirebaseFirestore.getInstance();
+        db.collection("users")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            for (QueryDocumentSnapshot document : task.getResult()){
+                                player = document.toObject(Player.class);
+                                playersList.add(player);
+                            }
+                            SortArray();
+                        }
+                    }
+                });
+        return view;
+    }
+
+    /**
+     * Sort PlayerList Array and Set The Adapter for the view
+     */
+    public void SortArray(){
         Collections.sort(playersList);
         playerAdapter = new LeaderboardListView(getActivity(), playersList);
         leaderboardList.setAdapter(playerAdapter);
-        return view;
     }
+
+
 }
