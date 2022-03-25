@@ -62,7 +62,7 @@ public class Player implements Parcelable, Comparable<Player> {
      * Return player location
      * @return Player Location
      */
-    public LocationStore getPlayerLocation() {
+    public LocationStore getLocation() {
         return this.location;
     }
 

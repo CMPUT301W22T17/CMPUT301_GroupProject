@@ -29,6 +29,9 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.core.content.res.ResourcesCompat;
+import androidx.fragment.app.Fragment;
+
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -146,8 +149,8 @@ public class MapFragment extends Fragment implements View.OnClickListener {
             // get Player from MainActivity
             player = (Player) getArguments().getParcelable(playerKey);
             Location playerLocation = new Location("map_location");
-            playerLocation.setLatitude(player.getPlayerLocation().getLatitude());
-            playerLocation.setLongitude(player.getPlayerLocation().getLongitude());
+            playerLocation.setLatitude(player.getLocation().getLatitude());
+            playerLocation.setLongitude(player.getLocation().getLongitude());
             playerPoint = new GeoPoint(playerLocation);
             setToLocation(playerPoint);
             addLocationMarkers();
@@ -255,7 +258,7 @@ public class MapFragment extends Fragment implements View.OnClickListener {
     private void addLocationMarkers() {
 
         playerMarker.setPosition(playerPoint);
-        playerMarker.setTitle(Double.toString(player.getPlayerLocation().getLatitude()) + ", " + Double.toString(player.getPlayerLocation().getLongitude()));
+        playerMarker.setTitle(Double.toString(player.getLocation().getLatitude()) + ", " + Double.toString(player.getLocation().getLongitude()));
         playerMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
         map.getOverlays().add(playerMarker);
     }
@@ -278,6 +281,7 @@ public class MapFragment extends Fragment implements View.OnClickListener {
                                 double latDifference = (double) (Math.abs(code.getLocation().getLatitude() - centerLocation.getLatitude()));
                                 double longDifference = (double) (Math.abs(code.getLocation().getLongitude() - centerLocation.getLongitude()));
                                 if (latDifference < radius && longDifference < radius) {
+
                                     Location location = new Location("map_location");
                                     location.setLatitude(code.getLocation().getLatitude());
                                     location.setLongitude(code.getLocation().getLongitude());
