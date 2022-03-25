@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".PlayerProfileActivity">
 
-
     <org.osmdroid.views.MapView
         android:id="@+id/map"
         android:layout_width="match_parent"
@@ -18,32 +17,35 @@
     </org.osmdroid.views.MapView>
 
 
-    <Button
+    <ImageButton
         android:id="@+id/zoom_in_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="ZOOM IN"
-        app:layout_constraintBottom_toBottomOf="@+id/zoom_out_button"
-        app:layout_constraintEnd_toStartOf="@+id/zoom_out_button"
-        app:layout_constraintHorizontal_bias="0.572"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/zoom_out_button"
-        app:layout_constraintVertical_bias="0.755"></Button>
+        android:layout_width="74dp"
+        android:layout_height="62dp"
+        android:layout_marginEnd="4dp"
+        android:backgroundTint="#FFFFFF"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toTopOf="@+id/zoom_out_button"
+        app:layout_constraintEnd_toEndOf="@+id/zoom_out_button"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/zoom_out_button"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.944"
+        app:srcCompat="@drawable/ic_zoom_in"
+        tools:ignore="SpeakableTextPresentCheck,ImageContrastCheck" />
 
-    <Button
+    <ImageButton
         android:id="@+id/zoom_out_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="40dp"
-        android:layout_weight="1"
-        android:text="ZOOM OUT"
+        android:layout_width="74dp"
+        android:layout_height="62dp"
+        android:backgroundTint="#FFFFFF"
+        android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.934"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.855">
-
-    </Button>
-
+        app:layout_constraintVertical_bias="0.777"
+        app:srcCompat="@drawable/ic_zoom_out"
+        tools:ignore="SpeakableTextPresentCheck,ImageContrastCheck" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
