@@ -19,6 +19,11 @@ public class LeaderboardListView extends ArrayAdapter<Player> {
     private ArrayList<Player> players;
     private Context context;
 
+    /**
+     * Class constructor
+     * @param context
+     * @param players array list containing players
+     */
     public LeaderboardListView(Context context, ArrayList<Player> players){
         super(context,0,players);
         this.players = players;
@@ -26,6 +31,11 @@ public class LeaderboardListView extends ArrayAdapter<Player> {
 
     }
 
+    /**
+     * Creates the custom adapter to display the ranks
+     * @param position Rank of a player
+     * @return view of the array adapter
+     */
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -39,7 +49,7 @@ public class LeaderboardListView extends ArrayAdapter<Player> {
         TextView Rank = view.findViewById(R.id.Rank);
         Rank.setText(String.valueOf(position+1));
         userId.setText(player.getSettings().getUsername());
-        score.setText(String.valueOf(player.getStats().getHighestScore()));
+        score.setText(String.valueOf(player.getStats().getTotalScore()));
         return view;
     }
 }
