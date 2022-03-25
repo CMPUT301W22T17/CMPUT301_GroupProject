@@ -6,18 +6,15 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
-
-import androidx.core.content.res.ResourcesCompat;
-import androidx.fragment.app.Fragment;
-
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.Toast;
+
+import androidx.core.content.res.ResourcesCompat;
+import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -32,9 +29,7 @@ import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -126,8 +121,8 @@ public class MapFragment extends Fragment implements View.OnClickListener {
             // get Player from MainActivity
             player = (Player) getArguments().getParcelable(playerKey);
             Location playerLocation = new Location("map_location");
-            playerLocation.setLatitude(player.getPlayerLocation().getLatitude());
-            playerLocation.setLongitude(player.getPlayerLocation().getLongitude());
+            playerLocation.setLatitude(player.getLocation().getLatitude());
+            playerLocation.setLongitude(player.getLocation().getLongitude());
             playerPoint = new GeoPoint(playerLocation);
             setToLocation(playerPoint);
             addLocationMarkers();
@@ -217,7 +212,7 @@ public class MapFragment extends Fragment implements View.OnClickListener {
     private void addLocationMarkers() {
 
         playerMarker.setPosition(playerPoint);
-        playerMarker.setTitle(Double.toString(player.getPlayerLocation().getLatitude()) + ", " + Double.toString(player.getPlayerLocation().getLongitude()));
+        playerMarker.setTitle(Double.toString(player.getLocation().getLatitude()) + ", " + Double.toString(player.getLocation().getLongitude()));
         playerMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
         map.getOverlays().add(playerMarker);
 
@@ -238,8 +233,8 @@ public class MapFragment extends Fragment implements View.OnClickListener {
                             List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
                             for (DocumentSnapshot d : list) {
                                 QRCode code = d.toObject(QRCode.class);
-                                double latDifference = (double) (Math.abs(code.getLocation().getLatitude() - player.getPlayerLocation().getLatitude()));
-                                double longDifference = (double) (Math.abs(code.getLocation().getLongitude() - player.getPlayerLocation().getLongitude()));
+                                double latDifference = (double) (Math.abs(code.getLocation().getLatitude() - player.getLocation().getLatitude()));
+                                double longDifference = (double) (Math.abs(code.getLocation().getLongitude() - player.getLocation().getLongitude()));
                                 if (latDifference < radius && longDifference < radius) {
 
                                     Location location = new Location("map_location");

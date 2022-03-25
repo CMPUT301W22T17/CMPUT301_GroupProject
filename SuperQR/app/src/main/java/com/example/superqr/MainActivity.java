@@ -1,6 +1,7 @@
 package com.example.superqr;
 
 import static android.content.ContentValues.TAG;
+
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
@@ -13,6 +14,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
+
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -24,6 +26,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
 import com.example.superqr.databinding.ActivityMainBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -36,11 +39,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements EditInfoFragment.OnFragmentInteractionListener, ScanFragment.ScanFragmentListener, LocationListener {
     private static int REQUEST_IMAGE_CAPTURE = 1;
@@ -206,7 +208,7 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
     @Override
     public void onQRScanned(QRCode qrCode, boolean geo) {
         if (geo) {
-            qrCode.setLocation(player.getPlayerLocation().getLatitude(), player.getPlayerLocation().getLongitude());
+            qrCode.setLocation(player.getLocation().getLatitude(), player.getLocation().getLongitude());
             Log.d("debug", "geo is true");
         }
 
