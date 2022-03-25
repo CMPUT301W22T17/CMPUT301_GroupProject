@@ -1,21 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: androidx.loader:loader:1.0.0@aar">
     <CLASSES>
-<<<<<<< HEAD
-      <root url="jar://$PROJECT_DIR$/../../../TEST/lab6/CMPUT-301-CustomList/app/caches/transforms-3/243ed24f8d41e60be51ee37a4fbabc7b/transformed/loader-1.0.0/jars/classes.jar!/" />
-      <root url="file://$PROJECT_DIR$/../../../TEST/lab6/CMPUT-301-CustomList/app/caches/transforms-3/243ed24f8d41e60be51ee37a4fbabc7b/transformed/loader-1.0.0/res" />
-      <root url="file://$PROJECT_DIR$/../../../TEST/lab6/CMPUT-301-CustomList/app/caches/transforms-3/243ed24f8d41e60be51ee37a4fbabc7b/transformed/loader-1.0.0/AndroidManifest.xml" />
-=======
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/865ff83c11d207a48da98f1b11f320f8/transformed/loader-1.0.0/res" />
-      <root url="file://$PROJECT_DIR$/../../../TEST/lab6/CMPUT-301-CustomList/app/caches/transforms-3/865ff83c11d207a48da98f1b11f320f8/transformed/loader-1.0.0/res" />
-      <root url="jar://$PROJECT_DIR$/../../../TEST/lab6/CMPUT-301-CustomList/app/caches/transforms-3/865ff83c11d207a48da98f1b11f320f8/transformed/loader-1.0.0/jars/classes.jar!/" />
-      <root url="file://$PROJECT_DIR$/../../../TEST/lab6/CMPUT-301-CustomList/app/caches/transforms-3/865ff83c11d207a48da98f1b11f320f8/transformed/loader-1.0.0/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/243ed24f8d41e60be51ee37a4fbabc7b/transformed/loader-1.0.0/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/3986543a7121641b12198422ea284a43/transformed/loader-1.0.0/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/62fb0a0d54fe32443c5aae9f4560ffbc/transformed/loader-1.0.0/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/62fb0a0d54fe32443c5aae9f4560ffbc/transformed/loader-1.0.0/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/62fb0a0d54fe32443c5aae9f4560ffbc/transformed/loader-1.0.0/res" />
->>>>>>> 00dc97f5bcb9fcfe1740302c506fc42c2e89aac3
+      <root url="jar://$PROJECT_DIR$/../../../TEST/lab6/CMPUT-301-CustomList/app/caches/transforms-3/62fb0a0d54fe32443c5aae9f4560ffbc/transformed/loader-1.0.0/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../../../TEST/lab6/CMPUT-301-CustomList/app/caches/transforms-3/62fb0a0d54fe32443c5aae9f4560ffbc/transformed/loader-1.0.0/res" />
+      <root url="file://$PROJECT_DIR$/../../../TEST/lab6/CMPUT-301-CustomList/app/caches/transforms-3/62fb0a0d54fe32443c5aae9f4560ffbc/transformed/loader-1.0.0/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

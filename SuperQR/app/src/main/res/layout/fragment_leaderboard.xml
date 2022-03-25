@@ -25,7 +25,7 @@
         android:fontFamily="sans-serif-medium"
         android:text="LEADERBOARD"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-        android:textColor="#FF0000"
+        android:textColor="#000000"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
