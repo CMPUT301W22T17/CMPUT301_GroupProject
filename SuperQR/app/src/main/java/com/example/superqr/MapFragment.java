@@ -41,6 +41,7 @@ import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -71,6 +72,7 @@ public class MapFragment extends Fragment implements View.OnClickListener {
     private ImageButton zoomOutButton;
     private ImageButton searchLocationButton;
     private EditText locationSearchText;
+    private ArrayList<Marker> nearbySearchedCodes = new ArrayList<Marker>();
 
     public MapFragment() {
         // Required empty public constructor
@@ -147,7 +149,7 @@ public class MapFragment extends Fragment implements View.OnClickListener {
             playerPoint = new GeoPoint(playerLocation);
             setToLocation(playerPoint);
             addLocationMarkers();
-            addQRLocationMarkers(playerLocation, 0.04);
+            addQRLocationMarkers(playerLocation, 0.04, true);
         }
 
         else {
@@ -259,7 +261,15 @@ public class MapFragment extends Fragment implements View.OnClickListener {
     /**
      * Put markers onto the map of the QR codes that are nearby the player
      */
-    private void addQRLocationMarkers(Location centerLocation, double radius) {
+    private void addQRLocationMarkers(Location centerLocation, double radius, boolean nearPlayer) {
+
+        if (!nearbySearchedCodes.isEmpty()) {
+            for (int i = 0; i < nearbySearchedCodes.size(); i++) {
+                map.getOverlays().remove(nearbySearchedCodes.get(i));
+                nearbySearchedCodes.remove(nearbySearchedCodes.get(i));
+            }
+        }
+
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         db.collection("codes").get()
@@ -291,8 +301,13 @@ public class MapFragment extends Fragment implements View.OnClickListener {
                                     // https://stackoverflow.com/questions/2538787/how-to-print-a-float-with-2-decimal-places-in-java
                                     DecimalFormat decimalRounder = new DecimalFormat();
                                     decimalRounder.setMaximumFractionDigits(4);
-
-                                    QRMarker.setTitle("(" + Double.toString(Double.parseDouble(decimalRounder.format(markerLatDifference))) + ", " + Double.toString(Double.parseDouble(decimalRounder.format(markerLongDifference))) + ") km away.");
+                                    if (!nearPlayer) {
+                                        QRMarker.setTitle("(" + Double.toString(Double.parseDouble(decimalRounder.format(markerLatDifference))) + ", " + Double.toString(Double.parseDouble(decimalRounder.format(markerLongDifference))) + ") km away from your searched location.");
+                                        nearbySearchedCodes.add(QRMarker);
+                                    }
+                                    else {
+                                        QRMarker.setTitle("(" + Double.toString(Double.parseDouble(decimalRounder.format(markerLatDifference))) + ", " + Double.toString(Double.parseDouble(decimalRounder.format(markerLongDifference))) + ") km away from you.");
+                                    }
                                     QRMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
                                     map.getOverlays().add(QRMarker);
                                 }
@@ -326,7 +341,7 @@ public class MapFragment extends Fragment implements View.OnClickListener {
                 map.getOverlays().add(locationMarker);
 
                 locationSearchText.getText().clear();
-                addQRLocationMarkers(location, 0.05);
+                addQRLocationMarkers(location, 0.05, false);
 
             }
             else {
