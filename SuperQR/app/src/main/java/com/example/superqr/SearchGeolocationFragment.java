@@ -37,8 +37,6 @@ public class SearchGeolocationFragment extends Fragment {
     private ArrayList<LocationStore> nearbyQRCodes = new ArrayList<>();
     private double radius = 0.15;
 
-    private Map map;
-
     public SearchGeolocationFragment() {
         // Required empty public constructor
     }
