@@ -3,6 +3,7 @@ package com.example.superqr;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -28,7 +30,7 @@ import java.util.List;
  * Use the {@link LeaderboardFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class LeaderboardFragment extends Fragment {
+public class LeaderboardFragment extends Fragment implements View.OnClickListener {
 
 
     private static final String playerKey= "playerKey";
@@ -36,10 +38,13 @@ public class LeaderboardFragment extends Fragment {
     private ListView leaderboardList;
     private ArrayAdapter<Player> playerAdapter;
     private static ArrayList<Player> playersList;
+    private static ArrayList<Integer> totalScoreList, totalQRList, highestScoringList;
     private Player obj;
+    private Button myRankButton;
     FirebaseFirestore db;
     Task<QuerySnapshot> query;
     List<DocumentSnapshot> x;
+    private int myRank, totalQR, highestScoring;
     public LeaderboardFragment() {
         // Required empty public constructor
     }
@@ -79,10 +84,13 @@ public class LeaderboardFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_leaderboard,null);
 
-        player = (Player) getArguments().getParcelable(playerKey);
-
+        myRankButton = (Button) view.findViewById(R.id.myRank);
+        myRankButton.setOnClickListener(this);
         leaderboardList = view.findViewById(R.id.leaderboard_list);
         playersList = new ArrayList<>();
+        totalScoreList = new ArrayList();
+        totalQRList = new ArrayList();
+        highestScoringList= new ArrayList();
         db = FirebaseFirestore.getInstance();
         db.collection("users")
                 .get()
@@ -93,6 +101,9 @@ public class LeaderboardFragment extends Fragment {
                             for (QueryDocumentSnapshot document : task.getResult()){
                                 obj = document.toObject(Player.class);
                                 playersList.add(obj);
+                                totalScoreList.add(obj.getStats().getTotalScore());
+                                totalQRList.add(obj.getStats().getCounts());
+                                highestScoringList.add(obj.getStats().getHighestScore().getScore());
                             }
                             SortArray();
                         }
@@ -111,4 +122,40 @@ public class LeaderboardFragment extends Fragment {
     }
 
 
+    @Override
+    public void onClick(View view) {
+        switch (view.getId())
+        {
+            case R.id.myRank:
+                player = (Player) getArguments().getParcelable(playerKey);
+                myRank = findRank(player);
+                totalQR = findTotalQR(player);
+                highestScoring = findHighest(player);
+                DialogFragment myRankFragment = new MyRankFragment(myRank+1,highestScoring+1,totalQR+1);
+                myRankFragment.show(getActivity().getSupportFragmentManager(),"my_rank");
+        }
+    }
+
+    public int findRank(Player player){
+        int rank;
+        Collections.sort(totalScoreList, Collections.reverseOrder());
+        rank = totalScoreList.indexOf(player.getStats().getTotalScore());
+        Log.d("///ranksize",String.valueOf(player.getStats().getTotalScore()));
+        return rank;
+    }
+
+    public int findTotalQR(Player player){
+        int qr;
+        Collections.sort(totalQRList, Collections.reverseOrder());
+        Log.d("///totalQR",totalQRList.toString());
+        qr = totalQRList.indexOf(player.getStats().getCounts());
+        return qr;
+    }
+
+    public int findHighest(Player player){
+        int highest;
+        Collections.sort(highestScoringList, Collections.reverseOrder());
+        highest = highestScoringList.indexOf(player.getStats().getHighestScore().getScore());
+        return  highest;
+    }
 }
