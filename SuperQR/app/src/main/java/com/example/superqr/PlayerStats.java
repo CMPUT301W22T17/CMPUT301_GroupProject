@@ -116,7 +116,7 @@ public class PlayerStats implements Parcelable {
         int score = qrCode.getScore();
 
         this.qrCodes.add(qrCode);
-        this.counts += 1;
+        this.counts = qrCodes.size();
         this.totalScore += score;
 
         if (this.qrCodes.size() == 1) { // First QR code
