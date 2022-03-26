@@ -87,10 +87,17 @@ public class ScanFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param player current player of the game
-     * @return A new instance of fragment ScanFragment.
+     * @param player
+     *      Current player of the game
+     * @param scanAction
+     *      An integer indicating what the scanner is being used for.
+     *      0: Scanning QR code for points
+     *      1: Scanning QR code to login
+     *      2: Scanning QR code to see profile
+     *
+     * @return
+     *      A new instance of ScanFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static ScanFragment newInstance(Player player, int scanAction) {
         ScanFragment fragment = new ScanFragment();
         Bundle bundle = new Bundle();

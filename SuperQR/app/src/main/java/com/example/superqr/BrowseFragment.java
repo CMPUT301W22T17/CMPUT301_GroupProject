@@ -94,7 +94,7 @@ public class BrowseFragment extends Fragment implements View.OnClickListener {
                 break;
 
             case R.id.view_codes_button:
-                Fragment viewCodesFragment = new ViewPlayerCodesFragment();
+                Fragment viewCodesFragment = ViewPlayerCodesFragment.newInstance(player);
                 displayFragment(viewCodesFragment);
                 break;
 
