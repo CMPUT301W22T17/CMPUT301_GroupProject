@@ -11,7 +11,6 @@ import java.util.ArrayList;
  */
 public class PlayerStats implements Parcelable {
     private ArrayList<QRCode> qrCodes;
-    private int counts;
     private int totalScore;
     private QRCode highestScore = new QRCode();
     private QRCode lowestScore = new QRCode();
@@ -21,7 +20,6 @@ public class PlayerStats implements Parcelable {
      *
      */
     public PlayerStats() {
-        counts = 0;
         totalScore = 0;
         qrCodes = new ArrayList<>();
     }
@@ -29,14 +27,12 @@ public class PlayerStats implements Parcelable {
     /**
      * Creates and PlayerStats object by providing info
      * @param qrCodes
-     * @param counts
      * @param totalScore
      * @param highestScore
      * @param lowestScore
      */
-    public PlayerStats(ArrayList<QRCode> qrCodes, int counts, int totalScore, QRCode highestScore, QRCode lowestScore) {
+    public PlayerStats(ArrayList<QRCode> qrCodes, int totalScore, QRCode highestScore, QRCode lowestScore) {
         this.qrCodes = qrCodes;
-        this.counts = counts;
         this.totalScore = totalScore;
         this.highestScore = highestScore;
         this.lowestScore = lowestScore;
@@ -44,7 +40,6 @@ public class PlayerStats implements Parcelable {
 
     protected PlayerStats(Parcel in) {
         qrCodes = in.createTypedArrayList(QRCode.CREATOR);
-        counts = in.readInt();
         totalScore = in.readInt();
         highestScore = in.readParcelable(QRCode.class.getClassLoader());
         lowestScore = in.readParcelable(QRCode.class.getClassLoader());
@@ -77,7 +72,7 @@ public class PlayerStats implements Parcelable {
      *      counts integer
      */
     public int getCounts() {
-        return counts;
+        return qrCodes.size();
     }
 
     /**
@@ -116,7 +111,6 @@ public class PlayerStats implements Parcelable {
         int score = qrCode.getScore();
 
         this.qrCodes.add(qrCode);
-        this.counts += 1;
         this.totalScore += score;
 
         if (this.qrCodes.size() == 1) { // First QR code
@@ -140,7 +134,6 @@ public class PlayerStats implements Parcelable {
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeTypedList(qrCodes);
-        parcel.writeInt(counts);
         parcel.writeInt(totalScore);
         parcel.writeParcelable(highestScore, i);
         parcel.writeParcelable(lowestScore, i);
