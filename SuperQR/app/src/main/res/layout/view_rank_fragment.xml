@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="51dp"
+        android:layout_marginTop="47dp"
+        android:text="Your Total Score Rank is: " />
+
+    <TextView
+        android:id="@+id/totalScoring"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="-2dp"
+        android:layout_marginTop="47dp"
+        android:layout_toEndOf="@+id/textView5"
+         />
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView5"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="51dp"
+        android:layout_marginTop="21dp"
+        android:text="Your Highest Scoring QR code Rank is: " />
+
+    <TextView
+        android:id="@+id/highestScoring"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView5"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="21dp"
+        android:layout_toEndOf="@+id/textView7"
+         />
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView7"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="51dp"
+        android:layout_marginTop="21dp"
+        android:text="Your Total QR Codes Scanned Rank is: " />
+
+    <TextView
+        android:id="@+id/totalQR"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView7"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="21dp"
+        android:layout_toEndOf="@+id/textView9"
+        />
+
+
+</RelativeLayout>
