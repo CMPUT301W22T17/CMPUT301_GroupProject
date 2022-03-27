@@ -82,7 +82,8 @@ public class MapFragment extends Fragment implements View.OnClickListener {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param player current player of the game
+     * @param player
+     *      Current player of the game
      * @return A new instance of fragment MapFragment.
      */
     public static MapFragment newInstance(Player player) {
@@ -236,6 +237,8 @@ public class MapFragment extends Fragment implements View.OnClickListener {
 
     /**
      * Set the zoom and center the map onto the central given location.
+     * @param point
+     *      The point that the map centers in on.
      */
     private void setToLocation(GeoPoint point) {
         // https://stackoverflow.com/questions/40257342/how-to-display-user-location-on-osmdroid-mapview
@@ -283,6 +286,7 @@ public class MapFragment extends Fragment implements View.OnClickListener {
                                 QRCode code = d.toObject(QRCode.class);
                                 double latDifference = (double) (Math.abs(code.getLocation().getLatitude() - centerLocation.getLatitude()));
                                 double longDifference = (double) (Math.abs(code.getLocation().getLongitude() - centerLocation.getLongitude()));
+
                                 if (latDifference < radius && longDifference < radius) {
 
                                     Location location = new Location("map_location");
@@ -295,18 +299,17 @@ public class MapFragment extends Fragment implements View.OnClickListener {
                                     QRMarker.setIcon(QRPin);
                                     QRMarker.setPosition(QRPoint);
 
-                                    double markerLatDifference = getLocationDifference(centerLocation.getLatitude(), code.getLocation().getLatitude());
-                                    double markerLongDifference = getLocationDifference(centerLocation.getLongitude(), code.getLocation().getLongitude());
+                                    double euclideanDistance = getEuclideanDistance(centerLocation, code.getLocation());
 
                                     // https://stackoverflow.com/questions/2538787/how-to-print-a-float-with-2-decimal-places-in-java
                                     DecimalFormat decimalRounder = new DecimalFormat();
                                     decimalRounder.setMaximumFractionDigits(4);
                                     if (!nearPlayer) {
-                                        QRMarker.setTitle("(" + Double.toString(Double.parseDouble(decimalRounder.format(markerLatDifference))) + ", " + Double.toString(Double.parseDouble(decimalRounder.format(markerLongDifference))) + ") km away from your searched location.");
+                                        QRMarker.setTitle(Double.toString(Double.parseDouble(decimalRounder.format(euclideanDistance))) + " km away from your searched location.");
                                         nearbySearchedCodes.add(QRMarker);
                                     }
                                     else {
-                                        QRMarker.setTitle("(" + Double.toString(Double.parseDouble(decimalRounder.format(markerLatDifference))) + ", " + Double.toString(Double.parseDouble(decimalRounder.format(markerLongDifference))) + ") km away from you.");
+                                        QRMarker.setTitle(Double.toString(Double.parseDouble(decimalRounder.format(euclideanDistance))) + " km away from you.");
                                     }
                                     QRMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
                                     map.getOverlays().add(QRMarker);
@@ -317,6 +320,12 @@ public class MapFragment extends Fragment implements View.OnClickListener {
                 });
     }
 
+    /**
+     * Searches for the location that the player gives and places a marker for it on the map
+     * @param searchedLocation
+     *      A string representing the location that the player is searching for
+     * @throws IOException
+     */
     private void searchLocation(String searchedLocation) throws IOException {
         // https://stackoverflow.com/questions/69148288/how-to-search-location-name-on-osmdroid-to-get-latitude-longitude
         try {
@@ -353,8 +362,23 @@ public class MapFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    private double getLocationDifference(double centerPoint, double otherPoint) {
-        return centerPoint - otherPoint;
+    /**
+     * Calculates the euclidean distance between two given points
+     * @param centerPoint
+     *      The point the other point compares with
+     * @param otherPoint
+     *      The point that the center point compares with
+     * @return The euclidean distance between the center and other point
+     */
+    private double getEuclideanDistance(Location centerPoint, LocationStore otherPoint) {
+
+        double centerLatitudeKm = centerPoint.getLatitude() * 110.574;
+        double centerLongitudeKm = centerPoint.getLongitude() * (111.320 * Math.cos(centerPoint.getLatitude()));
+        double otherLatitudeKm = otherPoint.getLatitude() * 110.574;
+        double otherLongitudeKm = otherPoint.getLongitude() * (111.320 * Math.cos(otherPoint.getLatitude()));
+        double distance = Math.sqrt(Math.pow(centerLatitudeKm - otherLatitudeKm, 2) + Math.pow(centerLongitudeKm - otherLongitudeKm, 2));
+
+        return distance;
     }
 
 }
