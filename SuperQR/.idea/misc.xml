@@ -29,6 +29,7 @@
         <entry key="app/src/main/res/layout/fragment_view_player_codes.xml" value="0.22991071428571427" />
         <entry key="app/src/main/res/layout/login_qr_code_fragment.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/player_codes_content.xml" value="0.35260416666666666" />
+        <entry key="app/src/main/res/layout/qr_geolocation_content.xml" value="0.18704710144927536" />
         <entry key="app/src/main/res/layout/view_qr_score_fragment.xml" value="0.3435012817382812" />
         <entry key="app/src/main/res/menu/menu.xml" value="0.2953125" />
       </map>

@@ -1,25 +1,22 @@
 package com.example.superqr;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
@@ -28,10 +25,11 @@ public class ViewPlayerCodesFragment extends Fragment {
     private static final String playerKey = "playerKey";
     GridView codes;
     Player player;
-    ArrayList<QRCode> playerQRCodes;
-    FirebaseFirestore db;
+    ArrayList<String> imageList;
+    int numCodes;
     StorageReference playerRef;
-    ArrayList<Bitmap> bitmaps;
+    ProgressBar loadingImage;
+    TextView noQRCodes;
 
     public ViewPlayerCodesFragment() {
         // Required empty public constructor
@@ -65,43 +63,55 @@ public class ViewPlayerCodesFragment extends Fragment {
         final Activity activity = getActivity();
         View root = inflater.inflate(R.layout.fragment_player_codes, container, false);
 
-        playerQRCodes = new ArrayList<>();
-        bitmaps = new ArrayList<>();
         codes = root.findViewById(R.id.browse_qr_codes);
-        playerQRCodes = player.getStats().getQrCodes();
+        loadingImage = root.findViewById(R.id.loading_image_browse);
+        noQRCodes = root.findViewById(R.id.no_qr_codes_text);
 
+        imageList = new ArrayList<>();
         playerRef = FirebaseStorage.getInstance().getReference().child(player.getPlayerID()); // Gets path to playerID
+        numCodes = player.getStats().getQrCodes().size();
 
-        // https://www.youtube.com/watch?v=7QnhepFaMLM
-        // Retrieving image
-        for (int i = 0; i < playerQRCodes.size(); i++) {
-            String hash = playerQRCodes.get(i).getHash();
-            playerRef.child(hash).getBytes(1024 * 1024) // One MB
-                    .addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                        @Override
-                        public void onSuccess(byte[] bytes) {
-                            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                            bitmaps.add(bitmap);
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.d("debug", "FAILURESE");
-                            // https://stackoverflow.com/questions/43567626/how-to-check-if-a-file-exists-in-firebase-storage-from-your-android-application
-                            int errorCode = ((StorageException) e).getErrorCode();
-                            if (errorCode == StorageException.ERROR_OBJECT_NOT_FOUND) {
-                                // https://vectorified.com/download-image#image-placeholder-icon-7.png
-                                Drawable placeHolder = ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.image_placeholder, null);
-                            }
-                        }
-                    });
+        // Shows no codes text when player has no QR codes
+        if (numCodes == 0) {
+            loadingImage.setVisibility(View.GONE);
+            noQRCodes.setVisibility(View.VISIBLE);
         }
-        Log.d("debug", "HELLO");
-        PlayerCodesListView adapter = new PlayerCodesListView(activity, playerQRCodes, bitmaps);
-        codes.setAdapter(adapter);
 
+        for (int i = 0; i < numCodes; i++) {
+            playerRef.child(player.getStats().getQrCodes().get(i).getHash()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    imageList.add(uri.toString());
+                }
+            }).addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) { // Image was found
+                    if (imageList.size() == numCodes) {
+                        setAdapter();
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) { // No image found
+                    imageList.add("placeholder");
+                    if (imageList.size() == numCodes) {
+                        setAdapter();
+                    }
+
+                }
+            });
+        }
 
         return root;
+    }
+
+    /**
+     * Sets the list of images to be adapted
+     */
+    private void setAdapter() {
+        PlayerCodesGridView adapter = new PlayerCodesGridView(getContext(), imageList, player.getPlayerID());
+        codes.setAdapter(adapter);
+        loadingImage.setVisibility(View.GONE);
     }
 
 }

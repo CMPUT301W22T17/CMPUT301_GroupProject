@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,22 +25,19 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-public class PlayerCodesListView extends ArrayAdapter<QRCode> {
-    QRCode qrCode;
+public class PlayerCodesGridView extends ArrayAdapter<String> {
+    ArrayList<String> imageList;
     String playerID;
     ImageView objectImage;
-    StorageReference playerRef;
-    TextView textView;
-    Bitmap bitmap;
-    ProgressBar loadingImage;
-    ArrayList<Bitmap> bitmaps;
 
-    public PlayerCodesListView(@NonNull Context context, ArrayList<QRCode> qrCodes, ArrayList<Bitmap> bitmaps) {
-        super(context, 0, qrCodes);
-        this.bitmaps = bitmaps;
+    public PlayerCodesGridView(@NonNull Context context, ArrayList<String> imageList, String playerID) {
+        super(context, 0, imageList);
+        this.imageList = imageList;
+        this.playerID = playerID;
     }
 
     @NonNull
@@ -50,21 +48,25 @@ public class PlayerCodesListView extends ArrayAdapter<QRCode> {
             view = LayoutInflater.from(getContext()).inflate(R.layout.player_codes_content, parent, false);
         }
 
-        qrCode = getItem(position);
-        objectImage = view.findViewById(R.id.idIVimage);
-        textView = view.findViewById(R.id.idTVtext);
-        objectImage.setImageBitmap(bitmaps.get(position));
-        textView.setText(qrCode.getHash());
-        loadingImage = view.findViewById(R.id.loading_image_browse);
+        objectImage = view.findViewById(R.id.object_image);
 
+        if (imageList != null) {
+            if (imageList.get(position).equals("placeholder")) { // No photo in FireStorage
+                Picasso.get().load(R.drawable.image_placeholder).into(objectImage);
+            }
+            else { // Has photo in FireStorage
+                Picasso.get().load(imageList.get(position)).into(objectImage);
+            }
+        }
+
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO: Open fragment to comment and be able to delete if owner of QR code
+                Toast.makeText(getContext(), imageList.get(position), Toast.LENGTH_SHORT).show(); // Testing
+            }
+        });
 
         return view;
-    }
-
-    private void setViews(Bitmap bitmap) {
-        Drawable placeHolder = ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.image_placeholder, null);
-        textView.setText(qrCode.getHash());
-        objectImage.setImageDrawable(placeHolder);
-        objectImage.setImageBitmap(Bitmap.createScaledBitmap(bitmap, 150, 150, false));
     }
 }
