@@ -30,6 +30,7 @@ public class ViewPlayerCodesFragment extends Fragment {
     StorageReference playerRef;
     ProgressBar loadingImage;
     TextView noQRCodes;
+    int i;
 
     public ViewPlayerCodesFragment() {
         // Required empty public constructor
@@ -77,7 +78,7 @@ public class ViewPlayerCodesFragment extends Fragment {
             noQRCodes.setVisibility(View.VISIBLE);
         }
 
-        for (int i = 0; i < numCodes; i++) {
+        for (i = 0; i < numCodes; i++) {
             playerRef.child(player.getStats().getQrCodes().get(i).getHash()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
                 public void onSuccess(Uri uri) {
@@ -93,7 +94,7 @@ public class ViewPlayerCodesFragment extends Fragment {
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) { // No image found
-                    imageList.add("placeholder");
+                    imageList.add(String.format("placeholder" + "-" + "%s", player.getStats().getQrCodes().get(i - 1).getHash()));
                     if (imageList.size() == numCodes) {
                         setAdapter();
                     }
@@ -109,7 +110,7 @@ public class ViewPlayerCodesFragment extends Fragment {
      * Sets the list of images to be adapted
      */
     private void setAdapter() {
-        PlayerCodesGridView adapter = new PlayerCodesGridView(getContext(), imageList, player.getPlayerID());
+        PlayerCodesGridView adapter = new PlayerCodesGridView(getContext(), imageList, player);
         codes.setAdapter(adapter);
         loadingImage.setVisibility(View.GONE);
     }

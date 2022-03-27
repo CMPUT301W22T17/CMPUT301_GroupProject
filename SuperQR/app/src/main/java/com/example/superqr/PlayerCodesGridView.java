@@ -29,15 +29,18 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import javax.annotation.RegEx;
+
 public class PlayerCodesGridView extends ArrayAdapter<String> {
     ArrayList<String> imageList;
-    String playerID;
+    Player player;
     ImageView objectImage;
+    String hash;
 
-    public PlayerCodesGridView(@NonNull Context context, ArrayList<String> imageList, String playerID) {
+    public PlayerCodesGridView(@NonNull Context context, ArrayList<String> imageList, Player player) {
         super(context, 0, imageList);
         this.imageList = imageList;
-        this.playerID = playerID;
+        this.player = player;
     }
 
     @NonNull
@@ -49,9 +52,11 @@ public class PlayerCodesGridView extends ArrayAdapter<String> {
         }
 
         objectImage = view.findViewById(R.id.object_image);
+        String link = imageList.get(position);
+        String[] isPlaceholder = link.split("-");
 
         if (imageList != null) {
-            if (imageList.get(position).equals("placeholder")) { // No photo in FireStorage
+            if (isPlaceholder[0].equals("placeholder")) { // No photo in FireStorage
                 Picasso.get().load(R.drawable.image_placeholder).into(objectImage);
             }
             else { // Has photo in FireStorage
@@ -63,7 +68,13 @@ public class PlayerCodesGridView extends ArrayAdapter<String> {
             @Override
             public void onClick(View view) {
                 // TODO: Open fragment to comment and be able to delete if owner of QR code
-                Toast.makeText(getContext(), imageList.get(position), Toast.LENGTH_SHORT).show(); // Testing
+                try {
+                    hash = FirebaseStorage.getInstance().getReferenceFromUrl(link).getName();
+                }
+                catch (IllegalArgumentException e) {
+                    hash = isPlaceholder[1];
+                }
+                Toast.makeText(getContext(), hash, Toast.LENGTH_SHORT).show(); // Testing
             }
         });
 
