@@ -106,9 +106,9 @@ public class SearchPlayerFragment extends Fragment {
         searchButton.setVisibility(View.INVISIBLE);
     }
 
-    private void replaceFragment(Player player) {
+    private void replaceFragment(Player otherPlayer) {
         hideViews();
-        Fragment displaySearchPlayer = DisplaySearchPlayerFragment.newInstance(player);
+        Fragment displaySearchPlayer = DisplaySearchPlayerFragment.newInstance(this.player, otherPlayer);
         FragmentManager fragmentManager = getChildFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.player_profile_container, displaySearchPlayer);
