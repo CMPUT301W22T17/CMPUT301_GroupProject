@@ -1,5 +1,6 @@
 package com.example.superqr;
 
+import android.database.sqlite.SQLiteReadOnlyDatabaseException;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -123,6 +124,30 @@ public class PlayerStats implements Parcelable {
         else if (score < lowestScore.getScore()) {
             lowestScore = qrCode;
         }
+    }
+
+    public void deleteQRCode(QRCode qrCode) {
+        this.qrCodes.remove(qrCode);
+        this.totalScore -= qrCode.getScore();
+        if (qrCode == this.highestScore) {
+            QRCode newHighest = qrCodes.get(0);
+            for (int i = 0; i < qrCodes.size(); i++) {
+                if (qrCodes.get(i).getScore() > newHighest.getScore()) {
+                    newHighest = qrCodes.get(i);
+                }
+            }
+            highestScore = newHighest;
+        }
+        else if (qrCode == this.lowestScore) {
+            QRCode newLowest = qrCodes.get(0);
+            for (int i = 0; i < qrCodes.size(); i++) {
+                if (qrCodes.get(i).getScore() < newLowest.getScore()) {
+                    newLowest = qrCodes.get(i);
+                }
+            }
+            lowestScore = newLowest;
+        }
+
     }
 
 
