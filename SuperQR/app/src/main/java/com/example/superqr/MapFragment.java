@@ -58,6 +58,7 @@ public class MapFragment extends Fragment implements View.OnClickListener {
     // Taken from "Hello osmdroid World"
     // At: https://osmdroid.github.io/osmdroid/How-to-use-the-osmdroid-library.html
     // Reference: https://osmdroid.github.io/osmdroid/javadocs/osmdroid-android/debug/index.html?org/osmdroid/views/MapView.html
+    // For fixing scaling of markers: https://stackoverflow.com/questions/54811451/osmdroid-default-marker-moving-when-zooming-out-on-android-api-28
 
     private MapView map;
     private MapController controller;
