@@ -1,46 +1,36 @@
 package com.example.superqr;
 
+import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.util.Log;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.res.ResourcesCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageException;
-import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
-
-import javax.annotation.RegEx;
 
 public class PlayerCodesGridView extends ArrayAdapter<String> {
     ArrayList<String> imageList;
     Player player;
+    Player otherPlayer;
     ImageView objectImage;
     String hash;
 
-    public PlayerCodesGridView(@NonNull Context context, ArrayList<String> imageList, Player player) {
+    public PlayerCodesGridView(@NonNull Context context, ArrayList<String> imageList, Player player, Player otherPlayer) {
         super(context, 0, imageList);
         this.imageList = imageList;
         this.player = player;
+        this.otherPlayer = otherPlayer;
     }
 
     @NonNull
@@ -60,24 +50,9 @@ public class PlayerCodesGridView extends ArrayAdapter<String> {
                 Picasso.get().load(R.drawable.image_placeholder).into(objectImage);
             }
             else { // Has photo in FireStorage
-                Picasso.get().load(imageList.get(position)).into(objectImage);
+                Picasso.get().load(link).into(objectImage);
             }
         }
-
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // TODO: Open fragment to comment and be able to delete if owner of QR code
-                try {
-                    hash = FirebaseStorage.getInstance().getReferenceFromUrl(link).getName();
-                }
-                catch (IllegalArgumentException e) {
-                    hash = isPlaceholder[1];
-                }
-                Toast.makeText(getContext(), hash, Toast.LENGTH_SHORT).show(); // Testing
-            }
-        });
-
         return view;
     }
 }

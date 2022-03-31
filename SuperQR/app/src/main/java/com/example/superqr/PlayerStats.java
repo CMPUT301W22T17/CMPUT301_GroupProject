@@ -129,24 +129,31 @@ public class PlayerStats implements Parcelable {
     public void deleteQRCode(QRCode qrCode) {
         this.qrCodes.remove(qrCode);
         this.totalScore -= qrCode.getScore();
-        if (qrCode == this.highestScore) {
-            QRCode newHighest = qrCodes.get(0);
-            for (int i = 0; i < qrCodes.size(); i++) {
-                if (qrCodes.get(i).getScore() > newHighest.getScore()) {
-                    newHighest = qrCodes.get(i);
-                }
-            }
-            highestScore = newHighest;
+        if(this.getCounts() == 0){
+            highestScore = new QRCode();
+            lowestScore = new QRCode();
         }
-        else if (qrCode == this.lowestScore) {
-            QRCode newLowest = qrCodes.get(0);
-            for (int i = 0; i < qrCodes.size(); i++) {
-                if (qrCodes.get(i).getScore() < newLowest.getScore()) {
-                    newLowest = qrCodes.get(i);
+        else {
+            if (qrCode == this.highestScore) {
+                QRCode newHighest = qrCodes.get(0);
+                for (int i = 0; i < qrCodes.size(); i++) {
+                    if (qrCodes.get(i).getScore() > newHighest.getScore()) {
+                        newHighest = qrCodes.get(i);
+                    }
                 }
+                highestScore = newHighest;
             }
-            lowestScore = newLowest;
+            if (qrCode == this.lowestScore) {
+                QRCode newLowest = qrCodes.get(0);
+                for (int i = 0; i < qrCodes.size(); i++) {
+                    if (qrCodes.get(i).getScore() < newLowest.getScore()) {
+                        newLowest = qrCodes.get(i);
+                    }
+                }
+                lowestScore = newLowest;
+            }
         }
+
 
     }
 

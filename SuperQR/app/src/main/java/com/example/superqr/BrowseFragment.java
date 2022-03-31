@@ -92,7 +92,7 @@ public class BrowseFragment extends Fragment implements View.OnClickListener {
                 break;
 
             case R.id.view_codes_button:
-                Fragment viewCodesFragment = ViewPlayerCodesFragment.newInstance(player);
+                Fragment viewCodesFragment = ViewPlayerCodesFragment.newInstance(player, player);
                 displayFragment(viewCodesFragment);
                 break;
 
@@ -105,7 +105,6 @@ public class BrowseFragment extends Fragment implements View.OnClickListener {
      */
     public void displayFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
-
         fragmentTransaction.replace(R.id.browse_container, fragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();

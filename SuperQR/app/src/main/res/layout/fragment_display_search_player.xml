@@ -18,13 +18,12 @@
 
     </TextView>
 
-
     <TextView
         android:id="@+id/other_player_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:text="Player Email"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -37,7 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="16dp"
         android:text="Player Phone Number"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -50,7 +49,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="16dp"
         android:text="Total QR Codes Scanned:"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -62,15 +61,15 @@
         android:id="@+id/view_others_code_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="192dp"
+        android:layout_marginBottom="200dp"
         android:text="View Codes"
         android:textSize="10sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.557"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/delete_button"
-        app:layout_constraintVertical_bias="0.514">
+        app:layout_constraintVertical_bias="0.5">
 
     </Button>
 
@@ -79,7 +78,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:text="Total QR Code Score:"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -96,7 +95,7 @@
         android:textSize="30sp"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.542"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/other_player_total_score"></Button>
 
@@ -135,7 +134,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="16dp"
         android:text="Lowest QR Code Score"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -147,7 +146,7 @@
         android:id="@+id/view_low_score_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
         android:text="View"
         android:textSize="10sp"
@@ -179,7 +178,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:text="Highest QR Code Score"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
