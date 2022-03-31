@@ -382,7 +382,7 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
                             FragmentManager fragmentManager = getSupportFragmentManager();
                             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                             fragmentTransaction.replace(R.id.frame_layout, displaySearchPlayer);
-                            fragmentTransaction.addToBackStack(null);
+                            //fragmentTransaction.addToBackStack(null);
                             fragmentTransaction.commit();
                         } else {
                             Log.d("first else", "onComplete: data not exist");
@@ -406,7 +406,7 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout, searchPlayer);
-        fragmentTransaction.addToBackStack(null);
+        //fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
 }

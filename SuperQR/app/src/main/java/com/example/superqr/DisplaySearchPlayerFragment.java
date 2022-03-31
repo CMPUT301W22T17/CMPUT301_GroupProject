@@ -113,7 +113,6 @@ public class DisplaySearchPlayerFragment extends Fragment {
                         FragmentManager fragmentManager = getParentFragmentManager();
                         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                         fragmentTransaction.replace(R.id.other_player_info_fragment, browseFragment);
-                        fragmentTransaction.addToBackStack(null);
                         fragmentTransaction.commit();
                     }
                 });

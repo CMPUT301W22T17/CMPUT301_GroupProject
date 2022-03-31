@@ -116,7 +116,6 @@ public class SearchPlayerFragment extends Fragment{
         FragmentManager fragmentManager = getChildFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.player_profile_container, displaySearchPlayer);
-        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
 
