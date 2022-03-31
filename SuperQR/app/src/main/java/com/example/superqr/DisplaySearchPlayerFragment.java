@@ -54,7 +54,7 @@ public class DisplaySearchPlayerFragment extends Fragment {
      * @param otherPlayer
      * @return A new instance of fragment DisplaySearchPlayerFragment.
      */
-    // TODO: Rename and change types and number of parameters
+
     public static DisplaySearchPlayerFragment newInstance(Player player, Player otherPlayer) {
         DisplaySearchPlayerFragment fragment = new DisplaySearchPlayerFragment();
         Bundle args = new Bundle();
@@ -123,6 +123,9 @@ public class DisplaySearchPlayerFragment extends Fragment {
         return displayPlayerView;
     }
 
+    /**
+     * display a player's info in the correct field
+     */
     private void setViews() {
         otherPlayerUserNameTextView.setText(otherPlayer.getSettings().getUsername());
         otherPlayerEmailTextView.setText(otherPlayer.getSettings().getEmail());
@@ -133,6 +136,9 @@ public class DisplaySearchPlayerFragment extends Fragment {
         totalScoreTextView.setText(Integer.toString(otherPlayer.getStats().getTotalScore()));
     }
 
+    /**
+     * make views invisible
+     */
     private void hideView() {
         otherPlayerUserNameTextView.setVisibility(View.INVISIBLE);
         otherPlayerEmailTextView.setVisibility(View.INVISIBLE);

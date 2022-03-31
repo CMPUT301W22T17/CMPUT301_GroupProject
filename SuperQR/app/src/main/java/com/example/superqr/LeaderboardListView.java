@@ -18,6 +18,10 @@ import java.util.ArrayList;
 public class LeaderboardListView extends ArrayAdapter<Player> {
     private ArrayList<Player> players;
     private Context context;
+    private TextView userId;
+    private TextView score;
+    private TextView Rank;
+
 
     /**
      * Class constructor
@@ -44,9 +48,9 @@ public class LeaderboardListView extends ArrayAdapter<Player> {
             view = LayoutInflater.from(context).inflate(R.layout.leaderboard_content, parent, false);
         }
         Player player = players.get(position);
-        TextView userId = view.findViewById(R.id.userId);
-        TextView score = view.findViewById(R.id.score);
-        TextView Rank = view.findViewById(R.id.Rank);
+        userId = view.findViewById(R.id.userId);
+        score = view.findViewById(R.id.score);
+        Rank = view.findViewById(R.id.Rank);
         Rank.setText(String.valueOf(position+1));
         userId.setText(player.getSettings().getUsername());
         score.setText(String.valueOf(player.getStats().getTotalScore()));

@@ -1,7 +1,5 @@
 package com.example.superqr;
 
-import static android.content.ContentValues.TAG;
-
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -10,17 +8,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-
 import android.provider.MediaStore;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -162,7 +154,8 @@ public class ScanFragment extends Fragment {
                         }
 
                         else if (scanAction == 2) { // Show player profile
-
+                            Toast.makeText(activity, result.getText(), Toast.LENGTH_SHORT).show();
+                            listener1.onQRScanned1(result.getText()); // sends result back to LoginActivity
                         }
 
                     }
