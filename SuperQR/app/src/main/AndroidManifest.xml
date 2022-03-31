@@ -28,7 +28,8 @@
             android:exported="false" />
         <activity
             android:name="com.example.superqr.MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:hardwareAccelerated="false">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

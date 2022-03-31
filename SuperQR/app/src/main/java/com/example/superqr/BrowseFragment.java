@@ -1,14 +1,12 @@
 package com.example.superqr;
 import android.os.Bundle;
-
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -79,7 +77,7 @@ public class BrowseFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.player_search_button:
                 // https://stackoverflow.com/questions/16728426/android-nested-fragment-approach
-                Fragment searchPlayerFragment = new SearchPlayerFragment();
+                Fragment searchPlayerFragment = SearchPlayerFragment.newInstance(player);
                 displayFragment(searchPlayerFragment);
                 break;
 
