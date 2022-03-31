@@ -62,7 +62,7 @@ public class Player implements Parcelable, Comparable<Player> {
      * Return player location
      * @return Player Location
      */
-    public LocationStore getPlayerLocation() {
+    public LocationStore getLocation() {
         return this.location;
     }
 
@@ -120,12 +120,18 @@ public class Player implements Parcelable, Comparable<Player> {
         parcel.writeByte((byte) (this.isAdmin ? 1 : 0));
     }
 
-    //used to compare players for the leaderboard
+    /**
+     * Comparator method used to sort array lists.
+     * @param player to be compared with
+     * @return 0 if both players have the same score
+     *         1  if player score is greather than this score
+     *        -1 if this score is greather than player score
+     */
     @Override
     public int compareTo(Player player) {
-        if (this.stats.getHighestScore() == player.stats.getHighestScore()) {
+        if (this.stats.getTotalScore() == player.stats.getTotalScore()) {
             return 0;
-        } else if (this.stats.getHighestScore().getScore() > player.stats.getHighestScore().getScore()) {
+        } else if (this.stats.getTotalScore() > player.stats.getTotalScore()) {
             return -1;
         } else {
             return 1;

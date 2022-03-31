@@ -1,22 +1,30 @@
 package com.example.superqr;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.icu.text.DecimalFormat;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.RequiresApi;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -32,9 +40,10 @@ import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -49,17 +58,22 @@ public class MapFragment extends Fragment implements View.OnClickListener {
     // Taken from "Hello osmdroid World"
     // At: https://osmdroid.github.io/osmdroid/How-to-use-the-osmdroid-library.html
     // Reference: https://osmdroid.github.io/osmdroid/javadocs/osmdroid-android/debug/index.html?org/osmdroid/views/MapView.html
+    // For fixing scaling of markers: https://stackoverflow.com/questions/54811451/osmdroid-default-marker-moving-when-zooming-out-on-android-api-28
 
-    MapView map;
-    MapController controller;
-    Marker playerMarker;
-    Drawable playerPin;
-    Drawable QRPin;
-    GeoPoint playerPoint;
-    LocationStore singleCodeLocation = null;
-    Button zoomInButton;
-    Button zoomOutButton;
-    double radius = 0.15;
+    private MapView map;
+    private MapController controller;
+    private Marker playerMarker;
+    private Marker locationMarker;
+    private Drawable playerPin;
+    private Drawable QRPin;
+    private Drawable locationPin;
+    private GeoPoint playerPoint;
+    private LocationStore singleCodeLocation = null;
+    private ImageButton zoomInButton;
+    private ImageButton zoomOutButton;
+    private ImageButton searchLocationButton;
+    private EditText locationSearchText;
+    private ArrayList<Marker> nearbySearchedCodes = new ArrayList<Marker>();
 
     public MapFragment() {
         // Required empty public constructor
@@ -69,7 +83,8 @@ public class MapFragment extends Fragment implements View.OnClickListener {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param player current player of the game
+     * @param player
+     *      Current player of the game
      * @return A new instance of fragment MapFragment.
      */
     public static MapFragment newInstance(Player player) {
@@ -108,6 +123,11 @@ public class MapFragment extends Fragment implements View.OnClickListener {
         zoomOutButton = view.findViewById(R.id.zoom_out_button);
         zoomOutButton.setOnClickListener(this);
 
+        searchLocationButton = view.findViewById(R.id.search_location_button);
+        searchLocationButton.setOnClickListener(this);
+
+        locationSearchText = (EditText) view.findViewById(R.id.location_search_text);
+
         Bundle codeLocationBundle = getArguments();
         if (codeLocationBundle != null) {
             singleCodeLocation = codeLocationBundle.getParcelable("code_location");
@@ -126,11 +146,12 @@ public class MapFragment extends Fragment implements View.OnClickListener {
             // get Player from MainActivity
             player = (Player) getArguments().getParcelable(playerKey);
             Location playerLocation = new Location("map_location");
-            playerLocation.setLatitude(player.getPlayerLocation().getLatitude());
-            playerLocation.setLongitude(player.getPlayerLocation().getLongitude());
+            playerLocation.setLatitude(player.getLocation().getLatitude());
+            playerLocation.setLongitude(player.getLocation().getLongitude());
             playerPoint = new GeoPoint(playerLocation);
             setToLocation(playerPoint);
             addLocationMarkers();
+            addQRLocationMarkers(playerLocation, 0.04, true);
         }
 
         else {
@@ -176,6 +197,19 @@ public class MapFragment extends Fragment implements View.OnClickListener {
             case R.id.zoom_out_button:
                 controller.zoomOut();
                 break;
+            case R.id.search_location_button:
+                String searchedLocation = locationSearchText.getText().toString();
+                if (searchedLocation != "") {
+                    try {
+                        searchLocation(searchedLocation);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                else {
+                    Toast.makeText(getActivity(), "No location entered.", Toast.LENGTH_SHORT).show();
+                }
+                break;
         }
     }
 
@@ -186,12 +220,16 @@ public class MapFragment extends Fragment implements View.OnClickListener {
         //https://stackoverflow.com/questions/60301641/customized-icon-in-osmdroid-marker-android
         // Player Map Marker Icon: <a href="https://www.flaticon.com/free-icons/location" title="location icons">Location icons created by IconMarketPK - Flaticon</a>
         // QR Map Marker Icon: <a href="https://www.flaticon.com/free-icons/location" title="location icons">Location icons created by IconMarketPK - Flaticon</a>
+        // Searched Location Map Marker Icon: <a href="https://www.flaticon.com/free-icons/marker" title="marker icons">Marker icons created by IconMarketPK - Flaticon</a>
 
         Drawable initialPlayerPin = ResourcesCompat.getDrawable(getResources(), R.drawable.player_marker, null);
         playerPin = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap((((BitmapDrawable) initialPlayerPin).getBitmap()), (int) (33.0f * getResources().getDisplayMetrics().density), (int) (36.0f * getResources().getDisplayMetrics().density), true));
 
         Drawable initialQRPin = ResourcesCompat.getDrawable(getResources(), R.drawable.qr_marker, null);
         QRPin = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap((((BitmapDrawable) initialQRPin).getBitmap()), (int) (33.0f * getResources().getDisplayMetrics().density), (int) (36.0f * getResources().getDisplayMetrics().density), true));
+
+        Drawable initialLocationPin = ResourcesCompat.getDrawable(getResources(), R.drawable.location_marker, null);
+        locationPin = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap((((BitmapDrawable) initialLocationPin).getBitmap()), (int) (33.0f * getResources().getDisplayMetrics().density), (int) (36.0f * getResources().getDisplayMetrics().density), true));
 
         playerMarker = new Marker(map);
         playerMarker.setIcon(playerPin);
@@ -200,6 +238,8 @@ public class MapFragment extends Fragment implements View.OnClickListener {
 
     /**
      * Set the zoom and center the map onto the central given location.
+     * @param point
+     *      The point that the map centers in on.
      */
     private void setToLocation(GeoPoint point) {
         // https://stackoverflow.com/questions/40257342/how-to-display-user-location-on-osmdroid-mapview
@@ -217,29 +257,37 @@ public class MapFragment extends Fragment implements View.OnClickListener {
     private void addLocationMarkers() {
 
         playerMarker.setPosition(playerPoint);
-        playerMarker.setTitle(Double.toString(player.getPlayerLocation().getLatitude()) + ", " + Double.toString(player.getPlayerLocation().getLongitude()));
+        playerMarker.setTitle(Double.toString(player.getLocation().getLatitude()) + ", " + Double.toString(player.getLocation().getLongitude()));
         playerMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
         map.getOverlays().add(playerMarker);
-
-        addQRLocationMarkers();
     }
 
     /**
      * Put markers onto the map of the QR codes that are nearby the player
      */
-    private void addQRLocationMarkers() {
+    private void addQRLocationMarkers(Location centerLocation, double radius, boolean nearPlayer) {
+
+        if (!nearbySearchedCodes.isEmpty()) {
+            for (int i = 0; i < nearbySearchedCodes.size(); i++) {
+                map.getOverlays().remove(nearbySearchedCodes.get(i));
+                nearbySearchedCodes.remove(nearbySearchedCodes.get(i));
+            }
+        }
+
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         db.collection("codes").get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         if (!queryDocumentSnapshots.isEmpty()) {
                             List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
                             for (DocumentSnapshot d : list) {
                                 QRCode code = d.toObject(QRCode.class);
-                                double latDifference = (double) (Math.abs(code.getLocation().getLatitude() - player.getPlayerLocation().getLatitude()));
-                                double longDifference = (double) (Math.abs(code.getLocation().getLongitude() - player.getPlayerLocation().getLongitude()));
+                                double latDifference = (double) (Math.abs(code.getLocation().getLatitude() - centerLocation.getLatitude()));
+                                double longDifference = (double) (Math.abs(code.getLocation().getLongitude() - centerLocation.getLongitude()));
+
                                 if (latDifference < radius && longDifference < radius) {
 
                                     Location location = new Location("map_location");
@@ -251,7 +299,19 @@ public class MapFragment extends Fragment implements View.OnClickListener {
                                     Marker QRMarker = new Marker(map);
                                     QRMarker.setIcon(QRPin);
                                     QRMarker.setPosition(QRPoint);
-                                    QRMarker.setTitle(Double.toString(code.getLocation().getLatitude()) + ", " + Double.toString(code.getLocation().getLongitude()));
+
+                                    double euclideanDistance = getEuclideanDistance(centerLocation, code.getLocation());
+
+                                    // https://stackoverflow.com/questions/2538787/how-to-print-a-float-with-2-decimal-places-in-java
+                                    DecimalFormat decimalRounder = new DecimalFormat();
+                                    decimalRounder.setMaximumFractionDigits(4);
+                                    if (!nearPlayer) {
+                                        QRMarker.setTitle(Double.toString(Double.parseDouble(decimalRounder.format(euclideanDistance))) + " km away from your searched location.");
+                                        nearbySearchedCodes.add(QRMarker);
+                                    }
+                                    else {
+                                        QRMarker.setTitle(Double.toString(Double.parseDouble(decimalRounder.format(euclideanDistance))) + " km away from you.");
+                                    }
                                     QRMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
                                     map.getOverlays().add(QRMarker);
                                 }
@@ -259,6 +319,67 @@ public class MapFragment extends Fragment implements View.OnClickListener {
                         }
                     }
                 });
+    }
+
+    /**
+     * Searches for the location that the player gives and places a marker for it on the map
+     * @param searchedLocation
+     *      A string representing the location that the player is searching for
+     * @throws IOException
+     */
+    private void searchLocation(String searchedLocation) throws IOException {
+        // https://stackoverflow.com/questions/69148288/how-to-search-location-name-on-osmdroid-to-get-latitude-longitude
+        try {
+            Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
+            List<Address> geoResults = geocoder.getFromLocationName(searchedLocation, 1);
+            if (!geoResults.isEmpty()) {
+
+                map.getOverlays().remove(locationMarker);
+                Address address = geoResults.get(0);
+                Location location = new Location("map_location");
+                location.setLatitude(address.getLatitude());
+                location.setLongitude(address.getLongitude());
+                GeoPoint foundPoint = new GeoPoint(address.getLatitude(), address.getLongitude());
+
+                locationMarker = new Marker(map);
+                locationMarker.setIcon(locationPin);
+                setToLocation(foundPoint);
+                locationMarker.setPosition(foundPoint);
+
+                locationMarker.setTitle(Double.toString(address.getLatitude()) + ", " + Double.toString(address.getLongitude()));
+                locationMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+                map.getOverlays().add(locationMarker);
+
+                locationSearchText.getText().clear();
+                addQRLocationMarkers(location, 0.05, false);
+
+            }
+            else {
+                Toast.makeText(getActivity(), "Cannot find location.", Toast.LENGTH_SHORT).show();
+            }
+        }
+        catch (IOException error) {
+            Log.d(TAG, error.getMessage());
+        }
+    }
+
+    /**
+     * Calculates the euclidean distance between two given points
+     * @param centerPoint
+     *      The point the other point compares with
+     * @param otherPoint
+     *      The point that the center point compares with
+     * @return The euclidean distance between the center and other point
+     */
+    private double getEuclideanDistance(Location centerPoint, LocationStore otherPoint) {
+
+        double centerLatitudeKm = centerPoint.getLatitude() * 110.574;
+        double centerLongitudeKm = centerPoint.getLongitude() * (111.320 * Math.cos(centerPoint.getLatitude()));
+        double otherLatitudeKm = otherPoint.getLatitude() * 110.574;
+        double otherLongitudeKm = otherPoint.getLongitude() * (111.320 * Math.cos(otherPoint.getLatitude()));
+        double distance = Math.sqrt(Math.pow(centerLatitudeKm - otherLatitudeKm, 2) + Math.pow(centerLongitudeKm - otherLongitudeKm, 2));
+
+        return distance;
     }
 
 }
