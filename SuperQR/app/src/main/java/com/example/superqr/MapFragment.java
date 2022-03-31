@@ -306,11 +306,13 @@ public class MapFragment extends Fragment implements View.OnClickListener {
                                     DecimalFormat decimalRounder = new DecimalFormat();
                                     decimalRounder.setMaximumFractionDigits(4);
                                     if (!nearPlayer) {
-                                        QRMarker.setTitle(Double.toString(Double.parseDouble(decimalRounder.format(euclideanDistance))) + " km away from your searched location.");
+                                        QRMarker.setTitle(Double.toString(Double.parseDouble(decimalRounder.format(euclideanDistance))) + " km away from your searched location."
+                                                + "\nScore: " + Integer.toString(code.getScore()));
                                         nearbySearchedCodes.add(QRMarker);
                                     }
                                     else {
-                                        QRMarker.setTitle(Double.toString(Double.parseDouble(decimalRounder.format(euclideanDistance))) + " km away from you.");
+                                        QRMarker.setTitle(Double.toString(Double.parseDouble(decimalRounder.format(euclideanDistance))) + " km away from you."
+                                                + "\nScore: " + Integer.toString(code.getScore()));
                                     }
                                     QRMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
                                     map.getOverlays().add(QRMarker);
