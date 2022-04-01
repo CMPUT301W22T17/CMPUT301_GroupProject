@@ -148,10 +148,4 @@ public class ViewPlayerCodesFragment extends Fragment {
         fragmentTransaction.replace(R.id.browse_container, fragment);
         fragmentTransaction.commit();
     }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        codes.setVisibility(View.VISIBLE);
-    }
 }
