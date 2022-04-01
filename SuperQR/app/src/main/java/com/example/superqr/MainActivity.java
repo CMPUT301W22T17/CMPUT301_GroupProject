@@ -64,7 +64,6 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         Intent data = result.getData();
                         player = (Player) data.getParcelableExtra("player");
-                        loadFragments();
                     }
                 }
             }
@@ -130,6 +129,7 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
         if (userName == "" || userName.contains("/")) {
             Intent intent = new Intent(MainActivity.this, LogInActivity.class);
             resultLauncher.launch(intent);
+            loadFragments();
         } else {
             Log.d("username", userName);
             DocumentReference docRef = db.collection("users").document(userName);
