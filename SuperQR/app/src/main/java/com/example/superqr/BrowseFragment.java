@@ -21,7 +21,6 @@ public class BrowseFragment extends Fragment implements View.OnClickListener {
     private Button playerSearchButton;
     private Button viewRankingButton;
     private Button viewCodesButton;
-    private Button searchGeolocationButton;
 
     public BrowseFragment() {
         // Required empty public constructor
@@ -63,8 +62,6 @@ public class BrowseFragment extends Fragment implements View.OnClickListener {
         viewCodesButton = browseView.findViewById(R.id.view_codes_button);
         viewCodesButton.setOnClickListener(this);
 
-        searchGeolocationButton = browseView.findViewById(R.id.search_geolocation_button);
-        searchGeolocationButton.setOnClickListener(this);
         showButtons();
 
         player = (Player) getArguments().getParcelable(playerKey);
@@ -86,16 +83,10 @@ public class BrowseFragment extends Fragment implements View.OnClickListener {
                 displayFragment(leaderboardFragment);
                 break;
 
-            case R.id.search_geolocation_button:
-                Fragment searchGeolocationFragment = SearchGeolocationFragment.newInstance(player);
-                displayFragment(searchGeolocationFragment);
-                break;
-
             case R.id.view_codes_button:
-                Fragment viewCodesFragment = new ViewPlayerCodesFragment();
+                Fragment viewCodesFragment = ViewPlayerCodesFragment.newInstance(player, player);
                 displayFragment(viewCodesFragment);
                 break;
-
         }
     }
 
@@ -105,7 +96,6 @@ public class BrowseFragment extends Fragment implements View.OnClickListener {
      */
     public void displayFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
-
         fragmentTransaction.replace(R.id.browse_container, fragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
@@ -120,7 +110,6 @@ public class BrowseFragment extends Fragment implements View.OnClickListener {
         playerSearchButton.setVisibility(View.INVISIBLE);
         viewRankingButton.setVisibility(View.INVISIBLE);
         viewCodesButton.setVisibility(View.INVISIBLE);
-        searchGeolocationButton.setVisibility(View.INVISIBLE);
     }
 
     /**
@@ -130,7 +119,6 @@ public class BrowseFragment extends Fragment implements View.OnClickListener {
         playerSearchButton.setVisibility(View.VISIBLE);
         viewRankingButton.setVisibility(View.VISIBLE);
         viewCodesButton.setVisibility(View.VISIBLE);
-        searchGeolocationButton.setVisibility(View.VISIBLE);
     }
 
 }
