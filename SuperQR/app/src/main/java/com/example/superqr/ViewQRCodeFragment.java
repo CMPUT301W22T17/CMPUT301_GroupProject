@@ -107,7 +107,7 @@ public class ViewQRCodeFragment extends Fragment {
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         // int height = displayMetrics.heightPixels;
         int width = displayMetrics.widthPixels;
-        int editTextWidth = width - 120;
+        int editTextWidth = width - 200;
         editText.setLayoutParams(new LinearLayout.LayoutParams(editTextWidth,LinearLayout.LayoutParams.WRAP_CONTENT));
         scoreText.setText(String.valueOf(code.getScore()));
 
@@ -148,11 +148,11 @@ public class ViewQRCodeFragment extends Fragment {
                 String comment = editText.getText().toString();
                 if (!(comment.equals(""))) {
                     if (player == otherPlayer) {
-                        player = addComment(player, code, comment);
+                        player = addComment(player, otherPlayer, code, comment);
 
 
                     } else {
-                        otherPlayer = addComment(otherPlayer, code, comment);
+                        otherPlayer = addComment(otherPlayer, player, code, comment);
                     }
                 }
                 updateAdapter(code.getComments());
@@ -192,10 +192,10 @@ public class ViewQRCodeFragment extends Fragment {
         return player;
     }
 
-    public Player addComment(Player player, QRCode code, String comment){
+    public Player addComment(Player player, Player otherPlayer, QRCode code, String comment){
         PlayerStats stats = player.getStats();
         ArrayList<QRCode> codes = stats.getQrCodes();
-        String commentU = player.getSettings().getUsername().concat(": " + comment);
+        String commentU = otherPlayer.getSettings().getUsername().concat(": " + comment);
         int position = codes.indexOf(code);
         if (position != -1) {
             code.addComment(commentU);

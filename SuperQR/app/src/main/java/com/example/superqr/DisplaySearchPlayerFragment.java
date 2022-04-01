@@ -8,13 +8,19 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -42,6 +48,7 @@ public class DisplaySearchPlayerFragment extends Fragment {
     private TextView totalScannedText;
     private Button viewCodeButton;
     private Button deleteButton;
+    private StorageReference mStorageRef;
 
     public DisplaySearchPlayerFragment() {
         // Required empty public constructor
@@ -92,6 +99,7 @@ public class DisplaySearchPlayerFragment extends Fragment {
 
         player = (Player) getArguments().getParcelable(playerKey);
         otherPlayer = (Player) getArguments().getParcelable(otherPlayerKey);
+        mStorageRef = FirebaseStorage.getInstance().getReference();
 
         setViews();
 
@@ -104,6 +112,21 @@ public class DisplaySearchPlayerFragment extends Fragment {
             public void onClick(View view) {
                 String otherPlayerName = otherPlayer.getSettings().getUsername();
                 DocumentReference df = db.collection("users").document(otherPlayerName);
+
+                ArrayList<QRCode> codes = otherPlayer.getStats().getQrCodes();
+                for (int i = 0; i < codes.size(); i++){
+                    QRCode code = codes.get(i);
+                    mStorageRef.child(otherPlayer.getPlayerID()).child(code.getHash()).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                        }
+                    });
+                }
+
                 df.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
@@ -116,8 +139,23 @@ public class DisplaySearchPlayerFragment extends Fragment {
                         fragmentTransaction.commit();
                     }
                 });
+
+
             }
         });
+
+        viewCodeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                hideView();
+                Fragment fragment = ViewPlayerCodesFragment.newInstance(player, otherPlayer);
+                FragmentManager fragmentManager = getParentFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.other_player_info_fragment, fragment);
+                fragmentTransaction.commit();
+            }
+        });
+
 
         return displayPlayerView;
     }
