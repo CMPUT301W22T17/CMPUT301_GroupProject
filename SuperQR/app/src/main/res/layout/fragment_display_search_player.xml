@@ -97,7 +97,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/other_player_total_score"></Button>
+        app:layout_constraintTop_toBottomOf="@+id/other_player_total_score" />
 
     <TextView
         android:id="@+id/total_qr_scanned"
@@ -127,7 +127,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/total_qr_scanned"
         app:layout_constraintTop_toTopOf="@+id/other_player_total_score"
-        app:layout_constraintVertical_bias="0.0"></TextView>
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/other_player_low_score_view"
