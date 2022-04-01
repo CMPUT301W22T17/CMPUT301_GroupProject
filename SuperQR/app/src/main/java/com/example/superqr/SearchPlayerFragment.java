@@ -2,11 +2,13 @@ package com.example.superqr;
 
 import static android.content.ContentValues.TAG;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -65,6 +67,8 @@ public class SearchPlayerFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 String playerName = searchEditText.getText().toString();
+                InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 if (playerName.equals("")) {
                     Toast.makeText(getActivity(), "Please enter a name.", Toast.LENGTH_SHORT).show();
                 }
