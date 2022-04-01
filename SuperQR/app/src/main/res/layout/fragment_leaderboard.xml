@@ -82,7 +82,7 @@
         android:id="@+id/leaderboard_list"
         android:layout_width="411dp"
         android:layout_height="383dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
