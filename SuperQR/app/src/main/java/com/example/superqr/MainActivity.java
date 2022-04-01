@@ -44,7 +44,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements EditInfoFragment.OnFragmentInteractionListener, ScanFragment.ScanFragmentListener, LocationListener {
+public class MainActivity extends AppCompatActivity implements EditInfoFragment.OnFragmentInteractionListener, ScanFragment.ScanFragmentListener, ScanFragment.ScanFragmentListener1, LocationListener {
     private static int REQUEST_IMAGE_CAPTURE = 1;
     private ActivityMainBinding binding;
     private StorageReference mStorageRef;
@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
     private void loadData() {
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
         String userName = sharedPreferences.getString("user", "");
-        if (userName == "") {
+        if (userName == "" || userName.contains("/")) {
             Intent intent = new Intent(MainActivity.this, LogInActivity.class);
             resultLauncher.launch(intent);
         } else {
@@ -228,10 +228,21 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
         db.collection("codes").document(qrCode.getHash()).set(qrCode);
     }
 
+    /**
+     * update user info in the database
+     * @param newUsername
+     *      Player's new username
+     * @param newEmail
+     *      Player's new email
+     * @param newPhone
+     */
     @Override
     public void onOkPressed(String newUsername, String newEmail, String newPhone) {
         String name = player.getSettings().getUsername();
-        if (name.equals(newUsername) || newUsername.isEmpty()) {
+        if (newUsername.contains("/")) {
+            Toast.makeText(MainActivity.this, "Unsuccessful Update. Username inaccurate", Toast.LENGTH_LONG).show();
+        }
+        else if (name.equals(newUsername) || newUsername.isEmpty()) {
             player.getSettings().setEmail(newEmail);
             player.getSettings().setPhone(newPhone);
             db.collection("users").document(name)
@@ -341,4 +352,61 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
     public void onStatusChanged(String provider, int status, Bundle extras) {
     }
 
+    /**
+     * look up player in the database
+     * display it if it exists in database
+     * else display the search fragment
+     * @param username
+     */
+    @Override
+    public void onQRScanned1(String username) {
+        if (username.contains("/")) {
+            replaceOnScanned1();
+        }
+        else if (username.equals("")) {
+            Toast.makeText(MainActivity.this, "Please enter a name.", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            DocumentReference docRef = db.collection("users").document(username);
+            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    Log.d(TAG, "onComplete: executing");
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            Log.d(TAG, "onComplete: data does exist");
+                            Player otherPlayer = document.toObject(Player.class);
+                            // go to profile view
+                            Fragment displaySearchPlayer = DisplaySearchPlayerFragment.newInstance(player, otherPlayer);
+                            FragmentManager fragmentManager = getSupportFragmentManager();
+                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                            fragmentTransaction.replace(R.id.frame_layout, displaySearchPlayer);
+                            //fragmentTransaction.addToBackStack(null);
+                            fragmentTransaction.commit();
+                        } else {
+                            Log.d("first else", "onComplete: data not exist");
+                            replaceOnScanned1();
+                        }
+                    } else {
+                        Log.d("second else", "else");
+                        replaceOnScanned1();
+                    }
+                }
+            });
+        }
+    }
+
+    /**
+     * replace onScanned1() when player does not exist
+     */
+    private void replaceOnScanned1() {
+        Toast.makeText(MainActivity.this, "Player does not exists", Toast.LENGTH_SHORT).show();
+        Fragment searchPlayer = SearchPlayerFragment.newInstance(player);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frame_layout, searchPlayer);
+        //fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
 }

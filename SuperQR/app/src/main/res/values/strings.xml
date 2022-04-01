@@ -8,4 +8,5 @@
     <string name="Browse">Browse</string>
     <string name="New_User">New User</string>
     <string name="Scanned">Scanned by another player!</string>
+    <string name="No_QR_Codes">No QR codes scanned yet!</string>
 </resources>

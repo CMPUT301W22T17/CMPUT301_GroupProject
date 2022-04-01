@@ -170,7 +170,7 @@ public class Player implements Parcelable, Comparable<Player> {
      * check if player is the owner
      * @return
      */
-    public Boolean getAdmin() {
+    public Boolean getIsAdmin() {
         return isAdmin;
     }
 }
