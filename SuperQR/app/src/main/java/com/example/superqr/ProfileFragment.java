@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -86,14 +87,12 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             case R.id.view_high_score_button:
                 // replace 2 with the high qr score player has
                 // https://stackoverflow.com/questions/25887373/calling-dialogfragment-from-fragment-not-fragmentactivity
-                DialogFragment highQRScoreFragment = new ViewQRScoreFragment(player.getPlayerID(), player.getStats().getHighestScore());
-                highQRScoreFragment.show(getActivity().getSupportFragmentManager(), "high_qr_dialog");
+                showQRCode(player.getStats().getHighestScore());
                 break;
 
             case R.id.view_low_score_button:
                 // replace 1 with the low qr score player has
-                DialogFragment lowQRScoreFragment = new ViewQRScoreFragment(player.getPlayerID(), player.getStats().getLowestScore());
-                lowQRScoreFragment.show(getActivity().getSupportFragmentManager(), "high_qr_dialog");
+                showQRCode(player.getStats().getLowestScore());
                 break;
             case R.id.edit_player_info_button:
                 editInfo();
@@ -142,8 +141,21 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         totalScannedText.setText(count);
         totalScoreText.setText(total);
 
+    }
 
-
+    /**
+     * Displays highest or lowest QR code
+     * @param qrCode
+     *      The QR code to be displayed
+     */
+    public void showQRCode(QRCode qrCode) {
+        if (player.getStats().getCounts() != 0) {
+            DialogFragment highQRScoreFragment = new ViewQRScoreFragment(player.getPlayerID(), qrCode);
+            highQRScoreFragment.show(getActivity().getSupportFragmentManager(), "qr_code");
+        }
+        else {
+            Toast.makeText(getActivity(), "No QR codes scanned", Toast.LENGTH_SHORT).show();
+        }
     }
 
 }
