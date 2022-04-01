@@ -112,7 +112,7 @@ public class ViewQRCodeFragment extends Fragment {
         scoreText.setText(String.valueOf(code.getScore()));
 
         //set delete button to invisible if player is not on their own QRCode, and is not admin
-        if (player!=otherPlayer && !player.getAdmin()) {
+        if (player!=otherPlayer && !player.getIsAdmin()) {
             deleteBtn.setVisibility(View.GONE);
         }
 
