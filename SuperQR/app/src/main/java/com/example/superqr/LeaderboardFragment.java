@@ -5,14 +5,18 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -41,6 +45,10 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
     private static ArrayList<Integer> totalScoreList, totalQRList, highestScoringList;
     private Player obj;
     private Button myRankButton;
+    private TextView titleText;
+    private TextView rankText;
+    private TextView userNameText;
+    private TextView scoreText;
     FirebaseFirestore db;
     Task<QuerySnapshot> query;
     List<DocumentSnapshot> x;
@@ -83,10 +91,16 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_leaderboard,null);
+        player = getArguments().getParcelable(playerKey);
 
         myRankButton = (Button) view.findViewById(R.id.myRank);
         myRankButton.setOnClickListener(this);
         leaderboardList = view.findViewById(R.id.leaderboard_list);
+        titleText = view.findViewById(R.id.leaderboard_title);
+        rankText = view.findViewById(R.id.rank_title);
+        userNameText = view.findViewById(R.id.username_title);
+        scoreText = view.findViewById(R.id.score_title);
+
         playersList = new ArrayList<>();
         totalScoreList = new ArrayList();
         totalQRList = new ArrayList();
@@ -109,6 +123,20 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
                         }
                     }
                 });
+        leaderboardList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                leaderboardList.setVisibility(View.GONE);
+                myRankButton.setVisibility(View.GONE);
+                titleText.setVisibility(View.GONE);
+                rankText.setVisibility(View.GONE);
+                userNameText.setVisibility(View.GONE);
+                scoreText.setVisibility(View.GONE);
+                Player otherPlayer = (Player) adapterView.getItemAtPosition(i);
+                DisplaySearchPlayerFragment fragment = DisplaySearchPlayerFragment.newInstance(player, otherPlayer);
+                displayFragment(fragment);
+            }
+        });
         return view;
     }
 
@@ -162,5 +190,15 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
         Collections.sort(highestScoringList, Collections.reverseOrder());
         highest = highestScoringList.indexOf(player.getStats().getHighestScore().getScore());
         return  highest;
+    }
+
+    /**
+     * Places a fragment on frame_layout in the main activity
+     * @param fragment
+     */
+    public void displayFragment(Fragment fragment) {
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.browse_container, fragment);
+        fragmentTransaction.commit();
     }
 }
