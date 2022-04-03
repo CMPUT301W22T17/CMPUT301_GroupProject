@@ -254,7 +254,7 @@ public class ScanFragment extends Fragment {
     public void showQRStats(QRCode qrCode) {
         final Activity activity = getActivity();
 
-        String[] options = {"Store photo", "Record geolocation"};
+        String[] options = {"Take photo", "Record geolocation"};
         boolean[] checkedOptions = {true, true};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());

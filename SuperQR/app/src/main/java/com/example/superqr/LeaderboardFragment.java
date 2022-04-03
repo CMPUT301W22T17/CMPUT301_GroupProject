@@ -199,7 +199,6 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
     public void displayFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.browse_container, fragment);
-        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
 }
