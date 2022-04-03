@@ -18,5 +18,14 @@
         android:backgroundTint="@color/white"
         android:padding="3dp" />
 
+    <TextView
+        android:id="@+id/object_score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="2dp"
+        android:padding="3dp"
+        android:text="Score"
+        android:textAlignment="center"
+        android:textColor="@color/black" />
 
 </LinearLayout>

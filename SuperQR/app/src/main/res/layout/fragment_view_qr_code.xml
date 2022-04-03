@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".ViewQRCodeFragment"
+    android:layout_marginTop="10dp"
     android:layout_marginBottom="75dp">
     <LinearLayout
         android:layout_width="match_parent"
@@ -57,21 +58,20 @@
 
     </LinearLayout>
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
         <EditText
             android:id="@+id/comment_text"
-            android:layout_width="1dp"
+            android:layout_width="302dp"
             android:layout_height="48dp"
-            android:hint="Comment"/>
+            android:hint="Comment" />
         <Button
             android:id="@+id/addCommentButton"
             android:layout_width="75dp"
             android:layout_height="48dp"
-            android:text="ADD"
-            android:layout_gravity="right"
-            />
+            android:text="ADD" />
     </LinearLayout>
     <ListView
         android:layout_width="match_parent"
