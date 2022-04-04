@@ -2,6 +2,7 @@
 
 
 References (also commented in code where used)
+
 From: stackoverflow.com
 At: https://stackoverflow.com/questions/16728426/android-nested-fragment-approach
 Author: Larry McKenzie https://stackoverflow.com/users/1157893/larry-mckenzie
