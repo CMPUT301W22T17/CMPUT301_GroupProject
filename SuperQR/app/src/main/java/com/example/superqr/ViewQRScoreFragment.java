@@ -21,6 +21,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
 
+/**
+ * Displays the image and score of the highest or lowest QR code.
+ */
 public class ViewQRScoreFragment extends DialogFragment {
     private TextView qrText;
     private ImageView qrImage;

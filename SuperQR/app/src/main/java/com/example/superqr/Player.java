@@ -76,6 +76,7 @@ public class Player implements Parcelable, Comparable<Player> {
     }
 
     /**
+     * Returns PlayerSettings
      * @return Player's PlayerSettings
      */
     public PlayerSettings getSettings() {
@@ -83,21 +84,34 @@ public class Player implements Parcelable, Comparable<Player> {
     }
 
     /**
+     * Returns PlayerStats
      * @return Player's PlayerStat
      */
     public PlayerStats getStats() {
         return this.stats;
     }
 
+    /**
+     * Sets the player settings
+     * @param settings
+     */
     public void setSettings(PlayerSettings settings) {
         this.settings = settings;
 
     }
 
+    /**
+     * Returns the player ID
+     * @return Player's ID
+     */
     public String getPlayerID() {
         return playerID;
     }
 
+    /**
+     * Sets the player stats
+     * @param stats Player's stats
+     */
     public void setStats(PlayerStats stats) {
         this.stats = stats;
     }
@@ -140,8 +154,7 @@ public class Player implements Parcelable, Comparable<Player> {
     }
 
     /**
-     * generate a random string that represents player ID
-     *
+     * Generate a random string that represents player ID
      * @return String
      */
     private String generateID() {

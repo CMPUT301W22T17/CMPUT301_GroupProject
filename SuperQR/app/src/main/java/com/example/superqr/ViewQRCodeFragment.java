@@ -31,6 +31,11 @@ import java.util.ArrayList;
  * A simple {@link Fragment} subclass.
  * Use the {@link ViewQRCodeFragment#newInstance} factory method to
  * create an instance of this fragment.
+ *
+ * Displays the image and score of a QR code.
+ * Players can comment on all QR codes.
+ * If the player owns the QR code or the player is an admin, then the player is able to delete the
+ * QR code.
  */
 public class ViewQRCodeFragment extends Fragment {
     private static final String playerKey = "playerKey";
@@ -192,10 +197,10 @@ public class ViewQRCodeFragment extends Fragment {
     /**
      * Adds otherPlayer's comment to player's QRCode in the database
      * returns updated player object with the comment.
-     * @param player
-     * @param otherPlayer
-     * @param code
-     * @param comment
+     * @param player Player viewing QR code
+     * @param otherPlayer Player that scanned the QR code being viewed
+     * @param code QR code being viewed
+     * @param comment Comment on the QR code
      * @return
      */
     public Player addComment(Player player, Player otherPlayer, QRCode code, String comment){
@@ -222,7 +227,7 @@ public class ViewQRCodeFragment extends Fragment {
 
     /**
      * update comment listview adapter
-     * @param comments
+     * @param comments Comment on the QR code
      */
     public void updateAdapter(ArrayList<String> comments){
         String[] strComments = new String[code.getComments().size()];

@@ -70,6 +70,7 @@ public class ScanFragment extends Fragment {
      * At: https://stackoverflow.com/questions/35091857/passing-object-from-fragment-to-activity
      * Author: David Rauca https://stackoverflow.com/users/3671918/david-rauca
      */
+
     public interface ScanFragmentListener {
         void onQRScanned(QRCode qrCode, boolean geo);
     }
@@ -144,7 +145,7 @@ public class ScanFragment extends Fragment {
                                     Toast.makeText(activity, "Cannot scan, QR code has already been scanned", Toast.LENGTH_SHORT).show();
                                 }
                             }
-                            if (!sameHash) {
+                            if (!sameHash) { // QR code has not been scanned by the player
                                 /* From: firebase.google.com
                                  * At: https://firebase.google.com/docs/firestore/query-data/queries
                                  * Author: Not Provided
@@ -162,7 +163,7 @@ public class ScanFragment extends Fragment {
                                                     }
                                                 }
                                                 Toast.makeText(activity, result.getText(), Toast.LENGTH_SHORT).show();
-                                                showQRStats(qrCode);
+                                                showQRStats(qrCode); // Dialog box asking to take photo and store geolocation
                                             }
                                         });
                             }
@@ -223,10 +224,13 @@ public class ScanFragment extends Fragment {
         super.onPause();
     }
 
-    // Asks user for camera permissions
     /* From: geeksforgeeks.org
      * At: https://www.geeksforgeeks.org/easy-runtime-permissions-in-android-with-dexter/
      * Author: chaitanyamunje https://auth.geeksforgeeks.org/user/chaitanyamunje/articles
+     */
+
+    /**
+     * Request camera permissions
      */
     private void requestForCamera() {
         final Activity activity = getActivity();
@@ -322,7 +326,10 @@ public class ScanFragment extends Fragment {
         builder.show();
     }
 
-    // Prompts player to change their camera permission to use the QR scan feature
+    /**
+     * Prompts player to change their camera permission to be able to take photos.
+     * Occurs when the player declines the scan permission multiple times.
+     */
     public void showSettingsDialog() {
         final Activity activity = getActivity();
 

@@ -18,6 +18,15 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
 
+
+/**
+ * A simple {@link Fragment} subclass.
+ * Use the {@link ViewPlayerCodesFragment#newInstance} factory method to
+ * create an instance of this fragment.
+ *
+ * Displays QR codes in a grid, with each item in the grid consisting of the QR codes object photo
+ * and the score of the QR code.
+ */
 public class ViewPlayerCodesFragment extends Fragment {
     private static final String playerKey = "playerKey";
     private static final String otherPlayerKey = "otherPlayerKey";
@@ -36,7 +45,6 @@ public class ViewPlayerCodesFragment extends Fragment {
     }
 
     /**
-     *
      * @param player
      *      Current player of the game
      * @return
@@ -56,6 +64,17 @@ public class ViewPlayerCodesFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    // From: geeksforgeeks.org
+    // At: https://www.geeksforgeeks.org/gridview-using-custom-arrayadapter-in-android-with-example/
+    // Author: clivefernandes777 https://auth.geeksforgeeks.org/user/clivefernandes777/articles
+
+    // From: geeksforgeeks.org
+    // At: https://www.geeksforgeeks.org/how-to-create-dynamic-gridview-in-android-using-firebase-firestore/
+    // Author: chaitanyamunje https://auth.geeksforgeeks.org/user/chaitanyamunje/articles
+
+    // From: geeksforgeeks.org
+    // At: https://www.geeksforgeeks.org/how-to-view-all-the-uploaded-images-in-firebase-storage/
+    // Author: annianni https://auth.geeksforgeeks.org/user/annianni/articles
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -78,6 +97,7 @@ public class ViewPlayerCodesFragment extends Fragment {
             noQRCodes.setVisibility(View.VISIBLE);
         }
 
+        // Gets the images from FireStorage
         for (i = 0; i < numCodes; i++) {
             playerRef.child(otherPlayer.getStats().getQrCodes().get(i).getHash()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
@@ -105,6 +125,7 @@ public class ViewPlayerCodesFragment extends Fragment {
         codes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                // Launch another fragment to view QR code with more options
                 codes.setVisibility(View.GONE);
                 String link = (String) codes.getItemAtPosition(i);
                 String[] isPlaceholder = link.split("-");
@@ -141,7 +162,7 @@ public class ViewPlayerCodesFragment extends Fragment {
     }
     /**
      * Places a fragment on frame_layout in the main activity
-     * @param fragment
+     * @param fragment Fragment to be displayed
      */
     public void displayFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();

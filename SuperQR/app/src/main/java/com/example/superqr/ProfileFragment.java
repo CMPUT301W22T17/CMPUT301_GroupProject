@@ -17,8 +17,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
  * A simple {@link Fragment} subclass.
  * Use the {@link ProfileFragment#newInstance} factory method to
  * create an instance of this fragment.
+ *
+ * This fragment displays user information such as username, email, and phone number.
+ * There are buttons to view highest and lowest that the player has scanned, a button for
+ * editing the players username, email and phone number, and a button to see the players
+ * personal QR code for logging in and showing others their profile.
  */
-
 public class ProfileFragment extends Fragment implements View.OnClickListener {
     //initialize variables, and key used to pass through
     private static final String playerKey = "playerKey";

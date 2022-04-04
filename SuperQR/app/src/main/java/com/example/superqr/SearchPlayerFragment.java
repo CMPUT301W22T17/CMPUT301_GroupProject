@@ -107,7 +107,7 @@ public class SearchPlayerFragment extends Fragment{
     }
 
     /**
-     * hide the views
+     * Hide the views
      */
     private void hideViews() {
         searchEditText.setVisibility(View.INVISIBLE);
@@ -116,7 +116,7 @@ public class SearchPlayerFragment extends Fragment{
     }
 
     /**
-     * replace fragments when a player exist in database
+     * Replace fragments when a player exist in database
      * @param otherPlayer
      */
     private void replaceFragment(Player otherPlayer) {

@@ -13,6 +13,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
+/**
+ * Adapter for displaying QR codes images and scores
+ */
 public class PlayerCodesGridView extends ArrayAdapter<String> {
     private ArrayList<String> imageList;
     private Player player;
@@ -40,6 +43,7 @@ public class PlayerCodesGridView extends ArrayAdapter<String> {
         String link = imageList.get(position);
         String[] isPlaceholder = link.split("-");
         String hash, scoreText = "";
+        // Getting hash from a url string
         try {
             hash = FirebaseStorage.getInstance().getReferenceFromUrl(link).getName();
         }

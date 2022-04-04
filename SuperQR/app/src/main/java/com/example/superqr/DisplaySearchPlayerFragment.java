@@ -23,6 +23,7 @@ import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
 
 /**
+ *
  * A simple {@link Fragment} subclass.
  * Use the {@link DisplaySearchPlayerFragment#newInstance} factory method to
  * create an instance of this fragment.

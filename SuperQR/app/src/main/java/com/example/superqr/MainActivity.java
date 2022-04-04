@@ -40,6 +40,10 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The base layer of the application. Handles the switching between profile, map, scan and browse
+ * fragment. Almost every fragment runs off of this activity.
+ */
 public class MainActivity extends AppCompatActivity implements EditInfoFragment.OnFragmentInteractionListener, ScanFragment.ScanFragmentListener, ScanFragment.ScanFragmentListener1, LocationListener {
     private final static int REQUEST_IMAGE_CAPTURE = 1;
     private ActivityMainBinding binding;

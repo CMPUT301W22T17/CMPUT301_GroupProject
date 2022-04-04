@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 /**
+ *
  * This is a Dialog Fragment for user to edit their user information.
  * User can provide username, email, and phone in the respective edit text.
  * By pressing the "OK" button, user's information will be updated,

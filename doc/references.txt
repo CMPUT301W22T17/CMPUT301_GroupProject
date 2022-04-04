@@ -269,5 +269,32 @@ From: geeksforgeeks.org
 
 At: https://www.geeksforgeeks.org/how-to-override-compareto-method-in-java/
 
-Author: Zack Aayush  https://auth.geeksforgeeks.org/user/zack_aayush/articles 
+Author: Zack Aayush https://auth.geeksforgeeks.org/user/zack_aayush/articles 
 
+
+From: geeksforgeeks.org
+
+At: https://www.geeksforgeeks.org/gridview-using-custom-arrayadapter-in-android-with-example/
+
+Author: clivefernandes777 https://auth.geeksforgeeks.org/user/clivefernandes777/articles
+
+
+From: geeksforgeeks.org
+
+At: https://www.geeksforgeeks.org/how-to-create-dynamic-gridview-in-android-using-firebase-firestore/
+
+Author: chaitanyamunje https://auth.geeksforgeeks.org/user/chaitanyamunje/articles
+
+
+From: geeksforgeeks.org
+
+At: https://www.geeksforgeeks.org/how-to-view-all-the-uploaded-images-in-firebase-storage/
+
+Author: annianni https://auth.geeksforgeeks.org/user/annianni/articles
+
+
+From: Picasso
+
+At: https://square.github.io/picasso/
+
+Author: jrodx https://github.com/jrodbx

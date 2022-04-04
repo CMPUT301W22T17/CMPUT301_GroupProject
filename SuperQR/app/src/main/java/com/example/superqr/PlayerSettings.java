@@ -41,26 +41,50 @@ public class PlayerSettings implements Parcelable {
         }
     };
 
+    /**
+     * Returns a username
+     * @return Player's username
+     */
     public String getUsername() {
         return username;
     }
 
+    /**
+     * Returns a phone number
+     * @return Player's phone number as a string
+     */
     public String getPhone() {
         return phone;
     }
 
+    /**
+     * Returns a email
+     * @return Player's email
+     */
     public String getEmail() {
         return email;
     }
 
+    /**
+     * Sets a player's username
+     * @param username Player's username
+     */
     public void setUsername(String username) {
         this.username = username;
     }
 
+    /**
+     * Sets a player's phone number
+     * @param phone Player's phone number
+     */
     public void setPhone(String phone) {
         this.phone = phone;
     }
 
+    /**
+     * Sets a player's email
+     * @param email Player's email
+     */
     public void setEmail(String email) {
         this.email = email;
     }
