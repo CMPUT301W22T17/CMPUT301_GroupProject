@@ -60,7 +60,10 @@ public class QRCode implements Parcelable {
 
     private String hashCode(String code) throws NoSuchAlgorithmException{
         // Hashes the code
-        // https://www.geeksforgeeks.org/sha-256-hash-in-java/
+        /* From: geeksforgeeks.org
+         * At: https://www.geeksforgeeks.org/sha-256-hash-in-java/
+         * Author: bilal-hungund https://auth.geeksforgeeks.org/user/bilal-hungund/articles
+         */
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         byte[] hashBytes = md.digest(code.getBytes(StandardCharsets.UTF_8));
         BigInteger number = new BigInteger(1, hashBytes);
@@ -80,7 +83,10 @@ public class QRCode implements Parcelable {
 
     private int calculateScore(String hash) {
         // Calculate score
-        // https://www.geeksforgeeks.org/java-program-for-hexadecimal-to-decimal-conversion/
+        /* From: geeksforgeeks.org
+         * At: https://www.geeksforgeeks.org/java-program-for-hexadecimal-to-decimal-conversion/
+         * Author: mayur_patil https://auth.geeksforgeeks.org/user/mayur_patil/articles
+         */
         char[] hashChars = hash.toCharArray();
         char prevChar = hashChars[0];
         int duplicates = 0, totalScore = 0, base = 0;

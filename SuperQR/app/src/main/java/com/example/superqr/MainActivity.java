@@ -49,9 +49,11 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
     private Fragment newFragment;
     private LocationManager locationManager;
 
-    // from: https://stackoverflow.com/questions/62671106/onactivityresult-method-is-deprecated-what-is-the-alternative
-    // author: https://stackoverflow.com/users/4147849/muntashir-akon
-    // used to pass Player object through into fragments.
+    // Used to pass Player object through into fragments.
+    /* From: stackoverflow.com
+     * At: https://stackoverflow.com/questions/62671106/onactivityresult-method-is-deprecated-what-is-the-alternative
+     * Author: Muntashir Akon https://stackoverflow.com/users/4147849/muntashir-akon
+     */
     ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
@@ -74,7 +76,10 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
             StorageReference qrcodes = mStorageRef.child(String.format("%s/%s", playerID, qrCodes.get(qrCodes.size() - 1).getHash()));
 
             // Get data as Bitmap and convert it into byte[] to upload with putBytes
-            // https://stackoverflow.com/questions/56699632/how-to-upload-file-bitmap-to-cloud-firestore
+            /* From: stackoverflow.com
+             * At: https://stackoverflow.com/questions/56699632/how-to-upload-file-bitmap-to-cloud-firestore
+             * Author: Deˣ https://stackoverflow.com/users/4377954/de%cb%a3
+             */
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -98,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //retrieve player from database
+        // Retrieve player from database
         mStorageRef = FirebaseStorage.getInstance().getReference();
         db = FirebaseFirestore.getInstance();
         // Get a top level reference to the collection
@@ -168,7 +173,10 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
         newFragment = ProfileFragment.newInstance(player);
         replaceFragment(newFragment);
 
-        //https://www.youtube.com/watch?v=Bb8SgfI4Cm4
+        /* From: youtube.com
+         * At: https://www.youtube.com/watch?v=Bb8SgfI4Cm4
+         * Author: Foxandroid https://www.youtube.com/channel/UC4Gwya_ODul8t9kjxsHm2dw
+         */
         binding.bottomNav.setOnItemSelectedListener(menuItem -> {
             switch (menuItem.getItemId()) {
                 case R.id.profile:
@@ -308,7 +316,10 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
     private void requestLocation() {
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-        //based on Ravi Tamada's code on https://www.androidhive.info/2015/02/android-location-api-using-google-play-services/
+        /* From: androidhive.info
+         * At: https://www.androidhive.info/2015/02/android-location-api-using-google-play-services/
+         * Author: Ravi Tamada https://www.androidhive.info/author/admin/
+         */
         try {
             locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, this);
@@ -402,7 +413,6 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout, searchPlayer);
-        //fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
 }
