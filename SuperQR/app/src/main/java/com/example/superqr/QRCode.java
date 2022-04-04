@@ -1,7 +1,7 @@
 package com.example.superqr;
+
 import android.os.Parcel;
 import android.os.Parcelable;
-import androidx.annotation.VisibleForTesting;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -21,7 +21,6 @@ public class QRCode implements Parcelable {
 
     // Firebase requirement
     public QRCode() {
-
     }
 
     /**
@@ -58,7 +57,7 @@ public class QRCode implements Parcelable {
         }
     };
 
-    @VisibleForTesting
+
     private String hashCode(String code) throws NoSuchAlgorithmException{
         // Hashes the code
         // https://www.geeksforgeeks.org/sha-256-hash-in-java/

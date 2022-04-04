@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
@@ -15,14 +14,11 @@ public class MyRankFragment extends DialogFragment {
     private TextView totalScoring, highestScoring, totalQR;
     private int totalScore,highestScore,totalQrScanned;
 
-
-
     public MyRankFragment(int totalScore, int highestScore, int totalQrScanned){
         this.totalScore = totalScore;
         this.highestScore = highestScore;
         this.totalQrScanned = totalQrScanned;
     }
-
 
     @NonNull
     @Override
@@ -40,6 +36,5 @@ public class MyRankFragment extends DialogFragment {
                 .setView(view_rank_view)
                 .setNegativeButton("BACK",null)
                 .create();
-
     }
 }

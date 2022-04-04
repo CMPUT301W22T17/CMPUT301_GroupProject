@@ -1,7 +1,6 @@
 package com.example.superqr;
 
 import static android.content.ContentValues.TAG;
-
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
@@ -14,7 +13,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
-
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -26,7 +24,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-
 import com.example.superqr.databinding.ActivityMainBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -39,19 +36,18 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements EditInfoFragment.OnFragmentInteractionListener, ScanFragment.ScanFragmentListener, ScanFragment.ScanFragmentListener1, LocationListener {
-    private static int REQUEST_IMAGE_CAPTURE = 1;
+    private final static int REQUEST_IMAGE_CAPTURE = 1;
     private ActivityMainBinding binding;
     private StorageReference mStorageRef;
-    Player player;
-    FirebaseFirestore db;
-    Fragment newFragment;
-    LocationManager locationManager;
+    private Player player;
+    private FirebaseFirestore db;
+    private Fragment newFragment;
+    private LocationManager locationManager;
 
     // from: https://stackoverflow.com/questions/62671106/onactivityresult-method-is-deprecated-what-is-the-alternative
     // author: https://stackoverflow.com/users/4147849/muntashir-akon
@@ -200,7 +196,7 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
     }
 
     /**
-     * Adds QRCcode to the player, updates the database, and update's the player's
+     * Adds QRCode to the player, updates the database, and update's the player's
      * QRCode stats as necessary.
      * @param qrCode
      *      QRCode that is scanned

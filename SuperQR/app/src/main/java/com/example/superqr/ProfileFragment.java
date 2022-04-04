@@ -20,7 +20,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
  */
 
 public class ProfileFragment extends Fragment implements View.OnClickListener {
-
     //initialize variables, and key used to pass through
     private static final String playerKey = "playerKey";
     private Player player;
@@ -28,7 +27,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     private Button qrLowScoreButton;
     private Button editInfoButton;
     private Button loginCodeButton;
-    private FirebaseFirestore db;
     public ProfileFragment() {
         // Required empty public constructor
     }
@@ -51,8 +49,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        db = FirebaseFirestore.getInstance();
-
     }
 
     @Override
@@ -62,7 +58,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         View profileView = inflater.inflate(R.layout.fragment_profile, container, false);
         qrHighScoreButton = (Button) profileView.findViewById(R.id.view_high_score_button);
         qrHighScoreButton.setOnClickListener(this);
-
         qrLowScoreButton = (Button) profileView.findViewById(R.id.view_low_score_button);
         qrLowScoreButton.setOnClickListener(this);
         editInfoButton = (Button) profileView.findViewById(R.id.edit_player_info_button);
@@ -125,7 +120,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         usernameText.setText(userName);
         emailText.setText(email);
         phoneText.setText(phone);
-
     }
 
     /**
@@ -140,7 +134,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
         totalScannedText.setText(count);
         totalScoreText.setText(total);
-
     }
 
     /**
@@ -157,5 +150,4 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             Toast.makeText(getActivity(), "No QR codes scanned", Toast.LENGTH_SHORT).show();
         }
     }
-
 }

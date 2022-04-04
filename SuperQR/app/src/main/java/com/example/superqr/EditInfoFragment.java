@@ -15,9 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 public class EditInfoFragment extends DialogFragment {
-
     private static final String TAG = "EditInfoFragment";
-
     private EditText editUsernameEditText;
     private EditText editEmailEditText;
     private EditText editPhoneEditText;
@@ -77,7 +75,6 @@ public class EditInfoFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_edit_info, null);
-
 
         editUsernameEditText = view.findViewById(R.id.edit_username_editText);
         editEmailEditText = view.findViewById(R.id.edit_email_editText);

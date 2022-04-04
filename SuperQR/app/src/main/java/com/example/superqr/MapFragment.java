@@ -1,7 +1,6 @@
 package com.example.superqr;
 
 import static android.content.ContentValues.TAG;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -12,11 +11,9 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
-
 import androidx.annotation.RequiresApi;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
-
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -26,12 +23,10 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
-
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
-
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
@@ -39,7 +34,6 @@ import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -101,17 +95,12 @@ public class MapFragment extends Fragment implements View.OnClickListener {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        //fixing
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
-
         Context ctx = getActivity().getApplicationContext();
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
-
-
 
         // Inflate the layout for this fragment
         // https://stackoverflow.com/questions/14897143/integrating-osmdroid-with-fragments
@@ -243,7 +232,6 @@ public class MapFragment extends Fragment implements View.OnClickListener {
      */
     private void setToLocation(GeoPoint point) {
         // https://stackoverflow.com/questions/40257342/how-to-display-user-location-on-osmdroid-mapview
-
         controller.setZoom(18);
         controller.zoomIn();
         controller.setZoom(2);
@@ -255,7 +243,6 @@ public class MapFragment extends Fragment implements View.OnClickListener {
      * Put markers onto the map of the player.
      */
     private void addLocationMarkers() {
-
         playerMarker.setPosition(playerPoint);
         playerMarker.setTitle(Double.toString(player.getLocation().getLatitude()) + ", " + Double.toString(player.getLocation().getLongitude()));
         playerMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
@@ -266,7 +253,6 @@ public class MapFragment extends Fragment implements View.OnClickListener {
      * Put markers onto the map of the QR codes that are nearby the player
      */
     private void addQRLocationMarkers(Location centerLocation, double radius, boolean nearPlayer) {
-
         if (!nearbySearchedCodes.isEmpty()) {
             for (int i = 0; i < nearbySearchedCodes.size(); i++) {
                 map.getOverlays().remove(nearbySearchedCodes.get(i));
@@ -275,7 +261,6 @@ public class MapFragment extends Fragment implements View.OnClickListener {
         }
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-
         db.collection("codes").get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -335,7 +320,6 @@ public class MapFragment extends Fragment implements View.OnClickListener {
             Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
             List<Address> geoResults = geocoder.getFromLocationName(searchedLocation, 1);
             if (!geoResults.isEmpty()) {
-
                 map.getOverlays().remove(locationMarker);
                 Address address = geoResults.get(0);
                 Location location = new Location("map_location");
@@ -354,7 +338,6 @@ public class MapFragment extends Fragment implements View.OnClickListener {
 
                 locationSearchText.getText().clear();
                 addQRLocationMarkers(location, 0.05, false);
-
             }
             else {
                 Toast.makeText(getActivity(), "Cannot find location.", Toast.LENGTH_SHORT).show();
@@ -374,7 +357,6 @@ public class MapFragment extends Fragment implements View.OnClickListener {
      * @return The euclidean distance between the center and other point
      */
     private double getEuclideanDistance(Location centerPoint, LocationStore otherPoint) {
-
         double centerLatitudeKm = centerPoint.getLatitude() * 110.574;
         double centerLongitudeKm = centerPoint.getLongitude() * (111.320 * Math.cos(centerPoint.getLatitude()));
         double otherLatitudeKm = otherPoint.getLatitude() * 110.574;

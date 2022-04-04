@@ -7,13 +7,9 @@ public class PlayerSettings implements Parcelable {
     private String username;
     private String phone;
     private String email;
-    private QRCode loginQR;
 
-    //temp empty constructor
-    public PlayerSettings() {
-        username = "NewUser";
-        phone = "123-123-1234";
-        email = "ashe@pokemon.com";
+    public PlayerSettings(){
+        // Required empty public constructor
     }
 
     public PlayerSettings(String username, String phone, String email) {
@@ -22,13 +18,11 @@ public class PlayerSettings implements Parcelable {
         this.email = email;
     }
 
-    // returns a QR code for player login
 
     protected PlayerSettings(Parcel in) {
         username = in.readString();
         phone = in.readString();
         email = in.readString();
-        loginQR = in.readParcelable(QRCode.class.getClassLoader());
     }
 
     public static final Creator<PlayerSettings> CREATOR = new Creator<PlayerSettings>() {
@@ -42,10 +36,6 @@ public class PlayerSettings implements Parcelable {
             return new PlayerSettings[size];
         }
     };
-
-    public QRCode getLoginQR() {
-        return loginQR;
-    }
 
     public String getUsername() {
         return username;
@@ -71,10 +61,6 @@ public class PlayerSettings implements Parcelable {
         this.email = email;
     }
 
-    public void setLoginQR(QRCode loginQR) {
-        this.loginQR = loginQR;
-    }
-
 
     @Override
     public int describeContents() {
@@ -86,6 +72,5 @@ public class PlayerSettings implements Parcelable {
         parcel.writeString(username);
         parcel.writeString(phone);
         parcel.writeString(email);
-        parcel.writeParcelable(loginQR, i);
     }
 }
