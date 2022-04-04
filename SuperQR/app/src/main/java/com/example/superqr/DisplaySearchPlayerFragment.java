@@ -26,6 +26,15 @@ import java.util.ArrayList;
  * A simple {@link Fragment} subclass.
  * Use the {@link DisplaySearchPlayerFragment#newInstance} factory method to
  * create an instance of this fragment.
+ *
+ * This fragment displays user information
+ * such as username, email, and phone
+ * are displayed in a textview respectively
+ * There is a "View Code" button that is visible to everyone
+ * by pressing the "View code" button, user will be brought to
+ * a fragment to view QR codes that are scanned by this player
+ * The "DELETE" button is only visible to an admin, where they
+ * can delete the given player from the database.
  */
 public class DisplaySearchPlayerFragment extends Fragment {
     // the fragment initialization parameters
