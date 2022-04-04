@@ -2,7 +2,6 @@ package com.example.superqr;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import java.util.Random;
 
 
@@ -10,7 +9,6 @@ import java.util.Random;
  * Player is the main interface by which most classes are managed by.
  */
 
-@SuppressWarnings("ALL")
 public class Player implements Parcelable, Comparable<Player> {
     private PlayerSettings settings;
     private PlayerStats stats = new PlayerStats();
@@ -170,8 +168,8 @@ public class Player implements Parcelable, Comparable<Player> {
     }
 
     /**
-     * check if player is the owner
-     * @return
+     * check if player is the owner, return true if they are, false otherwise
+     * @return Boolean isAdmin
      */
     public Boolean getIsAdmin() {
         return isAdmin;

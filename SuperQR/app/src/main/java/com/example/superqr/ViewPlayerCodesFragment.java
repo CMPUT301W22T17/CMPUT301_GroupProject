@@ -21,15 +21,15 @@ import java.util.ArrayList;
 public class ViewPlayerCodesFragment extends Fragment {
     private static final String playerKey = "playerKey";
     private static final String otherPlayerKey = "otherPlayerKey";
-    GridView codes;
-    Player player;
-    Player otherPlayer; //this is the player whose codes are being viewed
-    ArrayList<String> imageList;
-    int numCodes;
-    StorageReference playerRef;
-    ProgressBar loadingImage;
-    TextView noQRCodes;
-    int i;
+    private GridView codes;
+    private Player player;
+    private Player otherPlayer; //this is the player whose codes are being viewed
+    private ArrayList<String> imageList;
+    private int numCodes;
+    private StorageReference playerRef;
+    private ProgressBar loadingImage;
+    private TextView noQRCodes;
+    private int i;
 
     public ViewPlayerCodesFragment() {
         // Required empty public constructor

@@ -1,6 +1,5 @@
 package com.example.superqr;
 
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -9,10 +8,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
@@ -20,12 +17,11 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class LogInActivity extends AppCompatActivity implements ScanFragment.ScanFragmentListener1 {
-
-    Button newUserButton, existingUserButton, signupButton;
-    EditText usernameEditText, emailEditText, phoneEditText;
-    FrameLayout loginFrameLayout;
-    FirebaseFirestore db;
-    Player player;
+    private Button newUserButton, existingUserButton, signupButton;
+    private EditText usernameEditText, emailEditText, phoneEditText;
+    private FrameLayout loginFrameLayout;
+    private FirebaseFirestore db;
+    private Player player;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,15 +42,12 @@ public class LogInActivity extends AppCompatActivity implements ScanFragment.Sca
         newUserButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 newUserButton.setVisibility(View.GONE);
                 existingUserButton.setVisibility(View.GONE);
-
                 signupButton.setVisibility(View.VISIBLE);
                 usernameEditText.setVisibility(View.VISIBLE);
                 emailEditText.setVisibility(View.VISIBLE);
                 phoneEditText.setVisibility(View.VISIBLE);
-
             }
         });
 
@@ -80,7 +73,6 @@ public class LogInActivity extends AppCompatActivity implements ScanFragment.Sca
                 if (userName.contains("/")) {
                     Toast.makeText(LogInActivity.this, "Username is invalid", Toast.LENGTH_LONG).show();
                 }
-
                 else {
                     // check if username already exists
                     DocumentReference docRef = db.collection("users").document(userName);
@@ -120,7 +112,6 @@ public class LogInActivity extends AppCompatActivity implements ScanFragment.Sca
 
     @Override
     public void onQRScanned1(String username) {
-
         if (username.contains("/")) {
             loginFrameLayout.setVisibility(View.INVISIBLE);
             Toast.makeText(LogInActivity.this, "Invalid Username", Toast.LENGTH_LONG).show();
@@ -158,17 +149,17 @@ public class LogInActivity extends AppCompatActivity implements ScanFragment.Sca
                 }
             });
         }
-        }
+    }
 
-        @Override
-        public void onBackPressed() {
-            loginFrameLayout.setVisibility(View.INVISIBLE);
-            newUserButton.setVisibility(View.VISIBLE);
-            existingUserButton.setVisibility(View.VISIBLE);
-            signupButton.setVisibility(View.INVISIBLE);
-            usernameEditText.setVisibility(View.INVISIBLE);
-            emailEditText.setVisibility(View.INVISIBLE);
-            phoneEditText.setVisibility(View.INVISIBLE);
-            Toast.makeText(LogInActivity.this, "MAKE A SELECTION", Toast.LENGTH_SHORT).show();
-        }
+    @Override
+    public void onBackPressed() {
+        loginFrameLayout.setVisibility(View.INVISIBLE);
+        newUserButton.setVisibility(View.VISIBLE);
+        existingUserButton.setVisibility(View.VISIBLE);
+        signupButton.setVisibility(View.INVISIBLE);
+        usernameEditText.setVisibility(View.INVISIBLE);
+        emailEditText.setVisibility(View.INVISIBLE);
+        phoneEditText.setVisibility(View.INVISIBLE);
+        Toast.makeText(LogInActivity.this, "MAKE A SELECTION", Toast.LENGTH_SHORT).show();
+    }
 }

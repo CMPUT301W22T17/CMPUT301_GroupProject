@@ -35,8 +35,6 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class LeaderboardFragment extends Fragment implements View.OnClickListener {
-
-
     private static final String playerKey= "playerKey";
     private Player player;
     private ListView leaderboardList;
@@ -49,10 +47,11 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
     private TextView rankText;
     private TextView userNameText;
     private TextView scoreText;
-    FirebaseFirestore db;
-    Task<QuerySnapshot> query;
-    List<DocumentSnapshot> x;
+    private FirebaseFirestore db;
+    private Task<QuerySnapshot> query;
+    private List<DocumentSnapshot> x;
     private int myRank, totalQR, highestScoring;
+
     public LeaderboardFragment() {
         // Required empty public constructor
     }
@@ -61,10 +60,8 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     *
      * @return A new instance of fragment leaderboardFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static LeaderboardFragment newInstance(Player player) {
         LeaderboardFragment fragment = new LeaderboardFragment();
         Bundle bundle = new Bundle();
@@ -73,7 +70,6 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
         return fragment;
     }
 
-
     /**
      * Runs on the creation of the leaderboard fragment
      */
@@ -81,7 +77,6 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
-
 
     /**
      * Gets Players from the Database and creates the View for the Leaderboard Fragment
@@ -119,7 +114,7 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
                                 totalQRList.add(obj.getStats().getCounts());
                                 highestScoringList.add(obj.getStats().getHighestScore().getScore());
                             }
-                            SortArray();
+                            sortArray();
                         }
                     }
                 });
@@ -143,12 +138,11 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
     /**
      * Sort PlayerList Array and Set The Adapter for the view
      */
-    public void SortArray(){
+    public void sortArray(){
         Collections.sort(playersList);
         playerAdapter = new LeaderboardListView(getActivity(), playersList);
         leaderboardList.setAdapter(playerAdapter);
     }
-
 
     @Override
     public void onResume() {

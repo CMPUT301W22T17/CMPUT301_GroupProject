@@ -2,12 +2,10 @@ package com.example.superqr;
 
 import android.content.Context;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,8 +18,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FieldValue;
@@ -29,7 +25,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
 
 /**
@@ -46,15 +41,15 @@ public class ViewQRCodeFragment extends Fragment {
     private Player otherPlayer;
     private QRCode code;
     private String link;
-    ImageView objectImage;
-    Button deleteBtn;
-    EditText editText;
-    Button addBtn;
-    ListView listView;
-    FirebaseFirestore db ;
-    StorageReference mStorageRef;
-    ArrayAdapter<String> adapter;
-    TextView scoreText;
+    private ImageView objectImage;
+    private Button deleteBtn;
+    private EditText editText;
+    private Button addBtn;
+    private ListView listView;
+    private FirebaseFirestore db ;
+    private StorageReference mStorageRef;
+    private ArrayAdapter<String> adapter;
+    private TextView scoreText;
 
     public ViewQRCodeFragment() {
         // Required empty public constructor
@@ -162,12 +157,12 @@ public class ViewQRCodeFragment extends Fragment {
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
         });
-
         return view;
     }
 
     /**
      * removes a player's QRCode in the database and photo
+     * returns updated player object
      * @param player
      * @param code
      */
@@ -194,6 +189,15 @@ public class ViewQRCodeFragment extends Fragment {
         return player;
     }
 
+    /**
+     * Adds otherPlayer's comment to player's QRCode in the database
+     * returns updated player object with the comment.
+     * @param player
+     * @param otherPlayer
+     * @param code
+     * @param comment
+     * @return
+     */
     public Player addComment(Player player, Player otherPlayer, QRCode code, String comment){
         PlayerStats stats = player.getStats();
         ArrayList<QRCode> codes = stats.getQrCodes();
@@ -216,13 +220,16 @@ public class ViewQRCodeFragment extends Fragment {
         return player;
     }
 
+    /**
+     * update comment listview adapter
+     * @param comments
+     */
     public void updateAdapter(ArrayList<String> comments){
         String[] strComments = new String[code.getComments().size()];
 
         for (int i = 0; i < code.getComments().size(); i++) {
             strComments[i] = code.getComments().get(i);
         }
-
         /* From: youtube.com
          * At: https://www.youtube.com/watch?v=MCfsfgpmkEI
          * Author: Ralph Alex Charlemagne https://www.youtube.com/channel/UCBzSxKOoOn1jxmFp4wSwMRA
@@ -231,7 +238,6 @@ public class ViewQRCodeFragment extends Fragment {
         listView.setAdapter(adapter);
 
         editText.setText("");
-
     }
 
 }

@@ -14,7 +14,6 @@ import androidx.fragment.app.FragmentTransaction;
  * create an instance of this fragment.
  */
 public class BrowseFragment extends Fragment implements View.OnClickListener {
-
     //initialize variables and key used to pass through
     private static final String playerKey = "playerKey";
     private Player player;
@@ -103,7 +102,6 @@ public class BrowseFragment extends Fragment implements View.OnClickListener {
         fragmentTransaction.replace(R.id.browse_container, fragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
-
         hideButtons();
     }
 
