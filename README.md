@@ -13,6 +13,8 @@ Andy Le
 
 Muzammill Mandary
 
+Brian Lu
+
 
 This is the repository containing our main project in CMPUT301.
 
