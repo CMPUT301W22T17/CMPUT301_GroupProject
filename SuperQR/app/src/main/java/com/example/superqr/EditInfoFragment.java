@@ -3,16 +3,24 @@ package com.example.superqr;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+
+/**
+ * This is a Dialog Fragment for user to edit their user information.
+ * User can provide username, email, and phone in the respective edit text.
+ * By pressing the "OK" button, user's information will be updated,
+ * by pressing the "CANCEL" button, changes will be discard.
+ *
+ * Note: username must be valid, toast message will be displayed
+ * if invalid.
+ */
 
 public class EditInfoFragment extends DialogFragment {
     private static final String TAG = "EditInfoFragment";

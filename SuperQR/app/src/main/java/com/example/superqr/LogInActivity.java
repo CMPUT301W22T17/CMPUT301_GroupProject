@@ -16,6 +16,21 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+/**
+ * This is an activity for users that newly downloaded the app
+ * user can either press "existing user" or "new user" buttons
+ *     1. "new user" button brings user to a registration page,
+ *         where they can provide their information.
+ *         Username must be nonempty and not contain the character "/",
+ *         other fields can be empty. Toast message will be displayed,
+ *         if username is invalid
+ *     2. "existing user" button brings user to scan fragment,
+ *         where users can scan a valid QR code that contains
+ *         the user information for log in.
+ *  Note: User must either log in as new user or existing user to actually
+ *       get into the app.
+ */
+
 public class LogInActivity extends AppCompatActivity implements ScanFragment.ScanFragmentListener1 {
     private Button newUserButton, existingUserButton, signupButton;
     private EditText usernameEditText, emailEditText, phoneEditText;
@@ -70,7 +85,7 @@ public class LogInActivity extends AppCompatActivity implements ScanFragment.Sca
                 String email = emailEditText.getText().toString();
                 String phone = phoneEditText.getText().toString();
 
-                if (userName.contains("/")) {
+                if (userName.contains("/") || userName.isEmpty()) {
                     Toast.makeText(LogInActivity.this, "Username is invalid", Toast.LENGTH_LONG).show();
                 }
                 else {
@@ -109,6 +124,13 @@ public class LogInActivity extends AppCompatActivity implements ScanFragment.Sca
             }
         });
     }
+
+    /**
+     * check if username is valid
+     * look up the user in the firebase
+     * retrieve player if available
+     * @param username
+     */
 
     @Override
     public void onQRScanned1(String username) {

@@ -15,6 +15,13 @@ import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
+/**
+ * This is a DialogFragment for user to view their profile QR code
+ * The QR code is placed in a image view, and it is created using
+ * bit map. This is adapted from zxing library.
+ * There is a "Back" button for user to click,
+ * when clicked, user will be brought back to main activity
+ */
 public class ViewLoginCodeFragment extends DialogFragment {
     private String username;
     private ImageView loginQRImage;
