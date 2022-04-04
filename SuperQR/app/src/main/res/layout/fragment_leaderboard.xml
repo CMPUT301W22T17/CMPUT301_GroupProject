@@ -80,12 +80,7 @@
 
     <ListView
         android:id="@+id/leaderboard_list"
-<<<<<<< HEAD
         android:layout_width="410dp"
-        android:layout_height="484dp"
-        android:layout_marginTop="32dp"
-=======
-        android:layout_width="411dp"
         android:layout_height="450dp"
 >>>>>>> 8323b6afff31922ce4e3ffd19434e7ce7ba1bf23
         app:layout_constraintBottom_toBottomOf="parent"
