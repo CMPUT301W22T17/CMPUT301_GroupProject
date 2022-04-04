@@ -85,7 +85,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
     /* From: stackoverflow.com
      * At: https://stackoverflow.com/questions/11857022/fragment-implements-onclicklistener
-     * Author: https://stackoverflow.com/users/1921204/mohanraj-s
+     * Author: MohanRaj S https://stackoverflow.com/users/1921204/mohanraj-s
      */
     @Override
     public void onClick(View v) {
@@ -93,7 +93,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             case R.id.view_high_score_button:
                 /* From: stackoverflow.com
                  * At: https://stackoverflow.com/questions/25887373/calling-dialogfragment-from-fragment-not-fragmentactivity
-                 * Author: https://stackoverflow.com/users/2197905/pradeepnama
+                 * Author: PradeepNama https://stackoverflow.com/users/2197905/pradeepnama
                  */
                 showQRCode(player.getStats().getHighestScore());
                 break;
@@ -122,7 +122,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     public void setUserInfo(View view) {
         /* From: stackoverflow.com
          * At: https://stackoverflow.com/questions/6495898/findviewbyid-in-fragment
-         * Author: https://stackoverflow.com/users/615779/leffelmania
+         * Author: LeffelMania https://stackoverflow.com/users/615779/leffelmania
          */
         TextView usernameText = view.findViewById(R.id.player_username);
         TextView emailText = view.findViewById(R.id.player_email);

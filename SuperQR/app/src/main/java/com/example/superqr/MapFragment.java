@@ -72,19 +72,19 @@ public class MapFragment extends Fragment implements View.OnClickListener {
 
     /* From: github.io
      * At: https://osmdroid.github.io/osmdroid/How-to-use-the-osmdroid-library.html
-     * Authors: https://osmdroid.github.io/osmdroid/team-list.html
+     * Authors: Neil Boyd, kurtzmarc, Alex O'Ree, Matt Kergall https://osmdroid.github.io/osmdroid/team-list.html
      * To: Initialize the map API
      */
 
     /* From github.io
      * At: https://osmdroid.github.io/osmdroid/javadocAll/index.html
-     * Authors: https://osmdroid.github.io/osmdroid/team-list.html
+     * Authors: Neil Boyd, kurtzmarc, Alex O'Ree, Matt Kergall https://osmdroid.github.io/osmdroid/team-list.html
      * To: Used to reference the classes and methods that come with osmdroid in order to implement the map
      */
 
     /* From stackoverflow.com
      * At: https://stackoverflow.com/questions/54811451/osmdroid-default-marker-moving-when-zooming-out-on-android-api-28
-     * Author: https://stackoverflow.com/users/11096412/pottokdev
+     * Author: PottokDev https://stackoverflow.com/users/11096412/pottokdev
      * To: Make the scaling for the markers on the map fixed
      */
     public MapFragment() {
@@ -128,7 +128,7 @@ public class MapFragment extends Fragment implements View.OnClickListener {
         // Inflate the layout for this fragment
         /* From: stackoverflow.com
          * At: https://stackoverflow.com/questions/14897143/integrating-osmdroid-with-fragments
-         * Author: https://stackoverflow.com/users/2440169/viduka
+         * Author: viduka https://stackoverflow.com/users/2440169/viduka
          */
         View view = inflater.inflate(R.layout.activity_display_map, container, false);
 
@@ -241,7 +241,7 @@ public class MapFragment extends Fragment implements View.OnClickListener {
 
         /* From: stackoverflow.com
          * At: https://stackoverflow.com/questions/60301641/customized-icon-in-osmdroid-marker-android
-         * Author: https://stackoverflow.com/users/4778388/haniku
+         * Author: Haniku https://stackoverflow.com/users/4778388/haniku
          */
         Drawable initialPlayerPin = ResourcesCompat.getDrawable(getResources(), R.drawable.player_marker, null);
         playerPin = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap((((BitmapDrawable) initialPlayerPin).getBitmap()), (int) (33.0f * getResources().getDisplayMetrics().density), (int) (36.0f * getResources().getDisplayMetrics().density), true));
@@ -265,7 +265,7 @@ public class MapFragment extends Fragment implements View.OnClickListener {
     private void setToLocation(GeoPoint point) {
         /* From: stackoverflow.com
          * At: https://stackoverflow.com/questions/40257342/how-to-display-user-location-on-osmdroid-mapview
-         * Author: https://stackoverflow.com/users/4837089/sergey-nikitin
+         * Author: Sergey Nikitin https://stackoverflow.com/users/4837089/sergey-nikitin
          */
         controller.setZoom(18);
         controller.zoomIn();
@@ -331,7 +331,7 @@ public class MapFragment extends Fragment implements View.OnClickListener {
 
                                     /* From: stackoverflow.com
                                      * At: https://stackoverflow.com/questions/2538787/how-to-print-a-float-with-2-decimal-places-in-java
-                                     * Author: https://stackoverflow.com/users/203907/bozho
+                                     * Author: Bozho https://stackoverflow.com/users/203907/bozho
                                      */
                                     DecimalFormat decimalRounder = new DecimalFormat();
                                     decimalRounder.setMaximumFractionDigits(4);
@@ -362,7 +362,7 @@ public class MapFragment extends Fragment implements View.OnClickListener {
     private void searchLocation(String searchedLocation) throws IOException {
         /* From: stackoverflow.com
          * At: https://stackoverflow.com/questions/69148288/how-to-search-location-name-on-osmdroid-to-get-latitude-longitude
-         * Author: https://stackoverflow.com/users/12543189/faiz-azhar-ristya-nugraha
+         * Author: Faiz Azhar Ristya Nugraha https://stackoverflow.com/users/12543189/faiz-azhar-ristya-nugraha
          */
         try {
             Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());

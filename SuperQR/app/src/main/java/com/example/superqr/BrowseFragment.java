@@ -96,7 +96,7 @@ public class BrowseFragment extends Fragment implements View.OnClickListener {
     public void displayFragment(Fragment fragment) {
         /* From: stackoverflow.com
          * At: https://stackoverflow.com/questions/16728426/android-nested-fragment-approach
-         * Author https://stackoverflow.com/users/1157893/larry-mckenzie
+         * Author: Larry McKenzie https://stackoverflow.com/users/1157893/larry-mckenzie
          */
 
         FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();

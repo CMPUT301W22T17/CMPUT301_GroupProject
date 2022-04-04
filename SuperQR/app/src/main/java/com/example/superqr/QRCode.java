@@ -63,7 +63,7 @@ public class QRCode implements Parcelable {
         // Hashes the code
         /* From: geeksforgeeks.org
          * At: https://www.geeksforgeeks.org/sha-256-hash-in-java/
-         * Author: https://auth.geeksforgeeks.org/user/bilal-hungund/articles
+         * Author: bilal-hungund https://auth.geeksforgeeks.org/user/bilal-hungund/articles
          */
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         byte[] hashBytes = md.digest(code.getBytes(StandardCharsets.UTF_8));
@@ -86,7 +86,7 @@ public class QRCode implements Parcelable {
         // Calculate score
         /* From: geeksforgeeks.org
          * At: https://www.geeksforgeeks.org/java-program-for-hexadecimal-to-decimal-conversion/
-         * Author: https://auth.geeksforgeeks.org/user/mayur_patil/articles
+         * Author: mayur_patil https://auth.geeksforgeeks.org/user/mayur_patil/articles
          */
         char[] hashChars = hash.toCharArray();
         char prevChar = hashChars[0];

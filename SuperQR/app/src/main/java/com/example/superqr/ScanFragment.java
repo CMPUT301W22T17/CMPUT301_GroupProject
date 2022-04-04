@@ -72,7 +72,7 @@ public class ScanFragment extends Fragment {
 
     /* From: stackoverflow.com
      * At: https://stackoverflow.com/questions/35091857/passing-object-from-fragment-to-activity
-     * Author: https://stackoverflow.com/users/3671918/david-rauca
+     * Author: David Rauca https://stackoverflow.com/users/3671918/david-rauca
      */
     public interface ScanFragmentListener {
         void onQRScanned(QRCode qrCode, boolean geo);
@@ -122,7 +122,7 @@ public class ScanFragment extends Fragment {
         // Inflate the layout for this fragment
         /* From: youtube.com
          * At: https://www.youtube.com/watch?v=Iuj4CuWjYF8
-         * Author: https://www.youtube.com/channel/UCR1t5eSmLxLUdBnK2XwZOuw
+         * Author: SmallAcademy https://www.youtube.com/channel/UCR1t5eSmLxLUdBnK2XwZOuw
          */
         player = (Player) getArguments().getParcelable(playerKey);
         scanAction = getArguments().getInt("scanAction");
@@ -230,7 +230,7 @@ public class ScanFragment extends Fragment {
     // Asks user for camera permissions
     /* From: geeksforgeeks.org
      * At: https://www.geeksforgeeks.org/easy-runtime-permissions-in-android-with-dexter/
-     * Author: https://auth.geeksforgeeks.org/user/chaitanyamunje/articles
+     * Author: chaitanyamunje https://auth.geeksforgeeks.org/user/chaitanyamunje/articles
      */
     private void requestForCamera() {
         final Activity activity = getActivity();
