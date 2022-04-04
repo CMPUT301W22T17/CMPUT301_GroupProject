@@ -1,5 +1,5 @@
 # SuperQR
-SUPERQR, Pokemon-Go-like game where players collect QR codes
+SUPERQR: Pokemon-Go inspired game where players collect QR codes
 
 Created by
 
