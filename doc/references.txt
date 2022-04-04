@@ -249,3 +249,25 @@ From: stackoverflow.com
 At: https://stackoverflow.com/questions/43567626/how-to-check-if-a-file-exists-in-firebase-storage-from-your-android-application
 
 Author: Dan Alboteanu https://stackoverflow.com/users/6204133/dan-alboteanu
+
+
+From: firebase.google.com
+
+At: https://firebase.google.com/docs/database/android/lists-of-data
+
+Author: Firebase
+
+
+From: BeginnersBook.com
+
+At: https://beginnersbook.com/2013/12/sort-arraylist-in-descending-order-in-java/
+
+Author: Chaitanya Singh
+
+
+From: geeksforgeeks.org
+
+At: https://www.geeksforgeeks.org/how-to-override-compareto-method-in-java/
+
+Author: Zack Aayush  https://auth.geeksforgeeks.org/user/zack_aayush/articles 
+
