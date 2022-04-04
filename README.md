@@ -2,14 +2,19 @@
 SUPERQR, Pokemon-Go-like game where players collect QR codes
 
 Created by
+
 Steven Fan
+
 Jan Chow
+
 Liam Chen
-Andy le
+
+Andy Le
+
 Muzammill Mandary
 
-This is the repository containing our main project in CMPUT301.
 
+This is the repository containing our main project in CMPUT301.
 
 
 References (also commented in code where used)
