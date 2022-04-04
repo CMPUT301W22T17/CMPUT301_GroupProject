@@ -6,10 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import java.util.ArrayList;
 
 /**
@@ -22,7 +20,6 @@ public class LeaderboardListView extends ArrayAdapter<Player> {
     private TextView score;
     private TextView Rank;
 
-
     /**
      * Class constructor
      * @param context
@@ -32,7 +29,6 @@ public class LeaderboardListView extends ArrayAdapter<Player> {
         super(context,0,players);
         this.players = players;
         this.context = context;
-
     }
 
     /**

@@ -28,11 +28,10 @@ import java.util.ArrayList;
  * create an instance of this fragment.
  */
 public class DisplaySearchPlayerFragment extends Fragment {
-
     // the fragment initialization parameters
     private static final String playerKey = "playerKey";
     private static final String otherPlayerKey = "otherPlayerKey";
-    FirebaseFirestore db;
+    private FirebaseFirestore db;
     private Player player;
     private Player otherPlayer;
     private TextView otherPlayerUserNameTextView;

@@ -5,14 +5,18 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -31,8 +35,6 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class LeaderboardFragment extends Fragment implements View.OnClickListener {
-
-
     private static final String playerKey= "playerKey";
     private Player player;
     private ListView leaderboardList;
@@ -41,10 +43,15 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
     private static ArrayList<Integer> totalScoreList, totalQRList, highestScoringList;
     private Player obj;
     private Button myRankButton;
-    FirebaseFirestore db;
-    Task<QuerySnapshot> query;
-    List<DocumentSnapshot> x;
+    private TextView titleText;
+    private TextView rankText;
+    private TextView userNameText;
+    private TextView scoreText;
+    private FirebaseFirestore db;
+    private Task<QuerySnapshot> query;
+    private List<DocumentSnapshot> x;
     private int myRank, totalQR, highestScoring;
+
     public LeaderboardFragment() {
         // Required empty public constructor
     }
@@ -53,10 +60,8 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     *
      * @return A new instance of fragment leaderboardFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static LeaderboardFragment newInstance(Player player) {
         LeaderboardFragment fragment = new LeaderboardFragment();
         Bundle bundle = new Bundle();
@@ -64,7 +69,6 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
         fragment.setArguments(bundle);
         return fragment;
     }
-
 
     /**
      * Runs on the creation of the leaderboard fragment
@@ -74,7 +78,6 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
         super.onCreate(savedInstanceState);
     }
 
-
     /**
      * Gets Players from the Database and creates the View for the Leaderboard Fragment
      * @return View of the leaderboard
@@ -83,10 +86,16 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_leaderboard,null);
+        player = getArguments().getParcelable(playerKey);
 
         myRankButton = (Button) view.findViewById(R.id.myRank);
         myRankButton.setOnClickListener(this);
         leaderboardList = view.findViewById(R.id.leaderboard_list);
+        titleText = view.findViewById(R.id.leaderboard_title);
+        rankText = view.findViewById(R.id.rank_title);
+        userNameText = view.findViewById(R.id.username_title);
+        scoreText = view.findViewById(R.id.score_title);
+
         playersList = new ArrayList<>();
         totalScoreList = new ArrayList();
         totalQRList = new ArrayList();
@@ -105,22 +114,35 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
                                 totalQRList.add(obj.getStats().getCounts());
                                 highestScoringList.add(obj.getStats().getHighestScore().getScore());
                             }
-                            SortArray();
+                            sortArray();
                         }
                     }
                 });
+        leaderboardList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                leaderboardList.setVisibility(View.GONE);
+                myRankButton.setVisibility(View.GONE);
+                titleText.setVisibility(View.GONE);
+                rankText.setVisibility(View.GONE);
+                userNameText.setVisibility(View.GONE);
+                scoreText.setVisibility(View.GONE);
+                Player otherPlayer = (Player) adapterView.getItemAtPosition(i);
+                DisplaySearchPlayerFragment fragment = DisplaySearchPlayerFragment.newInstance(player, otherPlayer);
+                displayFragment(fragment);
+            }
+        });
         return view;
     }
 
     /**
      * Sort PlayerList Array and Set The Adapter for the view
      */
-    public void SortArray(){
+    public void sortArray(){
         Collections.sort(playersList);
         playerAdapter = new LeaderboardListView(getActivity(), playersList);
         leaderboardList.setAdapter(playerAdapter);
     }
-
 
     @Override
     public void onResume() {
@@ -162,5 +184,15 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
         Collections.sort(highestScoringList, Collections.reverseOrder());
         highest = highestScoringList.indexOf(player.getStats().getHighestScore().getScore());
         return  highest;
+    }
+
+    /**
+     * Places a fragment on frame_layout in the main activity
+     * @param fragment
+     */
+    public void displayFragment(Fragment fragment) {
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.browse_container, fragment);
+        fragmentTransaction.commit();
     }
 }

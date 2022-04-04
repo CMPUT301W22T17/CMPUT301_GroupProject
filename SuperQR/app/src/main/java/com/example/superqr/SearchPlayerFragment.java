@@ -31,12 +31,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
  * create an instance of this fragment.
  */
 public class SearchPlayerFragment extends Fragment{
-
     private static final String playerKey = "playerKey";
     private Player player;
     private Player otherPlayer;
     private FirebaseFirestore db;
-
     private ImageButton searchButton;
     private EditText searchEditText;
     private Button scanPlayerButton;
@@ -44,7 +42,6 @@ public class SearchPlayerFragment extends Fragment{
     public SearchPlayerFragment() {
         // Required empty public constructor
     }
-
 
     /**
      * Use this factory method to create a new instance of

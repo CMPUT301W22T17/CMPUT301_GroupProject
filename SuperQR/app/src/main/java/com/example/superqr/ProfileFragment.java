@@ -20,7 +20,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
  */
 
 public class ProfileFragment extends Fragment implements View.OnClickListener {
-
     //initialize variables, and key used to pass through
     private static final String playerKey = "playerKey";
     private Player player;
@@ -28,7 +27,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     private Button qrLowScoreButton;
     private Button editInfoButton;
     private Button loginCodeButton;
-    private FirebaseFirestore db;
     public ProfileFragment() {
         // Required empty public constructor
     }
@@ -51,8 +49,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        db = FirebaseFirestore.getInstance();
-
     }
 
     @Override
@@ -62,7 +58,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         View profileView = inflater.inflate(R.layout.fragment_profile, container, false);
         qrHighScoreButton = (Button) profileView.findViewById(R.id.view_high_score_button);
         qrHighScoreButton.setOnClickListener(this);
-
         qrLowScoreButton = (Button) profileView.findViewById(R.id.view_low_score_button);
         qrLowScoreButton.setOnClickListener(this);
         editInfoButton = (Button) profileView.findViewById(R.id.edit_player_info_button);
@@ -72,26 +67,33 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
         player = (Player) getArguments().getParcelable(playerKey);
 
-        // https://stackoverflow.com/questions/9931993/passing-an-object-from-an-activity-to-a-fragment
         // get the object from Main
+        /* From: stackoverflow.com
+         * At: https://stackoverflow.com/questions/9931993/passing-an-object-from-an-activity-to-a-fragment
+         * Author: Macarse https://stackoverflow.com/users/119895/macarse
+         */
         setUserInfo(profileView);
         setQRInfo(profileView);
 
         return profileView;
     }
 
-    // https://stackoverflow.com/questions/11857022/fragment-implements-onclicklistener
+    /* From: stackoverflow.com
+     * At: https://stackoverflow.com/questions/11857022/fragment-implements-onclicklistener
+     * Author: MohanRaj S https://stackoverflow.com/users/1921204/mohanraj-s
+     */
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.view_high_score_button:
-                // replace 2 with the high qr score player has
-                // https://stackoverflow.com/questions/25887373/calling-dialogfragment-from-fragment-not-fragmentactivity
+                /* From: stackoverflow.com
+                 * At: https://stackoverflow.com/questions/25887373/calling-dialogfragment-from-fragment-not-fragmentactivity
+                 * Author: PradeepNama https://stackoverflow.com/users/2197905/pradeepnama
+                 */
                 showQRCode(player.getStats().getHighestScore());
                 break;
 
             case R.id.view_low_score_button:
-                // replace 1 with the low qr score player has
                 showQRCode(player.getStats().getLowestScore());
                 break;
             case R.id.edit_player_info_button:
@@ -113,7 +115,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
      * Displays the player's personal information
      */
     public void setUserInfo(View view) {
-        // https://stackoverflow.com/questions/6495898/findviewbyid-in-fragment
+        /* From: stackoverflow.com
+         * At: https://stackoverflow.com/questions/6495898/findviewbyid-in-fragment
+         * Author: LeffelMania https://stackoverflow.com/users/615779/leffelmania
+         */
         TextView usernameText = view.findViewById(R.id.player_username);
         TextView emailText = view.findViewById(R.id.player_email);
         TextView phoneText = view.findViewById(R.id.player_phone);
@@ -125,7 +130,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         usernameText.setText(userName);
         emailText.setText(email);
         phoneText.setText(phone);
-
     }
 
     /**
@@ -140,7 +144,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
         totalScannedText.setText(count);
         totalScoreText.setText(total);
-
     }
 
     /**
@@ -157,5 +160,4 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             Toast.makeText(getActivity(), "No QR codes scanned", Toast.LENGTH_SHORT).show();
         }
     }
-
 }

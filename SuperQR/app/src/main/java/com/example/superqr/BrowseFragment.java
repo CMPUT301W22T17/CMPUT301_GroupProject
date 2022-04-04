@@ -14,7 +14,6 @@ import androidx.fragment.app.FragmentTransaction;
  * create an instance of this fragment.
  */
 public class BrowseFragment extends Fragment implements View.OnClickListener {
-
     //initialize variables and key used to pass through
     private static final String playerKey = "playerKey";
     private Player player;
@@ -73,7 +72,6 @@ public class BrowseFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.player_search_button:
-                // https://stackoverflow.com/questions/16728426/android-nested-fragment-approach
                 Fragment searchPlayerFragment = SearchPlayerFragment.newInstance(player);
                 displayFragment(searchPlayerFragment);
                 break;
@@ -95,11 +93,15 @@ public class BrowseFragment extends Fragment implements View.OnClickListener {
      * @param fragment
      */
     public void displayFragment(Fragment fragment) {
+        /* From: stackoverflow.com
+         * At: https://stackoverflow.com/questions/16728426/android-nested-fragment-approach
+         * Author: Larry McKenzie https://stackoverflow.com/users/1157893/larry-mckenzie
+         */
+
         FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.browse_container, fragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
-
         hideButtons();
     }
 

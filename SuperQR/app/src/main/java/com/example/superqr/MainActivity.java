@@ -1,7 +1,6 @@
 package com.example.superqr;
 
 import static android.content.ContentValues.TAG;
-
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
@@ -14,7 +13,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
-
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -26,7 +24,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-
 import com.example.superqr.databinding.ActivityMainBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -39,23 +36,24 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements EditInfoFragment.OnFragmentInteractionListener, ScanFragment.ScanFragmentListener, ScanFragment.ScanFragmentListener1, LocationListener {
-    private static int REQUEST_IMAGE_CAPTURE = 1;
+    private final static int REQUEST_IMAGE_CAPTURE = 1;
     private ActivityMainBinding binding;
     private StorageReference mStorageRef;
-    Player player;
-    FirebaseFirestore db;
-    Fragment newFragment;
-    LocationManager locationManager;
+    private Player player;
+    private FirebaseFirestore db;
+    private Fragment newFragment;
+    private LocationManager locationManager;
 
-    // from: https://stackoverflow.com/questions/62671106/onactivityresult-method-is-deprecated-what-is-the-alternative
-    // author: https://stackoverflow.com/users/4147849/muntashir-akon
-    // used to pass Player object through into fragments.
+    // Used to pass Player object through into fragments.
+    /* From: stackoverflow.com
+     * At: https://stackoverflow.com/questions/62671106/onactivityresult-method-is-deprecated-what-is-the-alternative
+     * Author: Muntashir Akon https://stackoverflow.com/users/4147849/muntashir-akon
+     */
     ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
@@ -64,7 +62,6 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         Intent data = result.getData();
                         player = (Player) data.getParcelableExtra("player");
-                        loadFragments();
                     }
                 }
             }
@@ -79,7 +76,10 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
             StorageReference qrcodes = mStorageRef.child(String.format("%s/%s", playerID, qrCodes.get(qrCodes.size() - 1).getHash()));
 
             // Get data as Bitmap and convert it into byte[] to upload with putBytes
-            // https://stackoverflow.com/questions/56699632/how-to-upload-file-bitmap-to-cloud-firestore
+            /* From: stackoverflow.com
+             * At: https://stackoverflow.com/questions/56699632/how-to-upload-file-bitmap-to-cloud-firestore
+             * Author: Deˣ https://stackoverflow.com/users/4377954/de%cb%a3
+             */
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //retrieve player from database
+        // Retrieve player from database
         mStorageRef = FirebaseStorage.getInstance().getReference();
         db = FirebaseFirestore.getInstance();
         // Get a top level reference to the collection
@@ -130,6 +130,7 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
         if (userName == "" || userName.contains("/")) {
             Intent intent = new Intent(MainActivity.this, LogInActivity.class);
             resultLauncher.launch(intent);
+            loadFragments();
         } else {
             Log.d("username", userName);
             DocumentReference docRef = db.collection("users").document(userName);
@@ -172,7 +173,10 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
         newFragment = ProfileFragment.newInstance(player);
         replaceFragment(newFragment);
 
-        //https://www.youtube.com/watch?v=Bb8SgfI4Cm4
+        /* From: youtube.com
+         * At: https://www.youtube.com/watch?v=Bb8SgfI4Cm4
+         * Author: Foxandroid https://www.youtube.com/channel/UC4Gwya_ODul8t9kjxsHm2dw
+         */
         binding.bottomNav.setOnItemSelectedListener(menuItem -> {
             switch (menuItem.getItemId()) {
                 case R.id.profile:
@@ -200,7 +204,7 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
     }
 
     /**
-     * Adds QRCcode to the player, updates the database, and update's the player's
+     * Adds QRCode to the player, updates the database, and update's the player's
      * QRCode stats as necessary.
      * @param qrCode
      *      QRCode that is scanned
@@ -312,7 +316,10 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
     private void requestLocation() {
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-        //based on Ravi Tamada's code on https://www.androidhive.info/2015/02/android-location-api-using-google-play-services/
+        /* From: androidhive.info
+         * At: https://www.androidhive.info/2015/02/android-location-api-using-google-play-services/
+         * Author: Ravi Tamada https://www.androidhive.info/author/admin/
+         */
         try {
             locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, this);
@@ -406,7 +413,6 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout, searchPlayer);
-        //fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
 }

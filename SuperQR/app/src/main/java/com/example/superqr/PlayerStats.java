@@ -1,9 +1,7 @@
 package com.example.superqr;
 
-import android.database.sqlite.SQLiteReadOnlyDatabaseException;
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import java.util.ArrayList;
 
 /**
@@ -105,7 +103,7 @@ public class PlayerStats implements Parcelable {
 
     /**
      * Adds a QR code to the player's collection of QR codes and updates highest score,
-     * lowest score, counts, and totalScore.
+     * lowest score, and totalScore.
      * @param qrCode
      */
     public void addQrCode(QRCode qrCode) {
@@ -126,6 +124,11 @@ public class PlayerStats implements Parcelable {
         }
     }
 
+    /**
+     * Deletes a QR code from the player's collection of QR codes and updates highest score,
+     * lowest score, and totalScore.
+     * @param qrCode
+     */
     public void deleteQRCode(QRCode qrCode) {
         this.qrCodes.remove(qrCode);
         this.totalScore -= qrCode.getScore();
@@ -154,6 +157,11 @@ public class PlayerStats implements Parcelable {
             }
         }
     }
+
+    /**
+     *  Sets the player's collection of QR codes
+     * @param qrCodes ArrayList of QR codes to set for the player to have
+     */
     public void setQrCodes(ArrayList<QRCode> qrCodes){
         this.qrCodes = qrCodes;
     }

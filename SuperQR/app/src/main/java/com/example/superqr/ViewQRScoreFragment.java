@@ -6,19 +6,15 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.DialogFragment;
-
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
@@ -26,7 +22,6 @@ import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
 
 public class ViewQRScoreFragment extends DialogFragment {
-
     private TextView qrText;
     private ImageView qrImage;
     private ProgressBar loadingImage;
@@ -47,8 +42,11 @@ public class ViewQRScoreFragment extends DialogFragment {
         loadingImage = qr_score_view.findViewById(R.id.loading_image);
 
         qrText.setText(Integer.toString(qrCode.getScore()));
-        // https://www.youtube.com/watch?v=7QnhepFaMLM
         // Retrieving image
+        /* From: youtube.com
+         * At: https://www.youtube.com/watch?v=7QnhepFaMLM
+         * Author: yoursTRULY https://www.youtube.com/channel/UCr0y1P0-zH2o3cFJyBSfAKg
+         */
         imageRef.getBytes(1024*1024) // One MB
                 .addOnSuccessListener(new OnSuccessListener<byte[]>() {
                     @Override
@@ -60,10 +58,15 @@ public class ViewQRScoreFragment extends DialogFragment {
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                // https://stackoverflow.com/questions/43567626/how-to-check-if-a-file-exists-in-firebase-storage-from-your-android-application
+                /* From: stackoverflow.com
+                 * At: https://stackoverflow.com/questions/43567626/how-to-check-if-a-file-exists-in-firebase-storage-from-your-android-application
+                 * Author: Dan Alboteanu https://stackoverflow.com/users/6204133/dan-alboteanu
+                 */
                 int errorCode = ((StorageException) e).getErrorCode();
                 if (errorCode == StorageException.ERROR_OBJECT_NOT_FOUND) {
-                    // https://vectorified.com/download-image#image-placeholder-icon-7.png
+                    /* From: vectorified.com
+                     * At: https://vectorified.com/download-image#image-placeholder-icon-7.png
+                     */
                     Drawable placeHolder = ResourcesCompat.getDrawable(getResources(), R.drawable.image_placeholder, null);
                     qrImage.setImageDrawable(placeHolder);
                     loadingImage.setVisibility(View.GONE);
