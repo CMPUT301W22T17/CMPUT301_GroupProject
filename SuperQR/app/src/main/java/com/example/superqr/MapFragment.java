@@ -51,15 +51,10 @@ import java.util.Locale;
  * create an instance of this fragment.
  */
 public class MapFragment extends Fragment implements View.OnClickListener {
+
     //initialize variables, and key used to pass through
     private static final String playerKey = "playerKey";
     private Player player;
-
-    // Taken from "Hello osmdroid World"
-    // At: https://osmdroid.github.io/osmdroid/How-to-use-the-osmdroid-library.html
-    // Reference: https://osmdroid.github.io/osmdroid/javadocs/osmdroid-android/debug/index.html?org/osmdroid/views/MapView.html
-    // For fixing scaling of markers: https://stackoverflow.com/questions/54811451/osmdroid-default-marker-moving-when-zooming-out-on-android-api-28
-
     private MapView map;
     private MapController controller;
     private Marker playerMarker;
@@ -75,6 +70,23 @@ public class MapFragment extends Fragment implements View.OnClickListener {
     private EditText locationSearchText;
     private ArrayList<Marker> nearbySearchedCodes = new ArrayList<Marker>();
 
+    /* From: github.io
+     * At: https://osmdroid.github.io/osmdroid/How-to-use-the-osmdroid-library.html
+     * Authors: https://osmdroid.github.io/osmdroid/team-list.html
+     * To: Initialize the map API
+     */
+
+    /* From github.io
+     * At: https://osmdroid.github.io/osmdroid/javadocAll/index.html
+     * Authors: https://osmdroid.github.io/osmdroid/team-list.html
+     * To: Used to reference the classes and methods that come with osmdroid in order to implement the map
+     */
+
+    /* From stackoverflow.com
+     * At: https://stackoverflow.com/questions/54811451/osmdroid-default-marker-moving-when-zooming-out-on-android-api-28
+     * Author: https://stackoverflow.com/users/11096412/pottokdev
+     * To: Make the scaling for the markers on the map fixed
+     */
     public MapFragment() {
         // Required empty public constructor
     }
@@ -114,7 +126,10 @@ public class MapFragment extends Fragment implements View.OnClickListener {
 
 
         // Inflate the layout for this fragment
-        // https://stackoverflow.com/questions/14897143/integrating-osmdroid-with-fragments
+        /* From: stackoverflow.com
+         * At: https://stackoverflow.com/questions/14897143/integrating-osmdroid-with-fragments
+         * Author: https://stackoverflow.com/users/2440169/viduka
+         */
         View view = inflater.inflate(R.layout.activity_display_map, container, false);
 
         zoomInButton = view.findViewById(R.id.zoom_in_button);
@@ -217,11 +232,17 @@ public class MapFragment extends Fragment implements View.OnClickListener {
      * Create location icons used to show where the player is.
      */
     private void createLocationIcons() {
-        //https://stackoverflow.com/questions/60301641/customized-icon-in-osmdroid-marker-android
-        // Player Map Marker Icon: <a href="https://www.flaticon.com/free-icons/location" title="location icons">Location icons created by IconMarketPK - Flaticon</a>
-        // QR Map Marker Icon: <a href="https://www.flaticon.com/free-icons/location" title="location icons">Location icons created by IconMarketPK - Flaticon</a>
-        // Searched Location Map Marker Icon: <a href="https://www.flaticon.com/free-icons/marker" title="marker icons">Marker icons created by IconMarketPK - Flaticon</a>
+        /* Icon Attributions:
+         * From: flaticon.com
+         * Player Map Marker Icon: <a href="https://www.flaticon.com/free-icons/location" title="location icons">Location icons created by IconMarketPK - Flaticon</a>
+         * QR Map Marker Icon: <a href="https://www.flaticon.com/free-icons/location" title="location icons">Location icons created by IconMarketPK - Flaticon</a>
+         * Searched Location Map Marker Icon: <a href="https://www.flaticon.com/free-icons/marker" title="marker icons">Marker icons created by IconMarketPK - Flaticon</a>
+         */
 
+        /* From: stackoverflow.com
+         * At: https://stackoverflow.com/questions/60301641/customized-icon-in-osmdroid-marker-android
+         * Author: https://stackoverflow.com/users/4778388/haniku
+         */
         Drawable initialPlayerPin = ResourcesCompat.getDrawable(getResources(), R.drawable.player_marker, null);
         playerPin = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap((((BitmapDrawable) initialPlayerPin).getBitmap()), (int) (33.0f * getResources().getDisplayMetrics().density), (int) (36.0f * getResources().getDisplayMetrics().density), true));
 
@@ -242,8 +263,10 @@ public class MapFragment extends Fragment implements View.OnClickListener {
      *      The point that the map centers in on.
      */
     private void setToLocation(GeoPoint point) {
-        // https://stackoverflow.com/questions/40257342/how-to-display-user-location-on-osmdroid-mapview
-
+        /* From: stackoverflow.com
+         * At: https://stackoverflow.com/questions/40257342/how-to-display-user-location-on-osmdroid-mapview
+         * Author: https://stackoverflow.com/users/4837089/sergey-nikitin
+         */
         controller.setZoom(18);
         controller.zoomIn();
         controller.setZoom(2);
@@ -276,6 +299,10 @@ public class MapFragment extends Fragment implements View.OnClickListener {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+        /* From: firebase.google.com
+         * At: https://firebase.google.com/docs/firestore/query-data/queries
+         * Author: Not Provided
+         */
         db.collection("codes").get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -302,7 +329,10 @@ public class MapFragment extends Fragment implements View.OnClickListener {
 
                                     double euclideanDistance = getEuclideanDistance(centerLocation, code.getLocation());
 
-                                    // https://stackoverflow.com/questions/2538787/how-to-print-a-float-with-2-decimal-places-in-java
+                                    /* From: stackoverflow.com
+                                     * At: https://stackoverflow.com/questions/2538787/how-to-print-a-float-with-2-decimal-places-in-java
+                                     * Author: https://stackoverflow.com/users/203907/bozho
+                                     */
                                     DecimalFormat decimalRounder = new DecimalFormat();
                                     decimalRounder.setMaximumFractionDigits(4);
                                     if (!nearPlayer) {
@@ -330,7 +360,10 @@ public class MapFragment extends Fragment implements View.OnClickListener {
      * @throws IOException
      */
     private void searchLocation(String searchedLocation) throws IOException {
-        // https://stackoverflow.com/questions/69148288/how-to-search-location-name-on-osmdroid-to-get-latitude-longitude
+        /* From: stackoverflow.com
+         * At: https://stackoverflow.com/questions/69148288/how-to-search-location-name-on-osmdroid-to-get-latitude-longitude
+         * Author: https://stackoverflow.com/users/12543189/faiz-azhar-ristya-nugraha
+         */
         try {
             Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
             List<Address> geoResults = geocoder.getFromLocationName(searchedLocation, 1);

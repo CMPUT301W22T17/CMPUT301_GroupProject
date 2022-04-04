@@ -33,13 +33,22 @@ public class ViewLoginCodeFragment extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         View loginCodeView = LayoutInflater.from(getActivity()).inflate(R.layout.login_qr_code_fragment, null);
 
-        //https://www.youtube.com/watch?v=-IPI93Szwzk
-        //https://stackoverflow.com/questions/55909804/duplicate-class-android-support-v4-app-inotificationsidechannel-found-in-modules
         // fixed gradle
+        /* From: youtube.com
+         * At: https://www.youtube.com/watch?v=-IPI93Szwzk
+         * Author: https://www.youtube.com/channel/UCzE5gg5Z3wivPBatj8-doig
+         *
+         * From: stackoverflow.com
+         * At: https://stackoverflow.com/questions/55909804/duplicate-class-android-support-v4-app-inotificationsidechannel-found-in-modules
+         * Author:
+         */
         loginQRImage = (ImageView) loginCodeView.findViewById(R.id.loginQRCodeImageView);
         MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
         try {
-            //https://stackoverflow.com/questions/36428241/adding-dependency-zxing-android-embedded
+            /* From: stackoverflow.com
+             * At: https://stackoverflow.com/questions/36428241/adding-dependency-zxing-android-embedded
+             * Author:
+             */
             BitMatrix bitMatrix = multiFormatWriter.encode(username, BarcodeFormat.QR_CODE, 300, 300);
             BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
             Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix);

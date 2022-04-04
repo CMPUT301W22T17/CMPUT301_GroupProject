@@ -46,7 +46,6 @@ public class LogInActivity extends AppCompatActivity implements ScanFragment.Sca
         newUserButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //getSupportFragmentManager().beginTransaction().replace(R.id.logInFrameLayout, new NewUserFragment()).commit();
 
                 newUserButton.setVisibility(View.GONE);
                 existingUserButton.setVisibility(View.GONE);

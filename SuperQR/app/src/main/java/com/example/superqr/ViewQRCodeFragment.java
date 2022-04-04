@@ -102,10 +102,12 @@ public class ViewQRCodeFragment extends Fragment {
         listView = view.findViewById(R.id.comment_list);
 
         //dynamically set text box size to size of display
-        //https://stackoverflow.com/questions/11629675/get-screen-width-and-height-in-a-fragment
+        /* From: stackoverflow.com
+         * At: https://stackoverflow.com/questions/11629675/get-screen-width-and-height-in-a-fragment
+         * Author:
+         */
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        // int height = displayMetrics.heightPixels;
         int width = displayMetrics.widthPixels;
         int editTextWidth = width - 200;
         editText.setLayoutParams(new LinearLayout.LayoutParams(editTextWidth,LinearLayout.LayoutParams.WRAP_CONTENT));
@@ -221,7 +223,10 @@ public class ViewQRCodeFragment extends Fragment {
             strComments[i] = code.getComments().get(i);
         }
 
-        //https://www.youtube.com/watch?v=MCfsfgpmkEI
+        /* From: youtube.com
+         * At: https://www.youtube.com/watch?v=MCfsfgpmkEI
+         * Author: https://www.youtube.com/channel/UCBzSxKOoOn1jxmFp4wSwMRA
+         */
         adapter= new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, strComments);
         listView.setAdapter(adapter);
 

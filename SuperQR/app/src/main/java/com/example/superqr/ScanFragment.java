@@ -47,9 +47,17 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class ScanFragment extends Fragment {
-    // repositories:
-    // https://github.com/yuriy-budiyev/code-scanner
-    // https://github.com/Karumi/Dexter
+    /* Respository 1:
+     * From: github.com
+     * At: https://github.com/yuriy-budiyev/code-scanner
+     * Authors: https://github.com/yuriy-budiyev/code-scanner/graphs/contributors
+     *
+     * Respository 2:
+     * From: github.com
+     * At: https://github.com/Karumi/Dexter
+     * Authors: https://github.com/Karumi/Dexter/graphs/contributors
+     */
+
     //initialize variables and key used to pass through
     private static final String playerKey = "playerKey";
     private final int REQUEST_IMAGE_CAPTURE = 1;
@@ -62,7 +70,10 @@ public class ScanFragment extends Fragment {
     private QRCode qrCode;
     private FirebaseFirestore db;
 
-    // https://stackoverflow.com/questions/35091857/passing-object-from-fragment-to-activity
+    /* From: stackoverflow.com
+     * At: https://stackoverflow.com/questions/35091857/passing-object-from-fragment-to-activity
+     * Author: https://stackoverflow.com/users/3671918/david-rauca
+     */
     public interface ScanFragmentListener {
         void onQRScanned(QRCode qrCode, boolean geo);
     }
@@ -109,7 +120,10 @@ public class ScanFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        // https://www.youtube.com/watch?v=Iuj4CuWjYF8
+        /* From: youtube.com
+         * At: https://www.youtube.com/watch?v=Iuj4CuWjYF8
+         * Author: https://www.youtube.com/channel/UCR1t5eSmLxLUdBnK2XwZOuw
+         */
         player = (Player) getArguments().getParcelable(playerKey);
         scanAction = getArguments().getInt("scanAction");
         final Activity activity = getActivity();
@@ -135,7 +149,10 @@ public class ScanFragment extends Fragment {
                                 }
                             }
                             if (!sameHash) {
-                                // https://firebase.google.com/docs/firestore/query-data/queries
+                                /* From: firebase.google.com
+                                 * At: https://firebase.google.com/docs/firestore/query-data/queries
+                                 * Author: Not Provided
+                                 */
                                 Query beenScanned = db.collection("codes").whereIn("hash", Arrays.asList(qrCode.getHash()));
                                 beenScanned
                                         .get()
@@ -211,7 +228,10 @@ public class ScanFragment extends Fragment {
     }
 
     // Asks user for camera permissions
-    // https://www.geeksforgeeks.org/easy-runtime-permissions-in-android-with-dexter/
+    /* From: geeksforgeeks.org
+     * At: https://www.geeksforgeeks.org/easy-runtime-permissions-in-android-with-dexter/
+     * Author: https://auth.geeksforgeeks.org/user/chaitanyamunje/articles
+     */
     private void requestForCamera() {
         final Activity activity = getActivity();
         Dexter.withContext(activity).withPermissions(Manifest.permission.CAMERA)
@@ -290,7 +310,10 @@ public class ScanFragment extends Fragment {
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.cancel();
                 if (checkedOptions[0]) { // Take photo
-                    // https://developer.android.com/training/camera/photobasics
+                    /* From: developer.android.com
+                     * At: https://developer.android.com/training/camera/photobasics
+                     * Author: Not Provided
+                     */
                     Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     activity.startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE); // Camera
                 }
