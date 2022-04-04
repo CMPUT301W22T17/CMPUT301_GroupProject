@@ -50,7 +50,7 @@ public class ViewQRScoreFragment extends DialogFragment {
         // Retrieving image
         /* From: youtube.com
          * At: https://www.youtube.com/watch?v=7QnhepFaMLM
-         * Author: https://www.youtube.com/channel/UCr0y1P0-zH2o3cFJyBSfAKg
+         * Author: yoursTRULY https://www.youtube.com/channel/UCr0y1P0-zH2o3cFJyBSfAKg
          */
         imageRef.getBytes(1024*1024) // One MB
                 .addOnSuccessListener(new OnSuccessListener<byte[]>() {

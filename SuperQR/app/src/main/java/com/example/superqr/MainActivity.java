@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
     // Used to pass Player object through into fragments.
     /* From: stackoverflow.com
      * At: https://stackoverflow.com/questions/62671106/onactivityresult-method-is-deprecated-what-is-the-alternative
-     * Author: https://stackoverflow.com/users/4147849/muntashir-akon
+     * Author: Muntashir Akon https://stackoverflow.com/users/4147849/muntashir-akon
      */
     ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
             // Get data as Bitmap and convert it into byte[] to upload with putBytes
             /* From: stackoverflow.com
              * At: https://stackoverflow.com/questions/56699632/how-to-upload-file-bitmap-to-cloud-firestore
-             * Author: https://stackoverflow.com/users/4377954/de%cb%a3
+             * Author: Deˣ https://stackoverflow.com/users/4377954/de%cb%a3
              */
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
@@ -179,7 +179,7 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
 
         /* From: youtube.com
          * At: https://www.youtube.com/watch?v=Bb8SgfI4Cm4
-         * Author: https://www.youtube.com/channel/UC4Gwya_ODul8t9kjxsHm2dw
+         * Author: Foxandroid https://www.youtube.com/channel/UC4Gwya_ODul8t9kjxsHm2dw
          */
         binding.bottomNav.setOnItemSelectedListener(menuItem -> {
             switch (menuItem.getItemId()) {
@@ -321,8 +321,8 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         /* From: androidhive.info
-         * Based On: https://www.androidhive.info/2015/02/android-location-api-using-google-play-services/
-         * Author: Ravi Tamada
+         * At: https://www.androidhive.info/2015/02/android-location-api-using-google-play-services/
+         * Author: Ravi Tamada https://www.androidhive.info/author/admin/
          */
         try {
             locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -417,7 +417,6 @@ public class MainActivity extends AppCompatActivity implements EditInfoFragment.
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout, searchPlayer);
-        //fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
 }

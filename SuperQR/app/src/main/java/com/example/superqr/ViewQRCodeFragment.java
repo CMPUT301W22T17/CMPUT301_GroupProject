@@ -225,7 +225,7 @@ public class ViewQRCodeFragment extends Fragment {
 
         /* From: youtube.com
          * At: https://www.youtube.com/watch?v=MCfsfgpmkEI
-         * Author: https://www.youtube.com/channel/UCBzSxKOoOn1jxmFp4wSwMRA
+         * Author: Ralph Alex Charlemagne https://www.youtube.com/channel/UCBzSxKOoOn1jxmFp4wSwMRA
          */
         adapter= new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, strComments);
         listView.setAdapter(adapter);

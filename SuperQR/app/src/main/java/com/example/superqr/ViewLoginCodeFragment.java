@@ -36,7 +36,7 @@ public class ViewLoginCodeFragment extends DialogFragment {
         // fixed gradle
         /* From: youtube.com
          * At: https://www.youtube.com/watch?v=-IPI93Szwzk
-         * Author: https://www.youtube.com/channel/UCzE5gg5Z3wivPBatj8-doig
+         * Author: zainsoft https://www.youtube.com/channel/UCzE5gg5Z3wivPBatj8-doig
          *
          * From: stackoverflow.com
          * At: https://stackoverflow.com/questions/55909804/duplicate-class-android-support-v4-app-inotificationsidechannel-found-in-modules
