@@ -100,14 +100,20 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
         totalScoreList = new ArrayList();
         totalQRList = new ArrayList();
         highestScoringList= new ArrayList();
+
+        //From: firebase.google.com
+        //At: https://firebase.google.com/docs/database/android/lists-of-data
+        //Author: Firebase
+
+
         db = FirebaseFirestore.getInstance();
         db.collection("users")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {    //getting all players from the database
                         if(task.isSuccessful()){
-                            for (QueryDocumentSnapshot document : task.getResult()){
+                            for (QueryDocumentSnapshot document : task.getResult()){     //getting the different stats into an array at the same time for easy sorting
                                 obj = document.toObject(Player.class);
                                 playersList.add(obj);
                                 totalScoreList.add(obj.getStats().getTotalScore());
@@ -119,6 +125,13 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
                     }
                 });
         leaderboardList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            /**
+             * Displays another players profile when you click on them in the leaderboard.
+             * @param adapterView
+             * @param view
+             * @param i
+             * @param l
+             */
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 leaderboardList.setVisibility(View.GONE);
@@ -144,11 +157,18 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
         leaderboardList.setAdapter(playerAdapter);
     }
 
+    /**
+     * This runs when the fragment is resumed
+     */
     @Override
     public void onResume() {
         super.onResume();
     }
 
+    /**
+     * On click listener for the estimate My Rank Button
+     * @param view
+     */
     @Override
     public void onClick(View view) {
         switch (view.getId())
@@ -163,6 +183,15 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
         }
     }
 
+    /**
+     * Finds the rank that player is.
+     * @param player whose rank to search for.
+     * @return rank
+     */
+
+    //From: BeginnersBook.com
+    //At: https://beginnersbook.com/2013/12/sort-arraylist-in-descending-order-in-java/
+    //Author: Chaitanya Singh
     public int findRank(Player player){
         int rank;
         Collections.sort(totalScoreList, Collections.reverseOrder());
@@ -171,6 +200,11 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
         return rank;
     }
 
+    /**
+     * Finds the estimate of the totalQR scanned rank
+     * @param player whose rank to estimate
+     * @return totalqr rank
+     */
     public int findTotalQR(Player player){
         int qr;
         Collections.sort(totalQRList, Collections.reverseOrder());
@@ -179,6 +213,11 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
         return qr;
     }
 
+    /**
+     * Finds the estimate for the highest ranking qr code scanned rank
+     * @param player whose rank to estimate
+     * @return highest scoring qr code rank
+     */
     public int findHighest(Player player){
         int highest;
         Collections.sort(highestScoringList, Collections.reverseOrder());
