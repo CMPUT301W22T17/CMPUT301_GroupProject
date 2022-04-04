@@ -29,7 +29,14 @@ import com.google.firebase.firestore.FirebaseFirestore;
  * A simple {@link Fragment} subclass.
  * Use the {@link SearchPlayerFragment#newInstance} factory method to
  * create an instance of this fragment.
+ *
+ * This fragment is for user to search up player by their username
+ * user can either search by providing name that is exact match
+ * or by pressing the "scan" button which brings user to a
+ * ScanFragment, where user can provide a valid QR code that
+ * contains a player's information
  */
+
 public class SearchPlayerFragment extends Fragment{
     private static final String playerKey = "playerKey";
     private Player player;

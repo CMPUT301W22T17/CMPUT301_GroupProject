@@ -12,6 +12,11 @@ import androidx.fragment.app.FragmentTransaction;
  * A simple {@link Fragment} subclass.
  * Use the {@link BrowseFragment#newInstance} factory method to
  * create an instance of this fragment.
+ *
+ * This fragment contains three buttons
+ *      1. "SEARCH FOR PLAYER" will bring user to SearchPlayerFragment
+ *      2. "VIEW RANKING" will bring user to the LeaderBoardFragment
+ *      3. "VIEW MY QR CODES" will bring user to ViewQRCodeFragment
  */
 public class BrowseFragment extends Fragment implements View.OnClickListener {
     //initialize variables and key used to pass through

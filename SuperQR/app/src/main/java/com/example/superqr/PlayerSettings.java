@@ -3,6 +3,10 @@ package com.example.superqr;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+/**
+ * Contains a player's information
+ * username, phone, and email
+ */
 public class PlayerSettings implements Parcelable {
     private String username;
     private String phone;
