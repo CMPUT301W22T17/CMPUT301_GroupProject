@@ -40,14 +40,14 @@ public class ViewLoginCodeFragment extends DialogFragment {
          *
          * From: stackoverflow.com
          * At: https://stackoverflow.com/questions/55909804/duplicate-class-android-support-v4-app-inotificationsidechannel-found-in-modules
-         * Author:
+         * Author: Anice Jahanjoo https://stackoverflow.com/users/5282127/anice-jahanjoo
          */
         loginQRImage = (ImageView) loginCodeView.findViewById(R.id.loginQRCodeImageView);
         MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
         try {
             /* From: stackoverflow.com
              * At: https://stackoverflow.com/questions/36428241/adding-dependency-zxing-android-embedded
-             * Author:
+             * Author: Joanne Dela Cruz https://stackoverflow.com/users/12377369/joanne-dela-cruz
              */
             BitMatrix bitMatrix = multiFormatWriter.encode(username, BarcodeFormat.QR_CODE, 300, 300);
             BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
