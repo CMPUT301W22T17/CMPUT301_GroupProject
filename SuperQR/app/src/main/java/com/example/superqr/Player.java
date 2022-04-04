@@ -127,6 +127,9 @@ public class Player implements Parcelable, Comparable<Player> {
      */
     @Override
     public int compareTo(Player player) {
+        //From: geeksforgeeks.org
+        //At: https://www.geeksforgeeks.org/how-to-override-compareto-method-in-java/
+        //Author:Zack Aayush  https://auth.geeksforgeeks.org/user/zack_aayush/articles
         if (this.stats.getTotalScore() == player.stats.getTotalScore()) {
             return 0;
         } else if (this.stats.getTotalScore() > player.stats.getTotalScore()) {
