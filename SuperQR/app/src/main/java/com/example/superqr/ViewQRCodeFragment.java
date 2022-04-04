@@ -104,7 +104,7 @@ public class ViewQRCodeFragment extends Fragment {
         //dynamically set text box size to size of display
         /* From: stackoverflow.com
          * At: https://stackoverflow.com/questions/11629675/get-screen-width-and-height-in-a-fragment
-         * Author:
+         * Author: rajpara https://stackoverflow.com/users/582571/rajpara
          */
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);

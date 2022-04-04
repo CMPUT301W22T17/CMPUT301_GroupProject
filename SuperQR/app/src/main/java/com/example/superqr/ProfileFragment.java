@@ -75,7 +75,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         // get the object from Main
         /* From: stackoverflow.com
          * At: https://stackoverflow.com/questions/9931993/passing-an-object-from-an-activity-to-a-fragment
-         * Author:
+         * Author: Macarse https://stackoverflow.com/users/119895/macarse
          */
         setUserInfo(profileView);
         setQRInfo(profileView);

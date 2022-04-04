@@ -65,7 +65,7 @@ public class ViewQRScoreFragment extends DialogFragment {
             public void onFailure(@NonNull Exception e) {
                 /* From: stackoverflow.com
                  * At: https://stackoverflow.com/questions/43567626/how-to-check-if-a-file-exists-in-firebase-storage-from-your-android-application
-                 * Author:
+                 * Author: Dan Alboteanu https://stackoverflow.com/users/6204133/dan-alboteanu
                  */
                 int errorCode = ((StorageException) e).getErrorCode();
                 if (errorCode == StorageException.ERROR_OBJECT_NOT_FOUND) {
