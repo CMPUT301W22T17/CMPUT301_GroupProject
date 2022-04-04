@@ -47,8 +47,11 @@ public class ViewQRScoreFragment extends DialogFragment {
         loadingImage = qr_score_view.findViewById(R.id.loading_image);
 
         qrText.setText(Integer.toString(qrCode.getScore()));
-        // https://www.youtube.com/watch?v=7QnhepFaMLM
         // Retrieving image
+        /* From: youtube.com
+         * At: https://www.youtube.com/watch?v=7QnhepFaMLM
+         * Author: https://www.youtube.com/channel/UCr0y1P0-zH2o3cFJyBSfAKg
+         */
         imageRef.getBytes(1024*1024) // One MB
                 .addOnSuccessListener(new OnSuccessListener<byte[]>() {
                     @Override
@@ -60,10 +63,15 @@ public class ViewQRScoreFragment extends DialogFragment {
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                // https://stackoverflow.com/questions/43567626/how-to-check-if-a-file-exists-in-firebase-storage-from-your-android-application
+                /* From: stackoverflow.com
+                 * At: https://stackoverflow.com/questions/43567626/how-to-check-if-a-file-exists-in-firebase-storage-from-your-android-application
+                 * Author:
+                 */
                 int errorCode = ((StorageException) e).getErrorCode();
                 if (errorCode == StorageException.ERROR_OBJECT_NOT_FOUND) {
-                    // https://vectorified.com/download-image#image-placeholder-icon-7.png
+                    /* From: vectorified.com
+                     * At: https://vectorified.com/download-image#image-placeholder-icon-7.png
+                     */
                     Drawable placeHolder = ResourcesCompat.getDrawable(getResources(), R.drawable.image_placeholder, null);
                     qrImage.setImageDrawable(placeHolder);
                     loadingImage.setVisibility(View.GONE);

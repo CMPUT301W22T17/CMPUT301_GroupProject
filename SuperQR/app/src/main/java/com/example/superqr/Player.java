@@ -144,7 +144,10 @@ public class Player implements Parcelable, Comparable<Player> {
      * @return String
      */
     private String generateID() {
-        // https://www.programiz.com/java-programming/examples/generate-random-string
+        /* From: programiz.com
+         * At: https://www.programiz.com/java-programming/examples/generate-random-string
+         * Author: Not Provided
+         */
         String upperAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         String lowerAlphabet = "abcdefghijklmnopqrstuvwxyz";
         String numbers = "0123456789";

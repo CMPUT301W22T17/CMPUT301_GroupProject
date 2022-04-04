@@ -72,26 +72,33 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
         player = (Player) getArguments().getParcelable(playerKey);
 
-        // https://stackoverflow.com/questions/9931993/passing-an-object-from-an-activity-to-a-fragment
         // get the object from Main
+        /* From: stackoverflow.com
+         * At: https://stackoverflow.com/questions/9931993/passing-an-object-from-an-activity-to-a-fragment
+         * Author:
+         */
         setUserInfo(profileView);
         setQRInfo(profileView);
 
         return profileView;
     }
 
-    // https://stackoverflow.com/questions/11857022/fragment-implements-onclicklistener
+    /* From: stackoverflow.com
+     * At: https://stackoverflow.com/questions/11857022/fragment-implements-onclicklistener
+     * Author: https://stackoverflow.com/users/1921204/mohanraj-s
+     */
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.view_high_score_button:
-                // replace 2 with the high qr score player has
-                // https://stackoverflow.com/questions/25887373/calling-dialogfragment-from-fragment-not-fragmentactivity
+                /* From: stackoverflow.com
+                 * At: https://stackoverflow.com/questions/25887373/calling-dialogfragment-from-fragment-not-fragmentactivity
+                 * Author: https://stackoverflow.com/users/2197905/pradeepnama
+                 */
                 showQRCode(player.getStats().getHighestScore());
                 break;
 
             case R.id.view_low_score_button:
-                // replace 1 with the low qr score player has
                 showQRCode(player.getStats().getLowestScore());
                 break;
             case R.id.edit_player_info_button:
@@ -113,7 +120,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
      * Displays the player's personal information
      */
     public void setUserInfo(View view) {
-        // https://stackoverflow.com/questions/6495898/findviewbyid-in-fragment
+        /* From: stackoverflow.com
+         * At: https://stackoverflow.com/questions/6495898/findviewbyid-in-fragment
+         * Author: https://stackoverflow.com/users/615779/leffelmania
+         */
         TextView usernameText = view.findViewById(R.id.player_username);
         TextView emailText = view.findViewById(R.id.player_email);
         TextView phoneText = view.findViewById(R.id.player_phone);
